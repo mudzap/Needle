@@ -112,6 +112,7 @@ void Laser::GetVertex() {
 
 void Laser::ResetDraw() {
 
+    //FIX
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);

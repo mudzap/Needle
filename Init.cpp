@@ -15,8 +15,10 @@ bool Game::OnInit() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-	//SDL_OPENGL | SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER
+	
+    //SDL_OPENGL | SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER
 	//SDL_WINDOW_BORDERLESS | SDL_WINDOW_OPENGL
 
     window = SDL_CreateWindow("SDL Window", 32, 32, DEFAULT_W, DEFAULT_H, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -44,9 +46,13 @@ bool Game::OnInit() {
         }
 
         //Use Vsync
-        if (SDL_GL_SetSwapInterval(1) < 0)
+        if (SDL_GL_SetSwapInterval(-1) < 0)
         {
-            printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+            printf("Warning: Unable to set Adaptive VSync! SDL Error: %s\n", SDL_GetError());
+
+            if (SDL_GL_SetSwapInterval(1) < 0)
+                printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+                
         }
 
         //Initialize OpenGL
@@ -118,7 +124,7 @@ int Game::initGL()
     glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 
     glScissor(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_PLAY_W, DEFAULT_PLAY_H);
-    glAlphaFunc(GL_NEVER, 0.0); 
+    glAlphaFunc(GL_LEQUAL, 0.5); 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);

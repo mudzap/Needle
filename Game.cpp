@@ -28,8 +28,15 @@ int Game::OnExecute() {
     shader.SetUniform1i("u_Texture", 0);
     shader.SetUniformMat4f("u_Projection", orthoPlay);
     shader.SetUniform1f("scale", 1);
-    
-    textShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragSingleChannel.shader");
+
+    fboShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragBloom.shader");
+    fboShader.Bind();
+    fboShader.SetUniform1i("scene", 4);
+    fboShader.SetUniform1i("bloomBlur", 5);
+    fboShader.SetUniform1i("bloom", 1);
+    fboShader.SetUniform1f("exposure", 1.f);
+
+    textShader.InitShader("shaders/vertexSingleChannel.shader", "shaders/fragSingleChannel.shader");
     textShader.Bind();
     textShader.SetUniform1i("u_Texture", 1);
     textShader.SetUniformMat4f("u_Projection", orthoFull);
@@ -39,47 +46,28 @@ int Game::OnExecute() {
     shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
     shader3D.Bind();
     shader3D.SetUniform1i("u_Texture", 2);
-    shader3D.SetUniform1i("skybox", 3);
+    shader3D.SetUniform1i("skybox", 0);
     shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
     shader3D.SetUniformMat4f("u_Model", glm::mat4(1.f));
     shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
 
+    shaderCube.InitShader("shaders/skyboxVertexShader.shader", "shaders/skyboxFragShader.shader");
+    shaderCube.Bind();
+    shaderCube.SetUniform1f("skybox", 0);
+    shaderCube.SetUniformMat4f("u_Projection", camera.projection);
+    shaderCube.SetUniformMat4f("u_View", camera.view);
 
-    // STAGE
+    Shader gaussianShader;
+    gaussianShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragGaussian.shader");
+    gaussianShader.Bind();
+    gaussianShader.SetUniform1i("u_Texture", 5);
 
-    Stage stage;
-    stage.LoadModel("models/stairs.obj");
-    stage.FillBuffer();
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 3; k++) {
-                stage.PushBackStageTile(NORTH, { i, 2 * j, k }, 0);
-                stage.PushBackStageTile(EAST, { i, 2 * j, k }, 0);
-                stage.PushBackStageTile(SOUTH, { i, 2 * j, k }, 0);
-                stage.PushBackStageTile(WEST, { i, 2 * j, k }, 0);
-            }
-        }
-    }
+    // TEXTURES
 
-    Model cube("models/cube.obj");
-
-
-    Texture cubeMap;
-    cubeMap.LoadTextureCubeMap({
-        "sprites/px.png",
-        "sprites/nx.png" ,
-        "sprites/py.png" ,
-        "sprites/ny.png" ,
-        "sprites/pz.png" ,
-        "sprites/nz.png" },
-        true
-    );
+    CubeMap skybox;
 
     Texture texture;
-    texture.LoadTexture("sprites/entities.png", true);
-
-    Texture texture2;
-    texture2.LoadTexture("sprites/texture.png", true);
+    texture.LoadTexture("sprites/entities.png");
 
     Font myFont;
     myFont.Load("fonts/B612Mono-Bold.ttf");
@@ -94,12 +82,37 @@ int Game::OnExecute() {
     myFont.EndLoad();
     myFont.LoadTexture(true);
 
-    myFont.Bind(1);
-    texture2.Bind(2);
-    cubeMap.BindCubeMap(3);
-    texture.Bind(0);
+    Texture cubeMap;
+    cubeMap.LoadTextureCubeMap({
+        "sprites/px.png",
+        "sprites/nx.png",
+        "sprites/py.png",
+        "sprites/ny.png",
+        "sprites/pz.png",
+        "sprites/nz.png"
+        });
 
-    //myFont.Save("sprites/fontAtlas.png");
+
+    // STAGE
+
+    Stage stage;
+    stage.LoadModel("models/stairs.obj", "sprites/texture.png", 2);
+    stage.LoadModel("models/tree.obj", "sprites/bark-texture-12.png", 3);
+    stage.FillBuffer();
+    stage.PushBackStageTile(WEST, { 0, 0, 0 }, 1);
+    stage.PushBackStageTile(NORTH, { 0, 1, 0 }, 1);
+    stage.PushBackStageTile(EAST, { 1, 0, 0 }, 1);
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) {
+                stage.PushBackStageTile(NORTH, { i, 2 * j, k }, 0);
+                stage.PushBackStageTile(EAST, { i, 2 * j, k }, 0);
+                stage.PushBackStageTile(SOUTH, { i, 2 * j, k }, 0);
+                stage.PushBackStageTile(WEST, { i, 2 * j, k }, 0);
+            }
+        }
+    }
+    stage.SortTiles();
 
 
     // AUDIO
@@ -173,9 +186,47 @@ int Game::OnExecute() {
     
     char InputBuf[256] = { 0 };
 
+
+    glDisable(GL_MULTISAMPLE);
+    glDisable(GL_SCISSOR_TEST);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    Framebuffer frameBuffer(768, 896, FB_COLOR, 2);
+    Framebuffer gaussianFramebuffer[2] = { Framebuffer(768, 896), Framebuffer(768, 896) };
+    
+    cubeMap.BindCubeMap(0);
+
+    texture.Bind(0);
+    myFont.Bind(1);
+
+    for (unsigned int i = 0; i < stage.textures.size(); i++)
+        stage.textures[i].Bind(stage.textures[i].slot);
+
+    gaussianFramebuffer[0].BindTexture(5);
+    gaussianFramebuffer[1].BindTexture(5);
+
+    frameBuffer.BindTexture(4, 1);
+    frameBuffer.BindTexture(5, 2);
+
+
     //GAME LOOP //
 
+    int lastTime = SDL_GetTicks();
+    int nbFrames = 0;
+
     while (isRunning) {
+
+        /*
+        nbFrames++;
+        if (SDL_GetTicks() - lastTime >= 1000.0) { // If last prinf() was more than 1 sec ago
+            // printf and reset timer
+            printf("%f ms/frame, Average: %i\n", 1000.0 / float(nbFrames), nbFrames);
+            nbFrames = 0;
+            lastTime = SDL_GetTicks();
+        } */
+
 
         //ON EVENT
 
@@ -187,6 +238,26 @@ int Game::OnExecute() {
         Audio::HandleAudio();
         timer.Process();
 
+        std::thread t2([&] {
+
+            //MOVE TO SPAWNER
+            myLaser.HandleNodes();
+
+
+            //MOVE TO UI, NORMALIZE VALUES      //FIX
+            //SET TEXT (STATIC OR NOT)
+            //GET QUADS (ONLY STATIC)!
+            myFont.GetQuad("SCORE:", 0, Complex(224.f, 422.f));
+            myFont.GetQuad(std::to_string(player.playerArgs.pointScore), 0, Complex(224.f, 386.f));
+            myFont.GetQuad("GRAZE:", 0, Complex(224.f, 346.f));
+            myFont.GetQuad(std::to_string(player.playerArgs.grazeScore), 0, Complex(224.f, 310.f));
+
+            camera.HandleCamera();
+
+            });
+
+        //std::thread t1([&] {
+
         for (Enemy* enemies : enemyPool.activeEnemies) {
             player.HandlePlayerCollision(enemies);
             enemies->HandleEnemy();
@@ -194,20 +265,10 @@ int Game::OnExecute() {
 
         player.HandlePlayerMovement();
 
-        //MOVE TO SPAWNER
-        myLaser.HandleNodes();
-        
+        //    });
 
-        //MOVE TO UI, NORMALIZE VALUES 
-        //SET TEXT (STATIC OR NOT)
-        //GET QUADS (ONLY STATIC)!
-        myFont.GetQuad("SCORE:", 0, Complex(224.f, -422.f));
-        myFont.GetQuad("SCORE:", 0, Complex(224.f, 422.f));
-        myFont.GetQuad(std::to_string(player.playerArgs.pointScore), 0, Complex(224.f, 386.f));
-        myFont.GetQuad("GRAZE:", 0, Complex(224.f, 346.f));
-        myFont.GetQuad(std::to_string(player.playerArgs.grazeScore), 0, Complex(224.f, 310.f));
-
-        camera.HandleCamera();
+        //t1.join();
+        t2.join();
 
         OnLoop();
         
@@ -215,13 +276,27 @@ int Game::OnExecute() {
 
         //ON RENDER
 
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glViewport(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
-        glScissor(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
-        
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_MULTISAMPLE);
+
+
+        //START FRAMEBUFFER
+
+        frameBuffer.Bind();
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glViewport(0, 0, newPlayWidth, newPlayHeight);
+        glScissor(0, 0, newPlayWidth, newPlayHeight);
+
+
+
+        //DRAW STAGE
 
         shader3D.Bind();
 
@@ -230,12 +305,26 @@ int Game::OnExecute() {
 
         stage.DrawTilesOcclude(camera, shader3D);
 
-        cube.Draw();
+        //DRAW SKYBOX
+
+        glDepthFunc(GL_LEQUAL);
+
+        shaderCube.Bind();
+        skybox.Draw(shaderCube, camera);
+
+        glDepthFunc(GL_LESS);
+
 
         glDisable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        glAlphaFunc(GL_LEQUAL, 0.5);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+        //DRAW ENTITIES
 
         shader.Bind();
-
         player.Draw();
 
         for (Enemy* enemies : enemyPool.activeEnemies) {
@@ -246,25 +335,77 @@ int Game::OnExecute() {
         }
 
         //MOVE TO SPAWNER
-        //myLaser.ResetDraw();
+        myLaser.ResetDraw();
+
+        // FINISH FRAMEBUFFER
+
+
+        bool horizontal = true, first_iteration = true;
+        int amount = 5; //KIND OF PERFORMANCE HEAVY
+        gaussianShader.Bind();
+
+        for (unsigned int i = 0; i < amount; i++)
+        {
+            gaussianFramebuffer[horizontal].Bind();
+            gaussianFramebuffer[horizontal].BindTexture(5);
+            gaussianShader.SetUniform1i("horizontal", horizontal);
+
+            if (first_iteration) {
+                frameBuffer.BindTexture(5, 2);
+                frameBuffer.Draw();
+            }
+            else {
+                gaussianFramebuffer[!horizontal].BindTexture(5);
+                gaussianFramebuffer[!horizontal].Draw();
+            }
+
+            horizontal = !horizontal;
+
+            if (first_iteration)
+                first_iteration = false;
+        }
+        frameBuffer.Unbind(); //UNBINDS ALL FRAMEBUFFERS, SHOULD BE STATIC
+
+
+        glViewport(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
+
+        fboShader.Bind();
+        frameBuffer.BindTexture(4, 1);
+        gaussianFramebuffer[!horizontal].BindTexture(5);
+
+        frameBuffer.Draw();
+
+
+        //TEXT
+        textShader.Bind();
 
         glViewport(newXOffset, newYOffset, newWidth, newHeight);
         glScissor(newXOffset, newYOffset, newWidth, newHeight);
 
-        textShader.Bind();
+
         //MOVE TO UI
         myFont.ResetDraw();
 
-
+        
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         
         ImGui::NewFrame();
+        
+        
         {
             ImGui::PushFont(font1);
             ImGui::Begin("Player");
             ImGui::Text("Lives:\n%i\n", player.playerArgs.hearts);
             ImGui::Text("Graze:\n%i\n", player.playerArgs.grazeScore);
+            ImGui::PopFont();
+            ImGui::End();
+        }
+
+        {
+            ImGui::PushFont(font1);
+            ImGui::Begin("Game");
+            ImGui::Text("Average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::PopFont();
             ImGui::End();
         }
@@ -361,6 +502,7 @@ int Game::OnExecute() {
             ImGui::End();
         }
 
+        /*
         {
             ImGui::PushFont(font1);
             ImGui::Begin("Shader");
@@ -369,35 +511,44 @@ int Game::OnExecute() {
                 shader.ReInitShader();
                 shader3D.ReInitShader();
                 textShader.ReInitShader();
+                shaderCube.ReInitShader();
+
                 shader.Bind();
                 shader.SetUniform1i("u_Texture", 0);
                 shader.SetUniformMat4f("u_Projection", orthoPlay);
                 shader.SetUniform1f("scale", 1);
+
                 textShader.Bind();
                 textShader.SetUniform1i("u_Texture", 1);
                 textShader.SetUniformMat4f("u_Projection", orthoFull);
                 textShader.SetUniform4f("v_Color", 0.5f, 1.f, 0.5f, 1.f);
                 textShader.SetUniform1f("scale", 1);
+
                 shader3D.Bind();
                 shader3D.SetUniform1i("u_Texture", 2);
-                shader3D.SetUniform1i("skybox", 3);
+                shader3D.SetUniform1i("skybox", 0);
                 shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
                 shader3D.SetUniformMat4f("u_Model", glm::mat4(1.f));
                 shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
+
+                shaderCube.Bind();
+                shaderCube.SetUniform1f("skybox", 0);
+                shaderCube.SetUniformMat4f("u_Projection", camera.projection);
+                shaderCube.SetUniformMat4f("u_View", camera.view);
+
             }
             ImGui::PopFont();
             ImGui::End();
         }
-
+        */
+        
+        
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-     
+        
         SDL_GL_SwapWindow(window);
 
-
     }
-
 
     OnCleanup();
 

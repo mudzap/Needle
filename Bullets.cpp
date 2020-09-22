@@ -16,7 +16,7 @@ Bullets::~Bullets() {
 
 void Bullets::InitSpawner(const Projectile& projectile) {
 
-	InitTransformBuffers();
+	InitTransformBuffers(reserveSize);
 
 	vertices.resize(1);
 	tvertices.resize(reserveSize);
