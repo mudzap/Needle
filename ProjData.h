@@ -116,12 +116,12 @@ const CommonArgs BigBulletGreen{ BigBulletCosmeticFlags, BigBulletHitbox, {320, 
 const CommonArgs BigBulletYellow{ BigBulletCosmeticFlags, BigBulletHitbox, {384, 224, 64, 64} };
 const CommonArgs BigBulletGray{ BigBulletCosmeticFlags, BigBulletHitbox, {448, 224, 64, 64} };
 
-//BIG_BULLET
+//HUGE_BULLET
 const CommonFlags HugeBulletCosmeticFlags = PFLAG_SPAWN_PARTICLE | PFLAG_DESTROY_PARTICLE;
-const HitboxArgs HugeBulletHitbox = { 36, 1024 };
-const CommonArgs HugeBulletRed{ BigBulletCosmeticFlags, BigBulletHitbox, {512, 192, 128, 128} };
-const CommonArgs HugeBulletBlue{ BigBulletCosmeticFlags, BigBulletHitbox, {640, 192, 128, 128} };
-const CommonArgs HugeBulletGreen{ BigBulletCosmeticFlags, BigBulletHitbox, {768, 192, 128, 128} };
-const CommonArgs HugeBulletYellow{ BigBulletCosmeticFlags, BigBulletHitbox, {896, 192, 128, 128} };
+const HitboxArgs HugeBulletHitbox = { 1296, 1024 }; //MAYBE CHANGE LATER
+const CommonArgs HugeBulletRed{ HugeBulletCosmeticFlags, HugeBulletHitbox, {512, 192, 128, 128} };
+const CommonArgs HugeBulletBlue{ HugeBulletCosmeticFlags, HugeBulletHitbox, {640, 192, 128, 128} };
+const CommonArgs HugeBulletGreen{ HugeBulletCosmeticFlags, HugeBulletHitbox, {768, 192, 128, 128} };
+const CommonArgs HugeBulletYellow{ HugeBulletCosmeticFlags, HugeBulletHitbox, {896, 192, 128, 128} };
 
 #endif

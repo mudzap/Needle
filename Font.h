@@ -46,6 +46,7 @@ class Font: public Texture, public Mesh {
 
 	private:
 
+		unsigned char* localBuffer;
 		int lineHeight; /* line height */
 		stbtt_pack_context context;
 		int fonts;

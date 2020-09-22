@@ -82,6 +82,8 @@ extern "C"
 #include "Animation.h"
 #include "Stage.h"
 #include "Audio.h"
+#include "CubeMap.h"
+#include "Framebuffer.h"
 
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
@@ -116,8 +118,10 @@ class Game {
         Pool enemyPool;
 
         Shader shader;
+        Shader fboShader;
         Shader textShader;
         Shader shader3D;
+        Shader shaderCube;
 
         Audio audio;
 

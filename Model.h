@@ -12,34 +12,52 @@
 
 #include "OBJ_Loader.h"
 #include "Complex.h"
+#include "Texture.h"
 
+struct Material {
 
-struct vec2 {
-	float x, y;
+	// AMBIENT
+	objl::Vector3 Ka;
+
+	// DIFFUSE
+	objl::Vector3 Kd;
+
+	// SPECULAR
+	objl::Vector3 Ks;
+
+	// SPECULAR EXPONENT
+	float Ns;
+
+	//TRANSPARENCY
+	float Tr;
+
+	//float textureID;
+
 };
-
-struct vec3 {
-	float x, y, z;
-};
-
-struct Vertex3D {
-	vec3 position = { 0.f, 0.f, 0.f };
-	vec3 normals = { 0.f, 0.f, 0.f };
-	Complex uv = { 0.f, 0.f };
-};
-const Vertex3D defaultVertex3D;
 
 struct Mesh3D {
-	//UNEEDED
+	// Mesh Name
+	std::string meshName;
+
+	// Vertex List
+	std::vector<objl::Vertex> vertices;
+
+	// Index List
+	std::vector<unsigned int> indices;
+
+	// Material
+	Material meshMaterial;
 };
 
 class Model {
 
 	public:
 
-		Model(const std::string& filepath);
+		Model(const std::string& filepath, const std::string& texture, unsigned int slot);
 		Model();
 		~Model();
+
+		void LoadModel(const std::string& filepath, const std::string& texture, unsigned int slot);
 
 		void Draw();
 
@@ -49,11 +67,13 @@ class Model {
 
 		void InitBuffer();
 
-		void LoadModel(const std::string& filepath);
+		//void LoadModel(const std::string& filepath);
+
+		std::vector<Texture> textures;
 
 	private:
 
-		std::vector<objl::Mesh> mesh;
+		std::vector<Mesh3D> mesh;
 		std::vector<unsigned int> verticesOffset;
 		std::vector<unsigned int> indicesOffset;
 
@@ -62,6 +82,8 @@ class Model {
 
 		std::vector<unsigned int> vao;
 		std::vector<unsigned int> vbo;
+		std::vector<unsigned int> matVbo;
+		std::vector<unsigned int> instanceVbo;
 		std::vector<unsigned int> ibo;
 
 };

@@ -61,6 +61,7 @@ class Mesh {
 		bool instanced;
 
 		void InitTransformBuffers();
+		void InitTransformBuffers(unsigned int maxInstances);
 		void InitPrimitiveBuffers();
 		void Init3DBuffers();
 

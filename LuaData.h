@@ -83,6 +83,12 @@ struct LuaData {
 		lua["bigbullet_darkyellow"] = BigBulletYellow;
 		lua["bigbullet_gray"] = BigBulletGray;
 
+		//HUGE_BULLET
+		lua["hugebullet_red"] = HugeBulletRed;
+		lua["hugebullet_blue"] = HugeBulletBlue;
+		lua["hugebullet_green"] = HugeBulletGreen;
+		lua["hugebullet_yellow"] = HugeBulletYellow;
+
 	}
 
 	inline static void LoadAnimData(sol::state& lua) {

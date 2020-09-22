@@ -6,6 +6,7 @@
 
 #include "Complex.h"
 #include "Mesh.h"
+#include "Font.h"
 
 enum GUIElementType {
 
@@ -75,6 +76,8 @@ class UI {
 		void PopMenuSet();
 
 		MenuSet currentSet;
+		Font dynamicFont;
+		Font staticFont;
 
 };
 

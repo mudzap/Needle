@@ -15,20 +15,24 @@ class Texture {
     public:
 
         Texture();
+        Texture(const std::string& path);
         ~Texture();
 
-        void LoadTexture(const std::string& path, bool keepBuffer);
-        void LoadTextureCubeMap(const std::vector<std::string>& path, bool keepBuffer);
+        void LoadTexture(const std::string& path);
+
+        void LoadTextureMipmap(const std::string& path);
+
+        void LoadTextureCubeMap(const std::vector<std::string>& path);
         //void loadCubemap(std::vector<std::string> faces);
 
-        void Bind(unsigned int slot = 0) const;
-        void BindCubeMap(unsigned int slot) const;
-        void Unbind() const;
+        void Bind(unsigned int slot = 0);
+        void BindCubeMap(unsigned int slot = 0);
+        void Unbind();
 
-        unsigned char* localBuffer;
         int width, height, bpp;
 
         unsigned int texture;
+        int slot;
 
     private:
 

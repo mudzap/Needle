@@ -12,6 +12,7 @@
 #include "glm\gtc\matrix_transform.hpp"
 
 #include <vector>
+#include <algorithm>
 #include <string>
 #include "OBJ_Loader.h"
 
@@ -19,6 +20,7 @@
 #include "Complex.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Texture.h"
 
 const Complex NORTH = { 0, 1 };
 const Complex EAST = { 1, 0 };
@@ -35,16 +37,21 @@ struct StageTileInformation {
 	Complex cardinalDirection = NORTH;
 	itrio tile = { 0, 0, 0 };
 	unsigned int objectModelID = 0;
+	glm::mat4 tileViewMatrices = glm::mat4(1.f);
+
+	bool operator< (const StageTileInformation& rhs) {
+		return (objectModelID < rhs.objectModelID);
+	}
 };
 
 class Stage : public Model {
 
 	public:
 
-		void PushBackStageTile(const StageTileInformation& tileInformation);
 		void PushBackStageTile(const Complex cardinalDirection, const itrio tile, unsigned int objectID);
 		void PopBackStageTile();
-		void SetStageTile(const unsigned int index, const StageTileInformation& tileInformation);
+		void SetStageTile(const unsigned int index, const Complex cardinalDirection, const itrio tile, const unsigned int objectID);
+		void SortTiles();
 		void DrawTile(const unsigned int index, Shader& shader);
 		void DrawTilesOcclude(const Camera& camera, Shader& shader);
 		void DrawTiles(Shader& shader);
@@ -54,7 +61,6 @@ class Stage : public Model {
 	private:
 
 		std::vector<StageTileInformation> tiles;
-		std::vector<glm::mat4> tileViewMatrices;
 
 };
 

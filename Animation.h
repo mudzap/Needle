@@ -53,14 +53,14 @@ class Animation: public Mesh {
 		unsigned int frameTime;
 
 		std::vector<std::array<Complex,4>> spriteMap;
-		//std::vector<unsigned int>* animationSpritesID;
 
 		std::vector<unsigned int> animationSpritesID[16];//DYNAMIC ALLOCATION ISN'T NICE WITH LUA
 
-
-		ipair dimensions;
 		ipair currentState;
 		ipair targetState;
+
+		ipair dimensions;
+
 		unsigned int currentSpriteFrame;
 		unsigned int currentFrame;
 
