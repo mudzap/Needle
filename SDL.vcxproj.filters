@@ -159,9 +159,6 @@
     <ClCompile Include="ProjData.cpp">
       <Filter>Source Files\data</Filter>
     </ClCompile>
-    <ClCompile Include="OBJ_Loader.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\video</Filter>
     </ClCompile>
@@ -224,6 +221,12 @@
     </ClCompile>
     <ClCompile Include="CubeMap.cpp">
       <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="Framebuffer.cpp">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="StringFormat.cpp">
+      <Filter>Source Files\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +311,6 @@
     <ClInclude Include="ProjData.h">
       <Filter>Header Files\data</Filter>
     </ClInclude>
-    <ClInclude Include="OBJ_Loader.h">
-      <Filter>Header Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files\video</Filter>
     </ClInclude>
@@ -331,9 +331,6 @@
     </ClInclude>
     <ClInclude Include="Include\fasttrigo.h">
       <Filter>Header Files\fasttrigo</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_truetype.h">
-      <Filter>Header Files\stb</Filter>
     </ClInclude>
     <ClInclude Include="stb_rect_pack.h">
       <Filter>Header Files\stb</Filter>
@@ -359,6 +356,15 @@
     <ClInclude Include="CubeMap.h">
       <Filter>Header Files\video</Filter>
     </ClInclude>
+    <ClInclude Include="Framebuffer.h">
+      <Filter>Header Files\video</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_truetype.h">
+      <Filter>Header Files\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="StringFormat.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="scripts\stage1.lua">
@@ -383,6 +389,27 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="shaders\fragSingleChannel.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxFragShader.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\skyboxVertexShader.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\vertexSingleChannel.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\fragGaussian.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\fragBloom.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\fragSingleChannel_old.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\vertexSingleChannel_old.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

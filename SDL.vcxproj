@@ -25,6 +25,7 @@
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Complex.h" />
     <ClInclude Include="Enemy.h" />
@@ -43,7 +44,6 @@
     <ClInclude Include="LuaData.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="ProjData.h" />
@@ -59,6 +59,7 @@
     <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="stb_rect_pack.h" />
     <ClInclude Include="stb_truetype.h" />
+    <ClInclude Include="StringFormat.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
@@ -71,6 +72,7 @@
     <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Cleanup.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -92,7 +94,6 @@
     <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="OBJ_Loader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Pool.cpp" />
     <ClCompile Include="ProjData.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="stb_image_write.cpp" />
     <ClCompile Include="stb_rect_pack.cpp" />
     <ClCompile Include="stb_truetype.cpp" />
+    <ClCompile Include="StringFormat.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -115,11 +117,18 @@
   <ItemGroup>
     <None Include="scripts\stage1.lua" />
     <None Include="shaders\frag3d.shader" />
+    <None Include="shaders\fragBloom.shader" />
+    <None Include="shaders\fragGaussian.shader" />
     <None Include="shaders\fragPrimitive.shader" />
     <None Include="shaders\fragSingleChannel.shader" />
+    <None Include="shaders\fragSingleChannel_old.shader" />
     <None Include="shaders\fragTransform.shader" />
+    <None Include="shaders\skyboxFragShader.shader" />
+    <None Include="shaders\skyboxVertexShader.shader" />
     <None Include="shaders\vertex3d.shader" />
     <None Include="shaders\vertexPrimitive.shader" />
+    <None Include="shaders\vertexSingleChannel.shader" />
+    <None Include="shaders\vertexSingleChannel_old.shader" />
     <None Include="shaders\vertexTransform.shader" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -192,9 +201,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;WINDOWS_IGNORE_PACKING_MISMATCH;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;WINDOWS_IGNORE_PACKING_MISMATCH;_CRT_SECURE_NO_WARNINGS;_HAS_ITERATOR_DEBUGGING=1;_SECURE_SCL=1;_ITERATOR_DEBUG_LEVEL=2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Dell\source\repos\SDL\SDL\Include\lua;C:\Users\Dell\source\repos\SDL\SDL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Dell\source\repos\SDL\SDL\Include\freetype-gl;C:\Users\Dell\source\repos\SDL\SDL\Include\lua;C:\Users\Dell\source\repos\SDL\SDL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -205,12 +214,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Dell\source\repos\SDL\SDL\Lib\Win32;C:\MinGW\lib;C:\Users\Dell\source\repos\SDL\SDL\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2_mixer.lib;lua54.lib;opengl32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Dell\vcpkg\installed\x86-windows\bin;C:\Users\Dell\source\repos\SDL\SDL\Lib\Win32;C:\MinGW\lib;C:\Users\Dell\source\repos\SDL\SDL\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;zlibd.lib;IrrXMLd.lib;minizip.lib;AntTweakBar.lib;freetype.lib;freetype-gl.lib;SDL2_mixer.lib;lua54.lib;opengl32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -237,7 +247,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2_mixer.lib;lua54.lib;opengl32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;SDL2_mixer.lib;lua54.lib;opengl32.lib;glew32s.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Dell\source\repos\SDL\SDL\Lib\Win32;C:\MinGW\lib;C:\Users\Dell\source\repos\SDL\SDL\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
