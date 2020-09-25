@@ -1,5 +1,7 @@
 #include "Framebuffer.h"
 
+#define DOWNSCALE_FACTOR 3
+
 
 Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBehavior fboB, unsigned int count) {
 
@@ -30,7 +32,7 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBeh
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width/(i*(DOWNSCALE_FACTOR - 1) + 1), height / (i*(DOWNSCALE_FACTOR - 1) + 1), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture[i], 0);
 
 	}

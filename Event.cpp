@@ -53,9 +53,11 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
     if (keystate[SDL_SCANCODE_LSHIFT])
         camera.velocity.y -= 0.4f;
 
+
     while (SDL_PollEvent(&event)) {
 
         ImGui_ImplSDL2_ProcessEvent(&event);
+
 
         if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
             isRunning = false;
@@ -97,7 +99,9 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
 
             textShader.Bind();
             textShader.SetUniformMat4f("u_Projection", orthoFull);
+#ifdef _OLD_FONT_
             textShader.SetUniform4f("v_Color", 0.5f, 1.f, 0.5f, 1.f);
+#endif
             shader.SetUniform1f("scale", newScale);
 
             shader3D.Bind();
@@ -105,5 +109,6 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
             shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
         }
     }
+
 
 }

@@ -21,7 +21,7 @@ bool Game::OnInit() {
     //SDL_OPENGL | SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER
 	//SDL_WINDOW_BORDERLESS | SDL_WINDOW_OPENGL
 
-    window = SDL_CreateWindow("SDL Window", 32, 32, DEFAULT_W, DEFAULT_H, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("Shinmyoumaru", 32, 32, DEFAULT_W, DEFAULT_H, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if (window == NULL) {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -132,31 +132,6 @@ int Game::initGL()
     glEnable(GL_ALPHA_TEST);
     glEnable(GL_BLEND);
 
-
-    /*
-    programID;
-            
-    //Check for errors
-    int programSuccess = GL_TRUE;
-    glGetProgramiv(programID, GL_LINK_STATUS, &programSuccess);
-    if (programSuccess != GL_TRUE)
-    {
-        printf("Error linking program %d!\n", programID);
-        printProgramLog(programID);
-        success = false;
-    }
-    else
-    {
-        //Get vertex attribute location
-        posAttrib = glGetAttribLocation(programID, "position");
-        if (posAttrib == -1)
-        {
-            printf("position is not a valid glsl program variable!\n");
-            success = false;
-        }
-
-    }
-    */
 
     return success;
 }

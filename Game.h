@@ -1,6 +1,9 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
+#define DOWNSCALE_FACTOR 3
+
+
 #define GLM_FORCE_INLINE
 
 //#define GLM_FORCE_ALIGNED
@@ -17,8 +20,8 @@ extern "C"
 #include "lua/include/lualib.h"
 }
 
-#define GLEW_STATIC
 
+#define GLEW_STATIC
 #include <GL\glew.h>
 #include <SDL_opengl.h>
 #include <gl\glu.h>
@@ -27,7 +30,22 @@ extern "C"
 #include "imgui\imgui_impl_opengl3.h"
 #include <SDL.h>
 
+//#define NOT_USING_FT_GL_NAMESPACE
+#include <freetype-gl/freetype-gl.h>
+#include <freetype-gl/texture-atlas.h>
+#include <freetype-gl/texture-font.h>
+#include <freetype-gl/vector.h>
+#include <freetype-gl/markup.h>
+#include <freetype-gl/font-manager.h>
+#include <freetype-gl/vertex-buffer.h>
+#include <freetype-gl/edtaa3func.h>
+#include <freetype-gl/text-buffer.h>
+
 #include "OBJ_Loader.h"
+
+#include "assimp/Importer.hpp"      // C++ importer interface
+#include "assimp/scene.h"           // Output data structure
+#include "assimp/postprocess.h"     // Post processing flags
 
 #include "fasttrigo.h"
 #include <SDL_mixer.h>
@@ -56,6 +74,7 @@ extern "C"
 #include <set>
 #include <cstdarg>
 
+#include "StringFormat.h"
 #include "Texture.h"
 #include "RNG.h"
 #include "Projectile.h"
@@ -122,6 +141,7 @@ class Game {
         Shader textShader;
         Shader shader3D;
         Shader shaderCube;
+        Shader fboIntermediateShader;
 
         Audio audio;
 

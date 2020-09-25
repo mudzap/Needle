@@ -208,10 +208,11 @@ void Animation::Draw(const TVertex* instanceData) {
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TVertex), instanceData, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(TVertex), instanceData, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertex), instanceData);
 
 	glDrawArrays(GL_TRIANGLE_FAN, animationFrameOffset*4, 4);
 
 	glBindVertexArray(0);
 
-}
+}	

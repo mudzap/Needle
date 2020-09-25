@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <cstdarg>
 
+#include "assimp/Importer.hpp"      // C++ importer interface
+#include "assimp/scene.h"           // Output data structure
+#include "assimp/postprocess.h"     // Post processing flags
+
 #include "OBJ_Loader.h"
 #include "Complex.h"
 #include "Texture.h"
@@ -17,55 +21,72 @@
 struct Material {
 
 	// AMBIENT
-	objl::Vector3 Ka;
+	glm::vec3 Ka = glm::vec3(0.1);
 
 	// DIFFUSE
-	objl::Vector3 Kd;
+	glm::vec3 Kd = glm::vec3(0.8);
 
 	// SPECULAR
-	objl::Vector3 Ks;
+	glm::vec3 Ks = glm::vec3(0.2);
 
 	// SPECULAR EXPONENT
-	float Ns;
+	float Ns = 32;
 
 	//TRANSPARENCY
-	float Tr;
+	float Tr = 0.0;
 
 	//float textureID;
+};
+
+struct Vertex3D {
+
+	// Position Vector
+	glm::vec3 position;
+
+	// Normal Vector
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::vec3 bitangent;
+
+	// Texture Coordinate Vector
+	glm::vec2 uv;
 
 };
 
 struct Mesh3D {
+
 	// Mesh Name
 	std::string meshName;
 
 	// Vertex List
-	std::vector<objl::Vertex> vertices;
+	std::vector<Vertex3D> vertices;
 
 	// Index List
 	std::vector<unsigned int> indices;
 
 	// Material
 	Material meshMaterial;
+
 };
 
 class Model {
 
 	public:
 
-		Model(const std::string& filepath, const std::string& texture, unsigned int slot);
 		Model();
 		~Model();
 
 		void LoadModel(const std::string& filepath, const std::string& texture, unsigned int slot);
 
-		void Draw();
-
+		void StartDraw();
 		void Draw(const unsigned int modelID);
+		void EndDraw();
 
 		void FillBuffer();
 
 		void InitBuffer();
+
+		Mesh3D GetMesh(const unsigned int modelID);
 
 		//void LoadModel(const std::string& filepath);
 
@@ -73,17 +94,17 @@ class Model {
 
 	private:
 
+		void ProcessNode(aiNode* node, const aiScene* scene);
+		Mesh3D ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
 		std::vector<Mesh3D> mesh;
-		std::vector<unsigned int> verticesOffset;
-		std::vector<unsigned int> indicesOffset;
 
 		unsigned int vertexSize;
 		unsigned int indexSize;
 
-		std::vector<unsigned int> vao;
+		unsigned int vao;
 		std::vector<unsigned int> vbo;
 		std::vector<unsigned int> matVbo;
-		std::vector<unsigned int> instanceVbo;
 		std::vector<unsigned int> ibo;
 
 };
