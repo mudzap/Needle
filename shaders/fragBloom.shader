@@ -2,11 +2,11 @@
 
 layout(location = 0) out vec4 gl_Color;
 
+
 in vec2 v_TexCoord;
 
 uniform sampler2D scene;
 uniform sampler2D bloomBlur;
-uniform bool bloom;
 uniform float exposure;
 
 void main()
@@ -16,8 +16,7 @@ void main()
     vec3 hdrColor = texture(scene, v_TexCoord).rgb;
     vec3 bloomColor = texture(bloomBlur, v_TexCoord).rgb;
 
-    if (bloom)
-        hdrColor += bloomColor * exposure; // additive blending
+    hdrColor += bloomColor * exposure; // additive blending
 
     // tone mapping
     //vec3 result = vec3(1.0) - exp(-hdrColor * exposure);
