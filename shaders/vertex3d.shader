@@ -13,9 +13,7 @@ layout(location = 9) in float Tr;
 
 out VertexData{
 	vec3 v_FragPos;
-	vec3 v_Normal;
-	vec3 v_Tangent;
-	vec3 v_Bitangent;
+	mat3 v_TBN;
 	vec2 v_TexCoord;
 } v_Out;
 
@@ -32,9 +30,7 @@ uniform mat4 u_VP;
 void main() {
 
 	v_Out.v_FragPos = position;
-	v_Out.v_Normal = normals;
-	v_Out.v_Tangent = tangent;
-	v_Out.v_Bitangent = bitangent;
+	v_Out.v_TBN = mat3(tangent, bitangent, normals);
 	v_Out.v_TexCoord = texCoord;
 	
 	m_Out.v_Ka = Ka;
