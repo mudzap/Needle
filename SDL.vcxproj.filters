@@ -412,5 +412,8 @@
     <None Include="shaders\vertexSingleChannel_old.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="shaders\vertexTransform_old.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

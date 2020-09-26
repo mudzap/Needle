@@ -205,7 +205,11 @@ void Enemy::HandleEnemy() {
 		enemySpawners[i].FillVertices();
 	}
 
+#ifdef _MAT4_INSTANCING_
 	tvertices[0] = { transform.position, glm::mat4(1.f) };
+#else
+	tvertices[0] = { transform.position, {1.0, 0.0} };
+#endif
 
 }
 

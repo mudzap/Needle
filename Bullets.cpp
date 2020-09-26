@@ -279,10 +279,21 @@ void Bullets::BatchProcessBullets() {
 void Bullets::FillVertices() {
 
 	for (unsigned int i = 0; i < currentSize - trashSize; i++) {
+
+#ifdef _MAT4_INSTANCING_
+
 		Complex rotation = visualRotation[i];
 		glm::mat4 rotationMatrix = { rotation.x, rotation.y, 0.f, 0.f, -rotation.y, rotation.x, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f };
 		tvertices[i].translation = position[i];
 		tvertices[i].transform = rotationMatrix;
+
+#else
+
+		tvertices[i].translation = position[i];
+		tvertices[i].transform = visualRotation[i];
+
+#endif
+
 	}
 
 }

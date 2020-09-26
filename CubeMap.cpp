@@ -22,9 +22,7 @@ void CubeMap::Draw(Shader& shader, Camera& camera) {
 
     glDepthFunc(GL_LEQUAL);
 
-    shader.SetUniformMat4f("u_View", camera.view);
-
-    //glDepthMask(GL_FALSE);
+    shader.SetUniformMat4f("u_VP", camera.projection * camera.view);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -32,8 +30,6 @@ void CubeMap::Draw(Shader& shader, Camera& camera) {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     glBindVertexArray(0);
-
-    //glDepthMask(GL_TRUE);
 
     glDepthFunc(GL_LESS);
 

@@ -14,7 +14,6 @@
 #include "assimp/scene.h"           // Output data structure
 #include "assimp/postprocess.h"     // Post processing flags
 
-#include "OBJ_Loader.h"
 #include "Complex.h"
 #include "Texture.h"
 

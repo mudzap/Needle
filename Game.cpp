@@ -22,12 +22,20 @@ int Game::OnExecute() {
     orthoPlay = glm::ortho(-DEFAULT_PLAY_W / 2, DEFAULT_PLAY_W / 2, -DEFAULT_PLAY_H / 2, DEFAULT_PLAY_H / 2, 0.0f, 1.0f);
     orthoFull = glm::ortho(-DEFAULT_W / 2, DEFAULT_W / 2, -DEFAULT_H / 2, DEFAULT_H / 2, 0.f, 1.0f);
     camera.projection = glm::perspective(glm::radians(60.f), DEFAULT_PLAY_W / DEFAULT_PLAY_H, 1.f, 750.f);
-
+ 
+#ifdef _MAT4_INSTANCING_
+    shader.InitShader("shaders/vertexTransform_old.shader", "shaders/fragTransform.shader");
+    shader.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+    shader.SetUniformMat4f("u_Projection", orthoPlay);
+    shader.SetUniform1f("scale", 1);
+#else
     shader.InitShader("shaders/vertexTransform.shader", "shaders/fragTransform.shader");
     shader.Bind();
     shader.SetUniform1i("u_Texture", 0);
     shader.SetUniformMat4f("u_Projection", orthoPlay);
     shader.SetUniform1f("scale", 1);
+#endif
 
     fboShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragBloom.shader");
     fboShader.Bind();
@@ -57,16 +65,17 @@ int Game::OnExecute() {
     shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
     shader3D.Bind();
     shader3D.SetUniform1i("u_Texture", 2);
+    shader3D.SetUniform1i("u_Normal", 6);
     shader3D.SetUniform1i("skybox", 0);
     shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
-    shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
+    shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
+    shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
 
 
     shaderCube.InitShader("shaders/skyboxVertexShader.shader", "shaders/skyboxFragShader.shader");
     shaderCube.Bind();
     shaderCube.SetUniform1f("skybox", 0);
-    shaderCube.SetUniformMat4f("u_Projection", camera.projection);
-    shaderCube.SetUniformMat4f("u_View", camera.view);
+    shaderCube.SetUniformMat4f("u_VP", camera.projection * camera.view);
 
     Shader gaussianShader;
     gaussianShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragGaussian.shader");
@@ -79,6 +88,8 @@ int Game::OnExecute() {
 
     Texture texture;
     texture.LoadTexture("sprites/entities.png");
+    Texture normalTest;
+    normalTest.LoadTextureMipmap("sprites/rockNormal.png");
 
 
 #ifdef _OLD_FONT_
@@ -255,6 +266,7 @@ int Game::OnExecute() {
     cubeMap.BindCubeMap(0);
 
     texture.Bind(0);
+    normalTest.Bind(6);
 
 #ifdef _OLD_FONT_
     myFont.Bind(1);
@@ -340,6 +352,7 @@ int Game::OnExecute() {
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+        glDisable(GL_ALPHA_TEST);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -363,22 +376,23 @@ int Game::OnExecute() {
         shader3D.Bind();
 
         shader3D.SetUniformMat4f("u_VP", camera.vpMat);
-        shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
+        //shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
+        shader3D.SetUniform3f("lightPos", 30.f + 30.f * FT::sin(SDL_GetTicks() / 1000.f), 100.f, 30.f + 30.f * FT::sin(SDL_GetTicks() / 1000.f));
+        shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
+
 
         stage.DrawTilesOcclude(shader3D);
 
         //DRAW SKYBOX
 
-        glDepthFunc(GL_LEQUAL);
-
         shaderCube.Bind();
         skybox.Draw(shaderCube, camera);
-
-        glDepthFunc(GL_LESS);
 
 
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
+        glEnable(GL_ALPHA_TEST);
+
 
         glAlphaFunc(GL_LEQUAL, 0.5);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -397,7 +411,7 @@ int Game::OnExecute() {
         }
 
         //MOVE TO SPAWNER
-        myLaser.ResetDraw();
+        //myLaser.ResetDraw();
 
         // FINISH FRAMEBUFFER
         fboIntermediateShader.Bind();
@@ -410,6 +424,7 @@ int Game::OnExecute() {
         intermediateFramebuffer.Draw();
 
         glViewport(0, 0, newPlayWidth/DOWNSCALE_FACTOR, newPlayHeight/DOWNSCALE_FACTOR);
+        glScissor(0, 0, newPlayWidth/DOWNSCALE_FACTOR, newPlayHeight/DOWNSCALE_FACTOR);
 
 
         bool horizontal = true, first_iteration = true;
@@ -439,6 +454,7 @@ int Game::OnExecute() {
         frameBuffer.Unbind(); //UNBINDS ALL FRAMEBUFFERS, SHOULD BE STATIC
 
         glViewport(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
+        glScissor(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
 
         fboShader.Bind();
         frameBuffer.Draw();

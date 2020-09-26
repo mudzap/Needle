@@ -14,10 +14,17 @@ struct Vertex {
 };
 const Vertex defaultVertex;
 
+#ifdef _MAT4_INSTANCING_
 struct TVertex {
 	Complex translation = { 0.f, 0.f };
 	glm::mat4 transform = glm::mat4(1.f);
 };
+#else
+struct TVertex {
+	Complex translation = { 0.f, 0.f };
+	Complex transform = { 1.f, 0.f };
+};
+#endif
 const TVertex defaultTVertex;
 
 struct Quad {
@@ -70,6 +77,8 @@ class Mesh {
 		void ResetDraw();
 		void Draw(TVertex& instanceData);
 		void Draw(TVertex& instanceData, unsigned int instances);
+
+		void Draw(Complex& translation, Complex& transform, unsigned int instances);
 
 		std::vector<std::array<Vertex,4>> vertices;
 		std::vector<unsigned int> indices;

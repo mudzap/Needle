@@ -130,6 +130,7 @@
     <None Include="shaders\vertexSingleChannel.shader" />
     <None Include="shaders\vertexSingleChannel_old.shader" />
     <None Include="shaders\vertexTransform.shader" />
+    <None Include="shaders\vertexTransform_old.shader" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

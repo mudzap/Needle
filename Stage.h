@@ -16,7 +16,6 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include "OBJ_Loader.h"
 
 #include "Model.h"
 #include "Complex.h"

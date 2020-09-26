@@ -40,6 +40,7 @@ public:
 	void SetUniform2i(const std::string& name, int v0, int v1);
 	void SetUniform1iArray(const std::string& name, unsigned int size, int* v0);
 	void SetUniform1i(const std::string& name, int v0);
+	void SetUniformMat3f(const std::string& name, const glm::mat3 matrix);
 	void SetUniformMat4f(const std::string& name, const glm::mat4 matrix);
 
 	void DestroyShader();
