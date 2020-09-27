@@ -13,5 +13,5 @@ uniform float scale;
 void main() {
 	v_TexCoord = texCoord;
 	v_Color = color;
-	gl_Position = u_Projection * vec4(position, 0.0, 1.0 / scale);
+	gl_Position = u_Projection * vec4(position, 0.0, 1.0);
 }

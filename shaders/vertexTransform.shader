@@ -18,5 +18,5 @@ void main() {
 	transform[0].xy = vec2(rotComplex.x, rotComplex.y); //TRANSPOSED BECAUSE GLSL
 	transform[1].xy = vec2(-rotComplex.y, rotComplex.x);
 
-	gl_Position = u_Projection * vec4(transform * position + translation, 0.0, 1.0/scale);
+	gl_Position = u_Projection * vec4(transform * position + translation, 0.0, 1.0);
 }

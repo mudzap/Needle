@@ -9,11 +9,9 @@ uniform sampler2D u_Texture;
     
 void main() {
 
-    //vec3 sample = 1.0 - texture(u_Texture, v_TexCoord).rgb;
-
-    //gl_Color = vec4(sample, 1.0);
-    vec2 f_TexCoord = v_TexCoord * 3.0;
-    gl_Color = texture(u_Texture, f_TexCoord);
+    //vec2 f_TexCoord = v_TexCoord * 3.0;
+    //gl_Color = texture(u_Texture, f_TexCoord);
+    gl_Color = texture(u_Texture, v_TexCoord * 3.0);
 
 
     float brightness = dot(gl_Color.rgb, vec3(0.2126, 0.7152, 0.0722));

@@ -13,8 +13,11 @@ layout(location = 9) in float Tr;
 
 out VertexData{
 	vec3 v_FragPos;
-	mat3 v_TBN;
+	vec3 TangentLightPos;
+	vec3 TangentViewPos;
+	vec3 TangentFragPos;
 	vec2 v_TexCoord;
+	mat3 v_TBN;
 } v_Out;
 
 out MaterialData{
@@ -25,14 +28,21 @@ out MaterialData{
 	float v_Tr;
 } m_Out;
 
+uniform vec3 lightPos;
+uniform vec3 viewPos;
 uniform mat4 u_VP;
 
 void main() {
 
+	mat3 TBN = transpose(mat3(tangent, bitangent, normals));
+
 	v_Out.v_FragPos = position;
-	v_Out.v_TBN = mat3(tangent, bitangent, normals);
 	v_Out.v_TexCoord = texCoord;
-	
+	v_Out.TangentLightPos = TBN * lightPos;
+	v_Out.TangentViewPos = TBN * viewPos;
+	v_Out.TangentFragPos = TBN * v_Out.v_FragPos;
+	v_Out.v_TBN = TBN;
+
 	m_Out.v_Ka = Ka;
 	m_Out.v_Kd = Kd;
 	m_Out.v_Ks = Ks;
