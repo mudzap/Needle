@@ -21,8 +21,12 @@ class Framebuffer {
 
 	public:
 
-		Framebuffer(unsigned int width, unsigned int height, FramebufferBehavior fboB = FB_COLOR, unsigned int count = 1);
+		Framebuffer();
+		Framebuffer(unsigned int width, unsigned int height, FramebufferBehavior fboB = FB_COLOR, unsigned int count = 1, bool useDepth = true);
 		~Framebuffer();
+
+		void ReInit(unsigned int width, unsigned int height, FramebufferBehavior fboB = FB_COLOR, unsigned int count = 1, bool useDepth = true);
+		void Init(unsigned int width, unsigned int height, FramebufferBehavior fboB = FB_COLOR, unsigned int count = 1, bool useDepth = true);
 
 		void Draw();
 

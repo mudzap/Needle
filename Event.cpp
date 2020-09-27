@@ -90,23 +90,53 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
             newPlayWidth = newScale * DEFAULT_PLAY_W;
             newPlayHeight = newScale * DEFAULT_PLAY_H;
 
-            orthoPlay = glm::ortho(-newPlayWidth / 2, newPlayWidth / 2, -newPlayHeight / 2, newPlayHeight / 2, 0.0f, 1.0f);
-            orthoFull = glm::ortho(-newWidth / 2, newWidth / 2, -newHeight / 2, newHeight / 2, 0.f, 1.0f);
+            //orthoPlay = glm::ortho(-newPlayWidth / 2, newPlayWidth / 2, -newPlayHeight / 2, newPlayHeight / 2, 0.0f, 1.0f);
+            //orthoFull = glm::ortho(-newWidth / 2, newWidth / 2, -newHeight / 2, newHeight / 2, 0.f, 1.0f);
 
+            orthoPlay = glm::ortho(-DEFAULT_PLAY_W / 2, DEFAULT_PLAY_W / 2, -DEFAULT_PLAY_H / 2, DEFAULT_PLAY_H / 2, 0.0f, 1.0f);
+            orthoFull = glm::ortho(-DEFAULT_W / 2, DEFAULT_W / 2, -DEFAULT_H / 2, DEFAULT_H / 2, 0.f, 1.0f);
+            camera.projection = glm::perspective(glm::radians(60.f), DEFAULT_PLAY_W / DEFAULT_PLAY_H, 1.f, 750.f);
+
+#ifdef _MAT4_INSTANCING_
             shader.Bind();
+            shader.SetUniform1i("u_Texture", 0);
             shader.SetUniformMat4f("u_Projection", orthoPlay);
-            shader.SetUniform1f("scale", newScale);
+            shader.SetUniform1f("scale", 1);
+#else
+            shader.Bind();
+            shader.SetUniform1i("u_Texture", 0);
+            shader.SetUniformMat4f("u_Projection", orthoPlay);
+#endif
+
+            fboShader.Bind();
+            fboShader.SetUniform1i("scene", 4);
+            fboShader.SetUniform1i("bloomBlur", 5);
+            fboShader.SetUniform1f("exposure", 0.7f);
+
+            fboIntermediateShader.Bind();
+            fboIntermediateShader.SetUniform1i("u_Texture", 4);
 
             textShader.Bind();
+            textShader.SetUniform1i("u_Texture", 1);
             textShader.SetUniformMat4f("u_Projection", orthoFull);
-#ifdef _OLD_FONT_
-            textShader.SetUniform4f("v_Color", 0.5f, 1.f, 0.5f, 1.f);
-#endif
-            shader.SetUniform1f("scale", newScale);
 
             shader3D.Bind();
+            shader3D.SetUniform1i("u_Texture", 2);
+            shader3D.SetUniform1i("u_Normal", 6);
+            shader3D.SetUniform1i("skybox", 0);
             shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
-            shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
+            shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
+            shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
+
+            shaderCube.Bind();
+            shaderCube.SetUniform1f("skybox", 0);
+            shaderCube.SetUniformMat4f("u_VP", camera.projection * camera.view);
+
+            frameBuffer.ReInit(newPlayWidth, newPlayHeight, FB_COLOR, 2, false);
+            gaussianFramebuffer[0].ReInit(newPlayWidth / DOWNSCALE_FACTOR, newPlayHeight / DOWNSCALE_FACTOR, FB_COLOR, 1);
+            gaussianFramebuffer[1].ReInit(newPlayWidth / DOWNSCALE_FACTOR, newPlayHeight / DOWNSCALE_FACTOR, FB_COLOR, 1);
+            intermediateFramebuffer.ReInit(newPlayWidth, newPlayHeight);
+
         }
     }
 

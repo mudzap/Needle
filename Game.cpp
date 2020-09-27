@@ -47,20 +47,12 @@ int Game::OnExecute() {
     fboIntermediateShader.Bind();
     fboIntermediateShader.SetUniform1i("u_Texture", 4);
 
-#ifdef _OLD_FONT_
-    textShader.InitShader("shaders/vertexSingleChannel_old.shader", "shaders/fragSingleChannel_old.shader");
-    textShader.Bind();
-    textShader.SetUniform1i("u_Texture", 1);
-    textShader.SetUniformMat4f("u_Projection", orthoFull);
-    textShader.SetUniform4f("v_Color", 0.5f, 1.f, 0.5f, 1.f);
-    textShader.SetUniform1f("scale", 1);
-#else
+
     textShader.InitShader("shaders/vertexSingleChannel.shader", "shaders/fragSingleChannel.shader");
     textShader.Bind();
     textShader.SetUniform1i("u_Texture", 1);
     textShader.SetUniformMat4f("u_Projection", orthoFull);
     textShader.SetUniform1f("scale", 1);
-#endif // _OLD_FONT_
 
     shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
     shader3D.Bind();
@@ -89,23 +81,9 @@ int Game::OnExecute() {
     Texture texture;
     texture.LoadTexture("sprites/entities.png");
     Texture normalTest;
-    normalTest.LoadTextureMipmap("sprites/rockNormal.png");
+    normalTest.LoadTextureMipmap("sprites/stone_normal.png");
 
 
-#ifdef _OLD_FONT_
-    Font myFont;
-    myFont.Load("fonts/B612Mono-Bold.ttf");
-    myFont.Prepare(1024, 1024,
-        42, 1);
-    myFont.Load("fonts/Roboto-Bold.ttf");
-    myFont.Add(42, 1);
-    myFont.Load("fonts/EBGaramond-Regular.ttf");
-    myFont.Add(42, 1);
-    myFont.Load("fonts/LibreCaslonDisplay-Regular.ttf");
-    myFont.Add(42, 1);
-    myFont.EndLoad();
-    myFont.LoadTexture(true);
-#endif
 
     Texture cubeMap;
     cubeMap.LoadTextureCubeMap({
@@ -119,10 +97,10 @@ int Game::OnExecute() {
 
 
     // STAGE
-
+    
     Stage stage;
-    stage.LoadModel("models/stairs.obj", "sprites/texture.png", 2);
-    stage.LoadModel("models/tree.obj", "sprites/bark-texture-12.png", 3);
+    stage.LoadModel("models/stairs.obj", "sprites/stone.png", 2);
+    stage.LoadModel("models/sphere.obj", "sprites/stone.png", 3);
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 2; j++) {
             for (int k = 0; k < 2; k++) {
@@ -196,8 +174,8 @@ int Game::OnExecute() {
     ImFont* font2 = io.Fonts->AddFontFromFileTTF("fonts/EBGaramond-BoldItalic.ttf", 15);
 
     // Text to be printed
-    std::string text = "Score: Graze: Bomb: 0123456789";
-    std::string textJap = " スコア  グレーズ  ボム  プレイヤー ";
+    std::string text = "High-Score: Graze: Bomb: 0123456789";
+    std::string textJap = " ハイスコア  グレーズ  ボム  プレイヤー ";
     //std::string textJap0 = "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟ゠ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヷヸヹヺ・ーヽヾヿ｟｠｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞ、。〃〄々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〘〙〚〛〜〝〞〟〠〡〢〣〤〥〦〧〨〩〪〭〮〯〫〬〰〱〲〳〴〵〶〷〸〹〺〻〼〽〾〿ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ";
     //std::string textJap1 = "日一国会人年大十二本中長出三同時政事自行社見月分議後前民生連五発間対上部東者党地合市業内相方四定今回新場金員九入選立開手米力学問高代明実円関決子動京全目表戦経通外最言氏現理調体化田当八六約主題下首意法不来作性的要用制治度務強気小七成期公持野協取都和統以機平総加山思家話世受区領多県続進正安設保改数記院女初北午指権心界支第産結百派点教報済書府活原先共得解名交資予川向際査勝面委告軍文反元重近千考判認画海参売利組知案道信策集在件団別物側任引使求所次水半品昨論計死官増係感特情投示変打男基私各始島直両朝革価式確村提運終挙果西勢減台広容必応演電歳住争談能無再位置企真流格有疑口過局少放税検藤町常校料沢裁状工建語球営空職証土与急止送援供可役構木割聞身費付施切由説転食比難防補車優夫研収断井何南石足違消境神番規術護展態導鮮備宅害配副算視条幹独警宮究育席輸訪楽起万着乗店述残想線率病農州武声質念待試族象銀域助労例衛然早張映限親額監環験追審商葉義伝働形景落欧担好退準賞訴辺造英被株頭技低毎医復仕去姿味負閣韓渡失移差衆個門写評課末守若脳極種美岡影命含福蔵量望松非撃佐核観察整段横融型白深字答夜製票況音申様財港識注呼渉達";
 
@@ -206,33 +184,63 @@ int Game::OnExecute() {
 
     // Build a new texture font from its description and size
     ftgl::texture_font_t* font = texture_font_new_from_file(atlas, 36, "fonts/Roboto-Regular.ttf");
-    ftgl::texture_font_t* fontJap0 = texture_font_new_from_file(atlas, 36, "fonts/DroidSansJapanese.ttf");
-    //ftgl::texture_font_t* fontJap1 = texture_font_new_from_file(atlas, 36, "fonts/DroidSansJapanese.ttf");
-    font->rendermode = RENDER_OUTLINE_EDGE;
-    font->outline_thickness = 0.5;
+    ftgl::texture_font_t* fontOutline = texture_font_new_from_file(atlas, 36, "fonts/Roboto-Regular.ttf");
+    ftgl::texture_font_t* fontJap0 = texture_font_new_from_file(atlas, 22, "fonts/NotoSerifJP-Black.otf");
+    ftgl::texture_font_t* fontJapOutline0 = texture_font_new_from_file(atlas, 22, "fonts/NotoSerifJP-Black.otf");
+    fontOutline->rendermode = RENDER_OUTLINE_EDGE;
+    fontOutline->outline_thickness = 2.0;
+    fontJapOutline0->rendermode = RENDER_OUTLINE_EDGE;
+    fontJapOutline0->outline_thickness = 1.0;
 
     ftgl::texture_font_load_glyphs(font, text.c_str());
+    ftgl::texture_font_load_glyphs(fontOutline, text.c_str());
     ftgl::texture_font_load_glyphs(fontJap0, textJap.c_str());
-    //ftgl::texture_font_load_glyphs(fontJap1, textJap1.c_str());
+    ftgl::texture_font_load_glyphs(fontJapOutline0, textJap.c_str());
 
     stbi_write_png("sprites/ATLAS.png", 1024, 1024, 1, atlas->data, 1024);
 
 
-    std::string englishText[3] = { "Score:", "Graze:", "Bomb:" };
-    std::string japaneseText[3] = { "スコア", "グレーズ", "ボム" };
+    std::string englishText[4] = {"Hi-Score:", "Score:", "Graze:", "Bomb:" };
+    std::string japaneseText[4] = {"ハイスコア", "スコア", "グレーズ", "ボム" };
 
-    Font myFont(sizeof(englishText) + sizeof(textJap), F_STATIC);
+    Font myFont( sizeof(englishText) + sizeof(textJap)/3, F_STATIC);
     myFont.LoadTexture(1024, 1024, atlas);
 
-    glm::vec2 pens[6] = { { 224.f, 422.f }, { 224.f, 386.f }, { 224.f, 350.f }, { 224.f, 314.f }, { 224.f, 278.f }, { 224.f, 242.f } };
-    glm::vec4 white = { 1.f, 1.f, 1.f, 1.f };
+    glm::vec2 pens[4] = { { 224.f, 422.f }, { 224.f, 380.f }, { 224.f, 338.f }, { 224.f, 296.f } };
+    glm::vec2 pens0[4] = { pens[0], pens[1], pens[2], pens[3] };
+    glm::vec2 japOffset = { 12.f, 10.f };
+    glm::vec2 japPens[4] = { pens[0] - japOffset, pens[1] - japOffset, pens[2] - japOffset, pens[3] - japOffset };
+    glm::vec2 japPens0[4] = { pens[0] - japOffset, pens[1] - japOffset, pens[2] - japOffset, pens[3] - japOffset };
 
-    myFont.AddText(font, englishText[0], &white, &pens[0]);
-    myFont.AddText(font, englishText[1], &white, &pens[1]);
-    myFont.AddText(font, englishText[2], &white, &pens[2]);
-    myFont.AddText(fontJap0, japaneseText[0], &white, &pens[3], 3);
-    myFont.AddText(fontJap0, japaneseText[1], &white, &pens[4], 3);
-    myFont.AddText(fontJap0, japaneseText[2], &white, &pens[5], 3);
+    glm::vec4 black = { 0.f,   0.f,   0.f,   1.f };
+    glm::vec4 white = { 1.f,   1.f,   1.f,   1.f };
+    glm::vec4 colors[4] = {
+        {1.f,    1.f,    1.f,    1.f},
+        {0.8f,   0.8f,   0.8f,   1.f},
+        {0.8f,   0.8f,   0.8f,   1.f},
+        {0.6f,   0.6f,   0.6f,   1.f}
+    };
+
+    myFont.AddTextGradient(fontOutline, englishText[0], colors, &pens0[0]);
+    myFont.AddTextGradient(fontOutline, englishText[1], colors, &pens0[1]);
+    myFont.AddTextGradient(fontOutline, englishText[2], colors, &pens0[2]);
+    myFont.AddTextGradient(fontOutline, englishText[3], colors, &pens0[3]);
+
+    myFont.AddText(font, englishText[0], &black, &pens[0]);
+    myFont.AddText(font, englishText[1], &black, &pens[1]);
+    myFont.AddText(font, englishText[2], &black, &pens[2]);
+    myFont.AddText(font, englishText[3], &black, &pens[3]);
+
+    myFont.AddText(fontJapOutline0, japaneseText[0], &black, &japPens[0], 3);
+    myFont.AddText(fontJapOutline0, japaneseText[1], &black, &japPens[1], 3);
+    myFont.AddText(fontJapOutline0, japaneseText[2], &black, &japPens[2], 3);
+    myFont.AddText(fontJapOutline0, japaneseText[3], &black, &japPens[3], 3);
+
+    myFont.AddTextGradient(fontJap0, japaneseText[0], colors, &japPens0[0], 3);
+    myFont.AddTextGradient(fontJap0, japaneseText[1], colors, &japPens0[1], 3);
+    myFont.AddTextGradient(fontJap0, japaneseText[2], colors, &japPens0[2], 3);
+    myFont.AddTextGradient(fontJap0, japaneseText[3], colors, &japPens0[3], 3);
+
     myFont.FillBuffers();
 
     ftgl::texture_font_delete(font);
@@ -259,20 +267,23 @@ int Game::OnExecute() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    Framebuffer frameBuffer(768, 896, FB_COLOR, 2);
-    Framebuffer gaussianFramebuffer[2] = { Framebuffer(768/ DOWNSCALE_FACTOR, 896/ DOWNSCALE_FACTOR), Framebuffer(768/ DOWNSCALE_FACTOR, 896/ DOWNSCALE_FACTOR) };
-    Framebuffer intermediateFramebuffer(768, 896);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    frameBuffer.Init(DEFAULT_PLAY_W, DEFAULT_PLAY_H, FB_COLOR, 2, false);
+    gaussianFramebuffer[0].Init(DEFAULT_PLAY_W / DOWNSCALE_FACTOR, DEFAULT_PLAY_H / DOWNSCALE_FACTOR, FB_COLOR, 1);
+    gaussianFramebuffer[1].Init(DEFAULT_PLAY_W / DOWNSCALE_FACTOR, DEFAULT_PLAY_H / DOWNSCALE_FACTOR, FB_COLOR, 1);
+    intermediateFramebuffer.Init(DEFAULT_PLAY_W, DEFAULT_PLAY_H);
     
     cubeMap.BindCubeMap(0);
 
     texture.Bind(0);
     normalTest.Bind(6);
 
-#ifdef _OLD_FONT_
     myFont.Bind(1);
-#else
-    myFont.Bind(1);
-#endif
+
 
     for (unsigned int i = 0; i < stage.textures.size(); i++)
         stage.textures[i].Bind(stage.textures[i].slot);
@@ -319,15 +330,6 @@ int Game::OnExecute() {
             //MOVE TO SPAWNER
             myLaser.HandleNodes();
 
-#ifdef _OLD_FONT_
-            //MOVE TO UI, NORMALIZE VALUES      //FIX
-            //TODO: SET TEXT (STATIC / DYNAMIC)
-            myFont.GetQuad("SCORE:", 0, Complex(224.f, 422.f));
-            myFont.GetQuad(std::to_string(player.playerArgs.pointScore), 0, Complex(224.f, 386.f));
-            myFont.GetQuad("GRAZE:", 0, Complex(224.f, 346.f));
-            myFont.GetQuad(std::to_string(player.playerArgs.grazeScore), 0, Complex(224.f, 310.f));
-#endif
-
             camera.HandleCamera();
 
             stage.GetDrawables(camera);
@@ -352,10 +354,9 @@ int Game::OnExecute() {
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
-        glDisable(GL_ALPHA_TEST);
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.2f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
 
 
@@ -377,7 +378,8 @@ int Game::OnExecute() {
 
         shader3D.SetUniformMat4f("u_VP", camera.vpMat);
         //shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
-        shader3D.SetUniform3f("lightPos", 30.f + 30.f * FT::sin(SDL_GetTicks() / 1000.f), 100.f, 30.f + 30.f * FT::sin(SDL_GetTicks() / 1000.f));
+        //shader3D.SetUniform3f("lightPos", 60.f * FT::cos(SDL_GetTicks() / 1000.f), 150.f, 60.f * FT::sin(SDL_GetTicks() / 1000.f));
+        shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
         shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
 
 
@@ -391,11 +393,6 @@ int Game::OnExecute() {
 
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
-        glEnable(GL_ALPHA_TEST);
-
-
-        glAlphaFunc(GL_LEQUAL, 0.5);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
         //DRAW ENTITIES
@@ -418,7 +415,7 @@ int Game::OnExecute() {
         frameBuffer.Bind();
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         intermediateFramebuffer.BindTexture(4);
         intermediateFramebuffer.Draw();
@@ -473,11 +470,9 @@ int Game::OnExecute() {
 
 
         //MOVE TO UI
-#ifdef _OLD_FONT_
-        myFont.ResetDraw();
-#else
         myFont.StaticDraw();
-#endif
+
+        
         
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
@@ -492,7 +487,7 @@ int Game::OnExecute() {
             ImGui::PopFont();
             ImGui::End();
         }
-
+        
         {
             ImGui::PushFont(font1);
             ImGui::Begin("Camera");
@@ -583,51 +578,12 @@ int Game::OnExecute() {
             }
             ImGui::PopFont();
             ImGui::End();
-        }
-
-        /*
-        {
-            ImGui::PushFont(font1);
-            ImGui::Begin("Shader");
-            if (ImGui::Button("Recompile"))
-            {
-                shader.ReInitShader();
-                shader3D.ReInitShader();
-                textShader.ReInitShader();
-                shaderCube.ReInitShader();
-
-                shader.Bind();
-                shader.SetUniform1i("u_Texture", 0);
-                shader.SetUniformMat4f("u_Projection", orthoPlay);
-                shader.SetUniform1f("scale", 1);
-
-                textShader.Bind();
-                textShader.SetUniform1i("u_Texture", 1);
-                textShader.SetUniformMat4f("u_Projection", orthoFull);
-                textShader.SetUniform4f("v_Color", 0.5f, 1.f, 0.5f, 1.f);
-                textShader.SetUniform1f("scale", 1);
-
-                shader3D.Bind();
-                shader3D.SetUniform1i("u_Texture", 2);
-                shader3D.SetUniform1i("skybox", 0);
-                shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
-                shader3D.SetUniformMat4f("u_Model", glm::mat4(1.f));
-                shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
-
-                shaderCube.Bind();
-                shaderCube.SetUniform1f("skybox", 0);
-                shaderCube.SetUniformMat4f("u_Projection", camera.projection);
-                shaderCube.SetUniformMat4f("u_View", camera.view);
-
-            }
-            ImGui::PopFont();
-            ImGui::End();
-        }
-        */
+        }  
         
         
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        
         
         SDL_GL_SwapWindow(window);
 

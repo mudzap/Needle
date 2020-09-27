@@ -46,20 +46,12 @@ struct Character {
 	ColorVertex characterVertices[4];
 };
 
-#ifdef _OLD_FONT_
-class Font: public Texture, public Mesh {
-#else
+
 class Font {
-#endif
 
 	public:
 
-
-#ifdef _OLD_FONT_
-		Font();
-#else
 		Font(unsigned int expectedSize = 0, FontType type = F_STATIC);
-#endif
 
 		~Font();
 
@@ -78,48 +70,29 @@ class Font {
 
 		void LoadTexture(const unsigned int w, const unsigned int h);
 
-#ifdef _OLD_FONT_
-
-		void Load(const std::string fontPath);
-		void Prepare(const int w, const int h, const int lh, const int sampling);
-		void Add(const int lh, const int sampling);
-		void EndLoad();
-		void GetQuad(const std::string text, const int font, Complex position);
-		void Save(const std::string pngPath);
-		std::vector<stbtt_packedchar> packedChar;
-
-#else
-
 		void LoadTexture(const bool keepBuffer);
 
 		//STATIC AND DYNAMIC
 		void AddText(ftgl::texture_font_t* font, std::string& text, glm::vec4* color, glm::vec2* pen, unsigned int bytesPerChar = 1);
+		void AddTextGradient(ftgl::texture_font_t* font, std::string& text, glm::vec4* color, glm::vec2* pen, unsigned int bytesPerChar = 1);
 
-#endif
 
 		unsigned char* bitmap;
 
 	private:
 
-#ifdef _OLD_FONT_
-		unsigned char* localBuffer;
-		int lineHeight; /* line height */
-		stbtt_pack_context context;
-		int fonts;
-		int index = 0;
-#else
+
 		std::vector<Character> characters;
-		std::vector<unsigned int> codepoints;
+		std::vector<unsigned short> indices;
 		unsigned int vao = 0;
 		unsigned int vbo = 0;
+		unsigned int ibo = 0;
 		unsigned int atlas = 0;
 		unsigned int size = 0;
 		int slot = 0;
 
 		int* first_index;
 		int* length;
-
-#endif
 
 };
 

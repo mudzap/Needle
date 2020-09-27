@@ -30,7 +30,6 @@ extern "C"
 #include "imgui\imgui_impl_opengl3.h"
 #include <SDL.h>
 
-//#define NOT_USING_FT_GL_NAMESPACE
 #include <freetype-gl/freetype-gl.h>
 #include <freetype-gl/texture-atlas.h>
 #include <freetype-gl/texture-font.h>
@@ -101,6 +100,7 @@ extern "C"
 #include "Audio.h"
 #include "CubeMap.h"
 #include "Framebuffer.h"
+#include "UI.h"
 
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
@@ -140,6 +140,17 @@ class Game {
         Shader shader3D;
         Shader shaderCube;
         Shader fboIntermediateShader;
+
+        //Framebuffer frameBuffer;
+        //Framebuffer gaussianFramebuffer[2];
+        //Framebuffer intermediateFramebuffer;
+
+        Framebuffer frameBuffer = Framebuffer();
+        Framebuffer gaussianFramebuffer[2] = {
+            Framebuffer(),
+            Framebuffer()
+        };
+        Framebuffer intermediateFramebuffer = Framebuffer();
 
         Audio audio;
 

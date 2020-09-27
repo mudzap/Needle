@@ -3,7 +3,35 @@
 #define DOWNSCALE_FACTOR 3
 
 
-Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBehavior fboB, unsigned int count) {
+Framebuffer::Framebuffer() {
+}
+
+Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBehavior fboB, unsigned int count, bool useDepth) {
+
+	Init(width, height, fboB, count, useDepth);
+
+}
+
+Framebuffer::~Framebuffer() {
+
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteTextures(count, texture);
+	glDeleteRenderbuffers(1, &rbo);
+
+}
+
+
+void Framebuffer::ReInit(unsigned int width, unsigned int height, FramebufferBehavior fboB, unsigned int count, bool useDepth) {
+
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteTextures(count, texture);
+	glDeleteRenderbuffers(1, &rbo);
+
+	Init(width, height, fboB, count, useDepth);	
+
+}
+
+void Framebuffer::Init(unsigned int width, unsigned int height, FramebufferBehavior fboB, unsigned int count, bool useDepth) {
 
 	this->count = count;
 	fboBehavior = fboB;
@@ -39,6 +67,8 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBeh
 
 	glDrawBuffers(count, attachments);
 
+	
+
 	//CREATE AND ATTACH DEPTH BUFFER
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 800, 600, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
@@ -46,9 +76,14 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBeh
 	//CREATE AND ATTACH RENDER BUFFER
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
+	if (useDepth) {
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	}
+	else {
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+	}
 
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
@@ -82,15 +117,6 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height, FramebufferBeh
 	glBindVertexArray(0);
 
 }
-
-Framebuffer::~Framebuffer() {
-
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteTextures(count, texture);
-	glDeleteRenderbuffers(1, &rbo);
-
-}
-
 
 void Framebuffer::Draw() {
 
