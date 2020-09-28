@@ -8,7 +8,6 @@ out vec2 v_TexCoord;
 out vec4 v_Color;
 
 uniform mat4 u_Projection;
-uniform float scale;
 
 void main() {
 	v_TexCoord = texCoord;

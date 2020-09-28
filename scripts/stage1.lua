@@ -18,8 +18,9 @@ function main()
 	-- PROJ ARGS, AND PROJECTILE
 	temp_pargs = pargs.new()
 	temp_pargs['vel'] = cmplx.new(3, 0)
-	testBullet = proj.new(temp_pargs, knife_green)
-	testBullet2 = proj.new(temp_pargs, knife_magenta)
+	testBullet2 = proj.new(temp_pargs, hugebullet_red)
+	testBullet = proj.new(temp_pargs, knife_magenta)
+	--testBullet2 = proj.new(temp_pargs, knife_green)
 
 
 	-- PATTERN, CONST, BARR, RANDOM...
@@ -38,12 +39,12 @@ function main()
 
 	-- ENEMY CREATION
 	testEnemy = enemies:createEnemy(cmplx.new(-200, 0), ran)
-	testEnemy:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern2)
-	testEnemy:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern2)
+	testEnemy:addConstant(cmplx.new(100, 0), 10000, testSpawner, testPattern2)
+	testEnemy:addConstant(cmplx.new(-100, 0), 10000, testSpawner, testPattern2)
 
-	--testEnemy2 = enemies:createEnemy(cmplx.new(200, 0), chen)
-	--testEnemy2:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern)
-	--testEnemy2:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern)
+	testEnemy2 = enemies:createEnemy(cmplx.new(200, 0), chen)
+	testEnemy2:addConstant(cmplx.new(100, 0), 10000, testSpawner, testPattern)
+	testEnemy2:addConstant(cmplx.new(-100, 0), 10000, testSpawner, testPattern)
 
 	-- CAMERA
 	cam:set_pos(-64, 20, 0)
@@ -53,9 +54,9 @@ function main()
 	doAfterFrames(400, function() cam:lerp(240, 0, 40, 80) end)
 
 	-- TIMING
-	--doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
-	--doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
-	--doAfterFrames(300, function() enemies:destroyEnemy(testEnemy2) end)
+	doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
+	doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
+	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
 
 	doAfterFrames(0, function() testEnemy:slowToXY(cmplx.new(-150, -50), 0.06) end)
 	doAfterFrames(60, function() testEnemy:slowToXY(cmplx.new(50, 300), 0.06) end)
@@ -63,7 +64,7 @@ function main()
 	doAfterFrames(130, function() testEnemy:circle(cmplx.new(200, 50)) end)
 	doAfterFrames(220, function() testEnemy:driftBrake(0.95) end)
 	doAfterFrames(280, function() testEnemy:slowToXY(cmplx.new(-350, -300), 0.04) end)
-	doAfterFrames(300, function() enemies:destroyEnemy(testEnemy) end)
+	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy) end)
 
 end
 

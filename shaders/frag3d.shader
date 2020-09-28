@@ -43,13 +43,14 @@ void main() {
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	//DIFFUSE
-	float diff = max(dot(lightDir, normal), 0.0);
+	float diff = max(dot(lightDir, normal), 0.0); //normal diffuse
+	//float diff = max( sign( max(dot(lightDir, normal), 0.0) ), 0.0 ) + 0.2; //cartoon
 	vec3 diffuse = m_In.v_Kd * diff * lightColor;
 
 	
 	//SPECULAR
 	float spec = pow(max(dot(lightDir, halfwayDir), 0.0), m_In.v_Ns) * mapping.a;
-	vec3 specular = m_In.v_Ks * spec * lightColor;
+	vec3 specular = m_In.v_Ks * spec * lightColor; 
 
 	//REFLECTION
 	const float reflectionStrength = 0.3;
@@ -57,6 +58,7 @@ void main() {
 
 	//vec3 result = (ambient + diffuse) * objectColor + texture(skybox, refl).rgb * reflectionStrength * (specular + 1);
 	vec3 result = (ambient + diffuse) * objectColor + specular;
+	//vec3 result = (ambient + diffuse) * objectColor; //cartoon
 	gl_Color = vec4(result, 1.0);
 
 }
