@@ -20,7 +20,7 @@ void Model::LoadModel(const std::string& filepath, const std::string& texture, u
 		aiProcess_FindDegenerates |
 		aiProcess_Triangulate |
 		aiProcess_FindInvalidData
-	);
+	);	
 
 	if (!scene) {
 		printf("Couldn't find model: %s.\n", filepath.c_str());

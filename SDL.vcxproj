@@ -45,6 +45,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayUI.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="ProjData.h" />
     <ClInclude Include="Projectile.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="Loop.cpp" />
     <ClCompile Include="LuaData.cpp" />
+    <ClCompile Include="PlayUI.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Complex.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -120,15 +122,14 @@
     <None Include="shaders\fragBloom.shader" />
     <None Include="shaders\fragGaussian.shader" />
     <None Include="shaders\fragPrimitive.shader" />
+    <None Include="shaders\fragPrimitiveBloom.shader" />
     <None Include="shaders\fragSingleChannel.shader" />
-    <None Include="shaders\fragSingleChannel_old.shader" />
     <None Include="shaders\fragTransform.shader" />
     <None Include="shaders\skyboxFragShader.shader" />
     <None Include="shaders\skyboxVertexShader.shader" />
     <None Include="shaders\vertex3d.shader" />
     <None Include="shaders\vertexPrimitive.shader" />
     <None Include="shaders\vertexSingleChannel.shader" />
-    <None Include="shaders\vertexSingleChannel_old.shader" />
     <None Include="shaders\vertexTransform.shader" />
     <None Include="shaders\vertexTransform_old.shader" />
   </ItemGroup>

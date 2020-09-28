@@ -1,9 +1,6 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#define DOWNSCALE_FACTOR 3
-
-
 #define GLM_FORCE_INLINE
 
 //#define GLM_FORCE_ALIGNED
@@ -100,8 +97,9 @@ extern "C"
 #include "Audio.h"
 #include "CubeMap.h"
 #include "Framebuffer.h"
-#include "UI.h"
+#include "PlayUI.h"
 
+#define DOWNSCALE_FACTOR 3
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
 const float DEFAULT_PLAY_W = 768;
@@ -135,6 +133,7 @@ class Game {
         Pool enemyPool;
 
         Shader shader;
+        Shader uiShader;
         Shader fboShader;
         Shader textShader;
         Shader shader3D;

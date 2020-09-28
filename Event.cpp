@@ -113,6 +113,10 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
             fboShader.SetUniform1i("bloomBlur", 5);
             fboShader.SetUniform1f("exposure", 0.7f);
 
+            uiShader.Bind();
+            uiShader.SetUniform1i("u_Texture", 7);
+            uiShader.SetUniformMat4f("u_Projection", orthoPlay);
+
             fboIntermediateShader.Bind();
             fboIntermediateShader.SetUniform1i("u_Texture", 4);
 
