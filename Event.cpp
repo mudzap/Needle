@@ -2,6 +2,7 @@
 
 void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
 
+    player.shooting = false;
     player.transform.velocity = Complex(0, 0);
     camera.velocity = { 0, 0, 0 };
     camera.rotationDelta = { 0, 0 };
@@ -46,6 +47,9 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
 
     if (keystate[SDL_SCANCODE_L])
         camera.rotationDelta.x += 1.5f;
+
+    if (keystate[SDL_SCANCODE_Z])
+        player.shooting = true;
 
     if (keystate[SDL_SCANCODE_SPACE])
         camera.velocity.y += 0.4f;

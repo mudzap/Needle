@@ -35,7 +35,6 @@ struct ConstantArgs {
 	unsigned int bulletPerArray = 1;
 	float angleBetweenBullets = 0.f;
 	float bulletOffsetRadius = 0.f;
-	//Complex bulletOffsetPostion = { 0.f, 0.f };
 	unsigned int startTimer = 0;
 	unsigned int stopTimer = 0;
 	unsigned int bulletShotTimer = 0;
@@ -54,7 +53,6 @@ struct BarrageArgs {
 	unsigned int bulletPerArray = 1;
 	float angleBetweenBullets = 0.f;
 	float bulletOffsetRadius = 0.f;
-	//Complex bulletOffsetPostion = { 0.f, 0.f };
 	unsigned int startTimer = 0;
 	unsigned int stopTimer = 0;
 	unsigned int bulletShotTimer = 0;
@@ -77,7 +75,6 @@ struct RandomArgs {
 	float angleBetweenArray = 0.f;
 	unsigned int bulletPerArray = 1;
 	float bulletOffsetRadius = 0.f;
-	//Complex bulletOffsetPostion = { 0.f, 0.f };
 	unsigned int startTimer = 0;
 	unsigned int stopTimer = 0;
 	unsigned int bulletShotTimer = 0;
@@ -89,6 +86,20 @@ struct RandomArgs {
 	//float loopingCone[2] = { 0, 90 };
 };
 const RandomArgs defaultRandom;
+
+struct PlayerSpawnerArgs {
+	Projectile baseProjectile = defaultProjectile;
+	bool aimed = false;
+
+	float initialBulletAngle = 0.f;
+	unsigned int bulletArrays = 1;
+	float angleBetweenArray = 0.f;
+	unsigned int bulletPerArray = 1;
+	float angleBetweenBullets = 0.f;
+	float bulletOffsetRadius = 0.f;
+	unsigned int bulletShotTimer = 0;
+};
+const PlayerSpawnerArgs defaultPlayerSpawner;
 
 class Player;
 struct PlayerArgs;
@@ -122,20 +133,33 @@ class Spawner : public Transform, public Bullets {
 			const SpawnerArgs& spawner,
 			const RandomArgs& random = defaultRandom
 		);
+		Spawner(
+			const Complex offset,
+			const unsigned int reserveSize,
+			const SpawnerArgs& spawner,
+			const PlayerSpawnerArgs& playerSpawner = defaultPlayerSpawner
+		);
 
 		~Spawner();
 
 		//inline void InstantiateBullet(Bullets* const pool, const Projectile* projectile, const Complex* position);
 
 		inline void InitializeConstantSpawner();
+		inline void InitializeEmptySpawner();
 		inline void InitializeBarrageSpawner();
 		inline void InitializeRandomSpawner();
+		inline void InitializePlayerSpawner();
+
 
 		void HandleSpawner();
 		void HandleEmpty();
 		void HandleConstantSpawner();
 		void HandleBarrageSpawner();
 		void HandleRandomSpawner();
+		bool HandlePlayerSpawner();
+
+		void ResetTimer();
+
 
 		inline void GetRandom();
 
@@ -151,6 +175,7 @@ class Spawner : public Transform, public Bullets {
 			ConstantArgs constant;
 			BarrageArgs barrage;
 			RandomArgs random;
+			PlayerSpawnerArgs playerSpawner;
 		};
 
 		Complex offset;

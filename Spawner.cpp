@@ -19,6 +19,7 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 	spawner(spawner),
 	projectile(projectile)
 {
+	InitializeEmptySpawner();
 	handlingFunction = &Spawner::HandleEmpty;
 }
 
@@ -53,6 +54,16 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 {
 	InitializeRandomSpawner();
 	handlingFunction = &Spawner::HandleRandomSpawner;
+}
+
+Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const PlayerSpawnerArgs& playerSpawner) :
+	Bullets(playerSpawner.baseProjectile, reserveSize),
+	spawner(spawner),
+	playerSpawner(playerSpawner),
+	offset(offset)
+{
+	InitializePlayerSpawner();
+	handlingFunction = &Spawner::HandleEmpty;
 }
 
 Spawner::~Spawner() {
@@ -99,7 +110,34 @@ inline void Spawner::InitializeRandomSpawner() {
 
 }
 
-inline void Spawner::HandleEmpty() {
+inline void Spawner::InitializeEmptySpawner() {
+
+	tempProjectile[0] = projectile;
+	timer[0] = Timer::lifeTimeFrames;
+	resettableTimer[0] = Timer::lifeTimeFrames;
+
+	/*
+	if (projectile.aimed) {
+		//AIM AT PLAYER, GET ANGLE
+	}
+	*/
+}
+
+inline void Spawner::InitializePlayerSpawner() {
+
+	tempProjectile[0] = projectile;
+	timer[0] = Timer::lifeTimeFrames;
+	resettableTimer[0] = Timer::lifeTimeFrames;
+
+	/*
+	if (projectile.aimed) {
+		//AIM AT PLAYER, GET ANGLE
+	}
+	*/
+
+}
+
+bool Spawner::HandlePlayerSpawner() {
 
 	spawner.angle += spawner.angleDelta;
 	spawner.angleDelta += spawner.angleAccel;
@@ -107,9 +145,32 @@ inline void Spawner::HandleEmpty() {
 	if (spawner.loopingConeEnd != spawner.loopingConeStart)
 		LoopAtCone();
 
+	if (Timer::lifeTimeFrames - timer[0] >= playerSpawner.bulletShotTimer) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
 
-//ELIMINATE STATE, LET POOL HANDLE IT
+void Spawner::ResetTimer() {
+	timer[0] = Timer::lifeTimeFrames;
+}
+
+void Spawner::HandleEmpty() {
+
+	spawner.angle += spawner.angleDelta;
+	spawner.angleDelta += spawner.angleAccel;
+
+	if (spawner.loopingConeEnd != spawner.loopingConeStart)
+		LoopAtCone();
+
+	const unsigned int tempTime = Timer::lifeTimeFrames - timer[CONSTANT];
+	const unsigned int resetTime = Timer::lifeTimeFrames - resettableTimer[CONSTANT];
+
+}
+
 void Spawner::HandleConstantSpawner() {
 
 	spawner.angle += spawner.angleDelta;

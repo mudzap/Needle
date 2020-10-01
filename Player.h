@@ -11,31 +11,28 @@
 #include "Enemy.h"
 #include "Animation.h"
 
+#include "ProjData.h"
+
 struct PlayerArgs {
-	//Projectile playerBullets[3];
-	//Projectile playerLasers[3];
-	uint8_t hearts = 2;
-	uint8_t bombs = 3;
-	uint16_t power = 0;
+	unsigned short hearts = 2;
+	unsigned short bombs = 3;
+	unsigned int power = 0;
 	uint32_t grazeScore = 0;
 	uint32_t pointScore = 0;
 	float speed = 5;
 };
 
-struct PlayerSpawnerArgs {
-	Projectile baseProjectile = defaultProjectile;
-	bool aimed = false;
-
-	float initialBulletAngle = 0.f;
-	unsigned int bulletArrays = 1;
-	float angleBetweenArray = 0.f;
-	unsigned int bulletPerArray = 1;
-	float angleBetweenBullets = 0.f;
-	float bulletOffsetRadius = 0.f;
-	Complex bulletOffsetPostion = { 0.f, 0.f };
-	unsigned int bulletShotTimer = 0;
+const ProjArgs playerProjectileArgs1 = {
+	.flags = (ProjFlags)0,
+	.initialVel = {8.f, 0.f},
+	.angle = 90.f
 };
-const PlayerSpawnerArgs defaultPlayerSpawner;
+
+const PlayerSpawnerArgs playerSpawner1 = {
+	.baseProjectile = Projectile(playerProjectileArgs1, RingedBulletCyan),
+	.aimed = false,
+	.bulletShotTimer = 100
+};
 
 class Player : public Transform, public Hitbox, public Animation {
 
@@ -65,9 +62,12 @@ class Player : public Transform, public Hitbox, public Animation {
 
 		void HandlePlayerCollision(Enemy* enemy) {
 
-			for(int i = 0; i < enemy->enemySpawners.size(); i++)
+			for (int i = 0; i < enemy->enemySpawners.size(); i++)
 				CheckCollisionRoutine(enemy->enemySpawners[i]);
-		}
+		};
+
+		void HandleSpawners();
+
 
 		//void AddPower(Player* player, Item* item);
 
@@ -75,16 +75,17 @@ class Player : public Transform, public Hitbox, public Animation {
 		}
 
 		void Draw();
+		void DrawBullets();
 
 		PlayerArgs playerArgs;
 
+		bool controllable = true;
+		bool conversation = false;
+		bool shooting = false;
+
 	private:
 
-		bool controllable;
-		bool conversation;
 		std::vector<unsigned int>collideableBullets;
-
-		void HandleSpawners();
 
 		void CheckGrazeable(Spawner& spawner);
 		void CheckCollideable(Spawner& spawner);
@@ -108,9 +109,10 @@ class Player : public Transform, public Hitbox, public Animation {
 			
 		}
 
-		std::array<Spawner, 3> spawners;
-		std::array<SpawnerArgs, 3> spawnerArgs;
-		std::array<PlayerSpawnerArgs, 3> playerSpawnerArgs;
+		std::array<Spawner, 2> spawners;
+		std::array<SpawnerArgs, 2> spawnerArgs = { defaultSpawner, defaultSpawner };
+		std::array<PlayerSpawnerArgs, 2> playerSpawnerArgs = { playerSpawner1, playerSpawner1 };
+		std::array<Complex, 2> spawnerOffsets = { Complex{-20.f, 5.f}, Complex{20.f, 5.f} };
 
 };
 

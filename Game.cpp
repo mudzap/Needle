@@ -370,7 +370,7 @@ int Game::OnExecute() {
         }
 
         player.HandlePlayerMovement();
-
+        player.HandleSpawners();
 
         t2.join();
 
@@ -426,6 +426,8 @@ int Game::OnExecute() {
         //DRAW ENTITIES
 
         shader.Bind();
+
+        player.DrawBullets();
         player.Draw();
 
         for (Enemy* enemies : enemyPool.activeEnemies) {

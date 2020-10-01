@@ -7,9 +7,9 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 	collideableBullets.reserve(512);
 
 	//MANUAL SPAWNER CONSTRUCTOR
-	unsigned int bullets = 200;
+	unsigned int bullets = 100;
 	for (int i = 0; i < spawners.size(); i++) {
-		spawners[i] = Spawner(Complex{ 0,0 }, bullets, spawnerArgs[i], playerSpawnerArgs[i].baseProjectile);
+		spawners[i] = Spawner(spawnerOffsets[i], bullets, spawnerArgs[i], playerSpawnerArgs[i]);
 	}
 	
 	SetStateSprites(1);
@@ -36,11 +36,14 @@ void Player::HandleSpawners() {
 
 	for (int i = 0; i < spawners.size(); i++) {
 
-		if (false) {
-			spawners[i].Instantiate(playerSpawnerArgs[i].baseProjectile, Complex{ 0,0 }, spawnerArgs[i]);
+		if (spawners[i].HandlePlayerSpawner() && shooting) {
+			spawners[i].Instantiate(playerSpawnerArgs[i].baseProjectile, transform.position + spawners[i].offset, spawnerArgs[i]);
+			spawners[i].ResetTimer();
 		}
 
 		spawners[i].BatchProcessBullets();
+		spawners[i].ScissorTest();
+		spawners[i].FillVertices();
 
 	}
 
@@ -87,7 +90,17 @@ void Player::CheckCollideable(Spawner& spawner) {
 }
 
 void Player::Draw() {
+
 	TVertex transformV;
 	transformV.translation = transform.position;
 	Animation::Draw(&transformV);
+
+}
+
+void Player::DrawBullets() {
+
+	for (int i = 0; i < spawners.size(); i++) {
+		spawners[i].Draw(spawners[i].tvertices[0], spawners[i].currentSize - spawners[i].trashSize);
+	}
+
 }
