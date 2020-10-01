@@ -33,31 +33,39 @@ void main() {
 	vec3 ambient = m_In.v_Ka * lightColor;	
 
 	//NORMALS
-	vec4 mapping = texture(u_Normal, v_In.v_TexCoord);
-	mapping = mapping * 2.0 - 1.0;
+	//vec4 mapping = texture(u_Normal, v_In.v_TexCoord);
+	vec3 mapping = texture(u_Normal, v_In.v_TexCoord).rgb * 2.0 - 1.0;
 	mapping.y = -mapping.y;
-	vec3 normal = normalize(mapping.rgb);
-	vec3 lightDir = normalize(v_In.TangentLightPos - v_In.TangentFragPos);
+	vec3 normal = normalize(mapping);
+	vec3 lightDist = v_In.TangentLightPos - v_In.TangentFragPos;
+	vec3 lightDir = normalize(lightDist);
+	float distance2 = lightDist.x * lightDist.x + lightDist.y * lightDist.y + lightDist.z * lightDist.z;;
+	float distanceFade = 1 / (1.0 + (0.0001 * distance2));
 	vec3 viewDir = normalize(v_In.TangentViewPos - v_In.TangentFragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 
 	//DIFFUSE
-	float diff = max(dot(lightDir, normal), 0.0); //normal diffuse
-	//float diff = max( sign( max(dot(lightDir, normal), 0.0) ), 0.0 ) + 0.2; //cartoon
-	vec3 diffuse = m_In.v_Kd * diff * lightColor;
-
+	float diff = max(dot(lightDir, normal), 0.0);
+	float distdiff = diff * distanceFade;
+	vec3 diffuse = m_In.v_Kd * distdiff * lightColor;
 	
 	//SPECULAR
-	float spec = pow(max(dot(lightDir, halfwayDir), 0.0), m_In.v_Ns) * mapping.a;
-	vec3 specular = m_In.v_Ks * spec * lightColor; 
+	//float spec = pow(max(dot(halfwayDir, normal), 0.0), m_In.v_Ns) * mapping.a;
+	float spec = pow(max(dot(halfwayDir, normal), 0.0), m_In.v_Ns);
+	vec3 specular = m_In.v_Ks * spec * lightColor;
+
+	//RIM
+	float rim = 1 - max(dot(viewDir, normal), 0.0);
+	rim = smoothstep(0.9, 1.0, rim);
+	vec3 RimColor = vec3(0.2) * lightColor;
+	vec3 finalRim = RimColor * vec3(rim);
 
 	//REFLECTION
-	const float reflectionStrength = 0.3;
+	const float reflectionStrength = 0.5;
 	vec3 refl = reflect(viewDir, normal);
 
-	//vec3 result = (ambient + diffuse) * objectColor + texture(skybox, refl).rgb * reflectionStrength * (specular + 1);
-	vec3 result = (ambient + diffuse) * objectColor + specular;
+	vec3 result = (ambient + diffuse + finalRim) * objectColor + specular * (texture(skybox, refl).rgb * reflectionStrength + 1);
 	//vec3 result = (ambient + diffuse) * objectColor; //cartoon
 	gl_Color = vec4(result, 1.0);
 
