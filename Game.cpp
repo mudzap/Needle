@@ -366,7 +366,7 @@ int Game::OnExecute() {
 
         for (Enemy* enemies : enemyPool.activeEnemies) {
             player.HandlePlayerCollision(enemies);
-            enemies->HandleEnemy();
+            enemies->HandleEnemy(player);
         }
 
         player.HandlePlayerMovement();

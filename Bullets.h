@@ -29,7 +29,7 @@ class Bullets: public Mesh {
 		void BatchClearBullets();
 		void ScissorTest();
 		void BatchSwap();
-		void BatchSwap(const int i, const int j);
+		void BatchSwap(const int i);
 
 		Complex aimSpot;
 

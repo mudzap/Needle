@@ -34,6 +34,8 @@ const PlayerSpawnerArgs playerSpawner1 = {
 	.bulletShotTimer = 100
 };
 
+class Enemy;
+
 class Player : public Transform, public Hitbox, public Animation {
 
 	public:
@@ -41,31 +43,8 @@ class Player : public Transform, public Hitbox, public Animation {
 		Player(const PlayerArgs& player, const TransformArgs& entity, const AnimationArgs& animArgs);
 		~Player();
 
-		void InitializePlayer(Player& player);
-
-		void HandlePlayerMovement() {
-			transform.position += transform.velocity;
-
-			ipair state = { 3, 0 };
-
-			if (transform.velocity.x > 1.f)
-				state.x = 6;
-			if (transform.velocity.x < -1.f)
-				state.x = 0;
-
-			TransitionToAnimationState(state);
-
-			HandleAnimation();
-
-			BindPlayerToScreen();
-		};
-
-		void HandlePlayerCollision(Enemy* enemy) {
-
-			for (int i = 0; i < enemy->enemySpawners.size(); i++)
-				CheckCollisionRoutine(enemy->enemySpawners[i]);
-		};
-
+		void HandlePlayerMovement();
+		void HandlePlayerCollision(Enemy* enemy);
 		void HandleSpawners();
 
 
@@ -82,6 +61,8 @@ class Player : public Transform, public Hitbox, public Animation {
 		bool controllable = true;
 		bool conversation = false;
 		bool shooting = false;
+
+		std::array<Spawner, 2> spawners;
 
 	private:
 
@@ -109,7 +90,6 @@ class Player : public Transform, public Hitbox, public Animation {
 			
 		}
 
-		std::array<Spawner, 2> spawners;
 		std::array<SpawnerArgs, 2> spawnerArgs = { defaultSpawner, defaultSpawner };
 		std::array<PlayerSpawnerArgs, 2> playerSpawnerArgs = { playerSpawner1, playerSpawner1 };
 		std::array<Complex, 2> spawnerOffsets = { Complex{-20.f, 5.f}, Complex{20.f, 5.f} };

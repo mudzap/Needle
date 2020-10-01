@@ -173,13 +173,18 @@ void Bullets::BatchSwap() {
 		tempTrash++;
 	}
 
-	//std::iter_swap(visualRotation.begin() + i, visualRotation.begin() + j); CALCULATED PER FRAME ANYWAYS
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(visualRotation.begin() + cullList[n], visualRotation.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
 	trashSize += cullList.size();
 	cullList.clear();
 
 }
 
-void Bullets::BatchSwap(const int i, const int j) {
+void Bullets::BatchSwap(const int i) {
 
 	cullList.emplace_back(i);
 

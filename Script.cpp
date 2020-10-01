@@ -104,7 +104,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         );
 
     sol::usertype<Enemy> enemyUT = lua.new_usertype<Enemy>("enemy",
-        sol::constructors<Enemy(Complex, AnimationArgs)>(),
+        sol::constructors<Enemy(Complex, AnimationArgs, int)>(),
         "setPos", &Enemy::SetPosition,
         "destroy", &Enemy::Destroy,
         "moveToXY", &Enemy::MoveTowards1,

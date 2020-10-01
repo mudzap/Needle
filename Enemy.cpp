@@ -4,8 +4,8 @@ Enemy::Enemy() {
 	enemySpawners.reserve(8);
 }
 
-Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs)
-	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox) {
+Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health)
+	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
 
 	enemySpawners.reserve(8);
 
@@ -15,8 +15,8 @@ Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs)
 
 }
 
-Enemy::Enemy(const Complex position, const AnimationArgs& animArgs)
-	: Transform(defaultTransform), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox) {
+Enemy::Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health)
+	: Transform(defaultTransform), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
 
 	enemySpawners.reserve(8);
 
@@ -39,7 +39,7 @@ void Enemy::SetPosition(Complex position) {
 void Enemy::Destroy() {
 	transform.velocity = Complex::zero;
 	transform.acceleration = Complex::zero;
-	state = DEAD;
+	dead = true;
 }
 
 void Enemy::MoveTowards1(Complex position, float speed, float accel) {
@@ -145,15 +145,13 @@ void Enemy::AddSpawnerRandom(
 	enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, random));
 }
 
-void Enemy::HandleEnemy() {
+void Enemy::HandleEnemy(Player& player) {
 
-	Transform::TranslateCartesian(transform.velocity);
+	if (!dead) {
 
-	switch (state) {
+		Transform::TranslateCartesian(transform.velocity);
 
-		case DEAD: {
-			break;
-		}
+		switch (state) {
 
 		case STOP: {
 			transform.velocity *= 1.f / (brakeConstant + 1.f);
@@ -184,32 +182,42 @@ void Enemy::HandleEnemy() {
 			break;
 		}
 
+		}
+
+		ipair state = { 1, 0 };
+
+		if (transform.velocity.x > 1.f)
+			state.x = 2;
+		if (transform.velocity.x < -1.f)
+			state.x = 0;
+
+		TransitionToAnimationState(state);
+
+		HandleAnimation();
+
+		for (int i = 0; i < player.spawners.size(); i++) {
+			CheckCollideable(player.spawners[i]);
+		}
+
+#ifdef _MAT4_INSTANCING_
+		tvertices[0] = { transform.position, glm::mat4(1.f) };
+#else
+		tvertices[0] = { transform.position, {1.0, 0.0} };
+#endif
+
+		for (int i = 0; i < enemySpawners.size(); i++) {
+			enemySpawners[i].transform.position = transform.position + enemySpawners[i].offset;
+			enemySpawners[i].HandleSpawner();
+		}
+
 	}
 
-	ipair state = { 1, 0 };
-
-	if (transform.velocity.x > 1.f)
-		state.x = 2;
-	if (transform.velocity.x < -1.f)
-		state.x = 0;
-
-	TransitionToAnimationState(state);
-
-	HandleAnimation();
-
 	for (int i = 0; i < enemySpawners.size(); i++) {
-		enemySpawners[i].transform.position = transform.position + enemySpawners[i].offset;
-		enemySpawners[i].HandleSpawner();
 		enemySpawners[i].BatchProcessBullets();
 		enemySpawners[i].ScissorTest();
 		enemySpawners[i].FillVertices();
 	}
 
-#ifdef _MAT4_INSTANCING_
-	tvertices[0] = { transform.position, glm::mat4(1.f) };
-#else
-	tvertices[0] = { transform.position, {1.0, 0.0} };
-#endif
 
 }
 
@@ -222,7 +230,33 @@ void Enemy::DrawBullets() {
 }
 
 void Enemy::Draw() {
-	TVertex transformV;
-	transformV.translation = transform.position;
-	Animation::Draw(&transformV);
+
+	if (!dead) {
+		TVertex transformV;
+		transformV.translation = transform.position;
+		Animation::Draw(&transformV);
+	}
+
+}
+
+void Enemy::CheckCollideable(Spawner& spawner) {
+
+	const unsigned int size = spawner.currentSize - spawner.trashSize;
+
+	for (unsigned int i = 0; i < size; i++) {
+
+		if (Hitbox::CheckCollision(hitbox.squaredHurtRadius, spawner.squaredHitboxRadius, transform.position, spawner.position[i])) {
+
+			spawner.BatchSwap(i);
+
+			health--;
+
+			if (health <= 0)
+				dead = true;
+
+			return;
+
+		}
+
+	}
 }

@@ -17,10 +17,10 @@ class Pool {
 		std::array<Enemy, MAX_ENEMIES> enemies;
 		std::set<Enemy*> activeEnemies;
 
-		inline Enemy* CreateEnemyTransform(const TransformArgs& entity, const AnimationArgs& anim) {
+		inline Enemy* CreateEnemyTransform(const TransformArgs& entity, const AnimationArgs& anim, int health) {
 			Enemy* const enemyReference = &enemies[enemyPointer];
 
-			enemies[enemyPointer] = std::move(Enemy(entity, anim));
+			enemies[enemyPointer] = std::move(Enemy(entity, anim, health));
 			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
 
 			if (activeEnemies.find(enemyReference) == activeEnemies.end())
@@ -29,10 +29,10 @@ class Pool {
 			return enemyReference;
 		};
 
-		inline Enemy* CreateEnemyComplex(const Complex position, const AnimationArgs& anim) {
+		inline Enemy* CreateEnemyComplex(const Complex position, const AnimationArgs& anim, int health) {
 			Enemy* const enemyReference = &enemies[enemyPointer];
 
-			enemies[enemyPointer] = std::move(Enemy(position, anim));
+			enemies[enemyPointer] = std::move(Enemy(position, anim, health));
 			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
 
 			if (activeEnemies.find(enemyReference) == activeEnemies.end())
@@ -53,9 +53,9 @@ class Pool {
 
 		};
 
-		inline void HandlePool() {
+		inline void HandlePool(Player& player) {
 			for (Enemy* elem : activeEnemies) {
-				elem->HandleEnemy();
+				elem->HandleEnemy(player);
 			}
 		};
 

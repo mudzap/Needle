@@ -29,8 +29,31 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 Player::~Player() {
 }
 
-void Player::InitializePlayer(Player& player) {
-}
+void Player::HandlePlayerMovement() {
+
+	transform.position += transform.velocity;
+
+	ipair state = { 3, 0 };
+
+	if (transform.velocity.x > 1.f)
+		state.x = 6;
+	if (transform.velocity.x < -1.f)
+		state.x = 0;
+
+	TransitionToAnimationState(state);
+
+	HandleAnimation();
+
+	BindPlayerToScreen();
+
+};
+
+void Player::HandlePlayerCollision(Enemy* enemy) {
+
+	for (int i = 0; i < enemy->enemySpawners.size(); i++)
+		CheckCollisionRoutine(enemy->enemySpawners[i]);
+
+};
 
 void Player::HandleSpawners() {
 
@@ -73,13 +96,12 @@ void Player::CheckGrazeable(Spawner& spawner) {
 void Player::CheckCollideable(Spawner& spawner) {
 	const unsigned int size = collideableBullets.size();
 
-	for (uint16_t i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++) {
 
 		if (Hitbox::CheckCollision(hitbox.squaredHitRadius, spawner.squaredHitboxRadius,
 			transform.position, spawner.position[collideableBullets[i]])) {
 			
-			spawner.BatchSwap(collideableBullets[i], spawner.currentSize - spawner.trashSize - 1);
-			spawner.trashSize++;
+			spawner.BatchSwap(collideableBullets[i]);
 
 			playerArgs.hearts--;
 			collideableBullets.clear();
@@ -87,6 +109,7 @@ void Player::CheckCollideable(Spawner& spawner) {
 		}
 
 	}
+
 }
 
 void Player::Draw() {

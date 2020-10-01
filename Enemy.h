@@ -9,6 +9,7 @@
 //#include "Timer.h"
 #include "Spawner.h"
 #include "Animation.h"
+#include "Player.h"
 
 enum EnemyState {
 	MOVE_TOWARDS,
@@ -16,9 +17,10 @@ enum EnemyState {
 	SLOW_TOWARDS,
 	STOP,
 	FULL_STOP,
-	DRIFT,
-	DEAD
+	DRIFT
 };
+
+class Player;
 
 class Enemy: public Transform, public Animation, public Hitbox {
 
@@ -26,8 +28,8 @@ class Enemy: public Transform, public Animation, public Hitbox {
 
 		//TAKES ITEM, SPAWNER, 
 		Enemy();
-		Enemy(const TransformArgs& entity, const AnimationArgs& animArgs);
-		Enemy(const Complex position, const AnimationArgs& animArgs);
+		Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health);
+		Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health);
 		~Enemy();
 		void SetPosition(Complex position);
 		void Destroy();
@@ -49,11 +51,13 @@ class Enemy: public Transform, public Animation, public Hitbox {
 		void AddSpawnerBarrage(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage);
 		void AddSpawnerRandom(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random);
 
-		void HandleEnemy();
+		void HandleEnemy(Player& player);
 
 		void DrawBullets();
 
 		void Draw();
+
+		void CheckCollideable(Spawner& spawner);
 
 		std::vector<Spawner> enemySpawners;
 
@@ -65,8 +69,10 @@ class Enemy: public Transform, public Animation, public Hitbox {
 		float accelPerUnit;
 		Complex targetPosition;
 		float brakeConstant;
-		EnemyState state = STOP;
+		int health = 10;
 
+		EnemyState state = STOP;
+		bool dead = false;
 };
 
 #endif
