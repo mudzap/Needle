@@ -180,8 +180,8 @@ int Game::OnExecute() {
     ImFont* font2 = io.Fonts->AddFontFromFileTTF("fonts/EBGaramond-BoldItalic.ttf", 15);
 
     // Text to be printed
-    std::string text = "High-Score: Graze: Bomb: 0123456789,.";
-    std::string textJap = " 最高得点  グレーズ  ボム  プレイヤー ";
+    std::string text = "High-Score: Graze:Bomb:0123456789,";
+    std::string textJap = "最 高得点グレーズボムプレイヤー ";
     //std::string textJap0 = "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟ゠ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヷヸヹヺ・ーヽヾヿ｟｠｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞ、。〃〄々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〘〙〚〛〜〝〞〟〠〡〢〣〤〥〦〧〨〩〪〭〮〯〫〬〰〱〲〳〴〵〶〷〸〹〺〻〼〽〾〿ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ";
     //std::string textJap1 = "日一国会人年大十二本中長出三同時政事自行社見月分議後前民生連五発間対上部東者党地合市業内相方四定今回新場金員九入選立開手米力学問高代明実円関決子動京全目表戦経通外最言氏現理調体化田当八六約主題下首意法不来作性的要用制治度務強気小七成期公持野協取都和統以機平総加山思家話世受区領多県続進正安設保改数記院女初北午指権心界支第産結百派点教報済書府活原先共得解名交資予川向際査勝面委告軍文反元重近千考判認画海参売利組知案道信策集在件団別物側任引使求所次水半品昨論計死官増係感特情投示変打男基私各始島直両朝革価式確村提運終挙果西勢減台広容必応演電歳住争談能無再位置企真流格有疑口過局少放税検藤町常校料沢裁状工建語球営空職証土与急止送援供可役構木割聞身費付施切由説転食比難防補車優夫研収断井何南石足違消境神番規術護展態導鮮備宅害配副算視条幹独警宮究育席輸訪楽起万着乗店述残想線率病農州武声質念待試族象銀域助労例衛然早張映限親額監環験追審商葉義伝働形景落欧担好退準賞訴辺造英被株頭技低毎医復仕去姿味負閣韓渡失移差衆個門写評課末守若脳極種美岡影命含福蔵量望松非撃佐核観察整段横融型白深字答夜製票況音申様財港識注呼渉達";
 
@@ -210,10 +210,17 @@ int Game::OnExecute() {
     std::string japaneseText[4] = {"最高得点", "得点", "グレーズ", "ボム" };
     std::string numbers = "12,345,678";
 
-    Font myFont(sizeof(numbers) + sizeof(englishText) + sizeof(textJap)/3, F_STATIC);
+    int sizeEvery = 0;
+    for (int i = 0; i < 4; i++) {
+        sizeEvery += japaneseText[i].length()/3 + englishText[i].length();
+    }
+    sizeEvery += 2 * numbers.length();
+    sizeEvery *= 2;
+
+    Font myFont(sizeEvery, F_STATIC);
     myFont.LoadTexture(1024, 1024, atlas);
 
-    glm::vec2 pens[4] = { { 216.f, 418.f }, { 216.f, 356.f }, { 216.f, 294.f }, { 216.f, 232.f } };
+    glm::vec2 pens[4] = { { 230.f, 418.f }, { 230.f, 356.f }, { 230.f, 294.f }, { 230.f, 232.f } };
     glm::vec2 pens0[4] = { pens[0], pens[1], pens[2], pens[3] };
     glm::vec2 japOffset = { 8.f, 18.f };
     glm::vec2 japPens[4] = { pens[0] - japOffset, pens[1] - japOffset, pens[2] - japOffset, pens[3] - japOffset };
@@ -284,7 +291,7 @@ int Game::OnExecute() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    glEnable(GL_ALPHA_TEST);
+    glDisable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -313,6 +320,9 @@ int Game::OnExecute() {
     frameBuffer.BindTexture(5, 2);
 
     intermediateFramebuffer.BindTexture(4);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 
     //GAME LOOP //
 

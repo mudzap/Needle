@@ -22,6 +22,21 @@ struct PlayerArgs {
 	float speed = 5;
 };
 
+struct PlayerSpawnerArgs {
+	Projectile baseProjectile = defaultProjectile;
+	bool aimed = false;
+
+	float initialBulletAngle = 0.f;
+	unsigned int bulletArrays = 1;
+	float angleBetweenArray = 0.f;
+	unsigned int bulletPerArray = 1;
+	float angleBetweenBullets = 0.f;
+	float bulletOffsetRadius = 0.f;
+	Complex bulletOffsetPostion = { 0.f, 0.f };
+	unsigned int bulletShotTimer = 0;
+};
+const PlayerSpawnerArgs defaultPlayerSpawner;
+
 class Player : public Transform, public Hitbox, public Animation {
 
 	public:
@@ -67,7 +82,9 @@ class Player : public Transform, public Hitbox, public Animation {
 
 		bool controllable;
 		bool conversation;
-		std::vector<uint16_t>collideableBullets;
+		std::vector<unsigned int>collideableBullets;
+
+		void HandleSpawners();
 
 		void CheckGrazeable(Spawner& spawner);
 		void CheckCollideable(Spawner& spawner);
@@ -78,6 +95,7 @@ class Player : public Transform, public Hitbox, public Animation {
 		}
 
 		void BindPlayerToScreen() {
+
 			if (transform.position.x > 384.f)
 				transform.position.x = 384.f;
 			else if (transform.position.x < -384.f)
@@ -87,7 +105,12 @@ class Player : public Transform, public Hitbox, public Animation {
 				transform.position.y = 448.f;
 			else if (transform.position.y < -448.f)
 				transform.position.y = -448.f;
+			
 		}
+
+		std::array<Spawner, 3> spawners;
+		std::array<SpawnerArgs, 3> spawnerArgs;
+		std::array<PlayerSpawnerArgs, 3> playerSpawnerArgs;
 
 };
 

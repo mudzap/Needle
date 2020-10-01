@@ -18,7 +18,7 @@ void Font::DynamicDraw() {
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(Character), characters.data());
 
-    glDrawElements(GL_TRIANGLES, size * 6, GL_UNSIGNED_SHORT, indices.data());
+    glDrawElements(GL_TRIANGLES, size * 6, GL_UNSIGNED_SHORT, 0);
 
     glBindVertexArray(0);
 
@@ -30,7 +30,7 @@ void Font::StaticDraw() {
 
     glBindVertexArray(vao);
 
-    glDrawElements(GL_TRIANGLES, size*6, GL_UNSIGNED_SHORT, indices.data());
+    glDrawElements(GL_TRIANGLES, size*6, GL_UNSIGNED_SHORT, 0);
 
     glBindVertexArray(0);
 
@@ -44,7 +44,7 @@ void Font::InitBuffers(unsigned int expectedSize, FontType type) {
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -57,13 +57,13 @@ void Font::InitBuffers(unsigned int expectedSize, FontType type) {
     if (type == F_STATIC) {
 
         glBufferData(GL_ARRAY_BUFFER, expectedSize * sizeof(Character), 0, GL_STATIC_DRAW);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, expectedSize * sizeof(unsigned short), 0, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * expectedSize * sizeof(indices), 0, GL_STATIC_DRAW);
 
     }
     else if (type == F_DYNAMIC) {
 
         glBufferData(GL_ARRAY_BUFFER, expectedSize * sizeof(Character), 0, GL_DYNAMIC_DRAW);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, expectedSize * sizeof(unsigned short), 0, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * expectedSize * sizeof(unsigned int), 0, GL_DYNAMIC_DRAW);
 
     }
     else {
@@ -79,9 +79,9 @@ void Font::FillBuffers() {
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(Character), characters.data());
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * sizeof(unsigned short), indices.data());
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices.size() * sizeof(unsigned int), indices.data());
 
     glBindVertexArray(0);
 

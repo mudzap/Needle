@@ -33,17 +33,17 @@ class PlayUI {
 			{{-576.f / 640.0f, -480.f / 480.0f}, {68.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},
 			{{-640.f / 640.0f, -480.f / 480.0f}, {0.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},
 			{{-576.f / 640.0f, 480.f / 480.0f}, {68.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},//
-			{{160.f / 640.0f, 480.f / 480.0f}, {68.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
-			{{160.f / 640.0f, 448.f / 480.0f}, {102.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
+			{{192.f / 640.0f, 480.f / 480.0f}, {68.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
+			{{192.f / 640.0f, 448.f / 480.0f}, {102.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
 			{{-576.f / 640.0f, 448.f / 480.0f}, {102.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},
 			{{-576.f / 640.0f, -448.f / 480.0f}, {102.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},//
-			{{160.f / 640.0f, -448.f / 480.0f}, {102.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
-			{{160.f / 640.0f, -480.f / 480.0f}, {136.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
+			{{192.f / 640.0f, -448.f / 480.0f}, {102.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
+			{{192.f / 640.0f, -480.f / 480.0f}, {136.f / _UI_TSIZE_, 820.f / _UI_TSIZE_}},
 			{{-576.f / 640.0f, -480.f / 480.0f}, {136.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},
-			{{160.f / 640.0f, 480.f / 480.0f}, {136.f / _UI_TSIZE_, 1024.f / _UI_TSIZE_}},//
+			{{192.f / 640.0f, 480.f / 480.0f}, {136.f / _UI_TSIZE_, 1024.f / _UI_TSIZE_}},//
 			{{640.f / 640.0f, 480.f / 480.0f}, {614.f / _UI_TSIZE_, 1024.f / _UI_TSIZE_}},
 			{{640.f / 640.0f, -480.f / 480.0f}, {614.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}},
-			{{160.f / 640.0f, -480.f / 480.0f}, {136.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}}
+			{{192.f / 640.0f, -480.f / 480.0f}, {136.f / _UI_TSIZE_, 0.f / _UI_TSIZE_}}
 		};
 
 		unsigned int playIndices[4*6] = {

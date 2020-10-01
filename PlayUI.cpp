@@ -9,7 +9,7 @@ PlayUI::PlayUI() {
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -28,7 +28,7 @@ void PlayUI::Draw() {
 
 	glBindVertexArray(vao);
 
-	glDrawElements(GL_TRIANGLES, 24 , GL_UNSIGNED_INT, playIndices);
+	glDrawElements(GL_TRIANGLES, 24 , GL_UNSIGNED_INT, 0);
 	
 	glBindVertexArray(0);
 

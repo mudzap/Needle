@@ -28,9 +28,15 @@ class Bullets: public Mesh {
 		void ClearBullet(const int ID);
 		void BatchClearBullets();
 		void ScissorTest();
+		void BatchSwap();
 		void BatchSwap(const int i, const int j);
 
 		Complex aimSpot;
+
+#ifdef _USE_SSE2_
+		using vector_cmplx = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
+		using vector_float = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
+		using vector_uint = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
 
 		std::vector<Complex> position;
 		std::vector<Complex> velocity;
@@ -43,9 +49,28 @@ class Bullets: public Mesh {
 		std::vector<Complex> visualRotation;
 		std::vector<Complex> rotationMat;
 
-		std::vector<uint32_t> sineTimer;
-		std::vector<uint32_t> stopAndGoTimer;
-		std::vector<uint32_t> zigzagTimer;
+		std::vector<unsigned int> sineTimer;
+		std::vector<unsigned int> stopAndGoTimer;
+		std::vector<unsigned int> zigzagTimer;
+#else
+		std::vector<Complex> position;
+		std::vector<Complex> velocity;
+		std::vector<Complex> acceleration;
+
+		std::vector<unsigned int> grazeable;
+
+		std::vector<Complex> cartesianVelocity;
+
+		std::vector<Complex> visualRotation;
+		std::vector<Complex> rotationMat;
+
+		std::vector<unsigned int> sineTimer;
+		std::vector<unsigned int> stopAndGoTimer;
+		std::vector<unsigned int> zigzagTimer;
+
+#endif
+
+		std::vector<unsigned int> cullList;
 
 
 		void Instantiate(const Projectile& projectile, const Complex& bulletPosition, const SpawnerArgs& spawner);

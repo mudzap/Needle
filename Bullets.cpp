@@ -80,6 +80,7 @@ void Bullets::InitSpawner(const Projectile& projectile) {
 	sineTimer.resize(reserveSize);
 	stopAndGoTimer.resize(reserveSize);
 	zigzagTimer.resize(reserveSize);
+	cullList.reserve(reserveSize);
 	bulletMethods.reserve(7);
 
 }
@@ -104,23 +105,87 @@ void Bullets::ScissorTest() {
 	const float heigthCheck = 448.f + quad.h * 0.5f;
 
 	for (unsigned int i = 0; i < currentSize - trashSize; i++) {
-		bool destroy = false;
-		if (position[i].x > widthCheck || position[i].x < -widthCheck)
-			destroy = true;
-		if (position[i].y > heigthCheck || position[i].y < -heigthCheck)
-			destroy = true;
 
-		if (destroy) {
-			BatchSwap(i, currentSize - trashSize - 1);
-			trashSize++;
-		}
+		if (position[i].x > widthCheck || position[i].x < -widthCheck || position[i].y > heigthCheck || position[i].y < -heigthCheck)
+			cullList.emplace_back(i);
 			 
 	}
+
+	BatchSwap();
+	//BatchSwap(i, currentSize - trashSize - 1);
+	//trashSize++;
+
+}
+
+void Bullets::BatchSwap() {
+
+	unsigned int tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(position.begin() + cullList[n], position.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(velocity.begin() + cullList[n], velocity.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(acceleration.begin() + cullList[n], acceleration.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(grazeable.begin() + cullList[n], grazeable.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(cartesianVelocity.begin() + cullList[n], cartesianVelocity.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(rotationMat.begin() + cullList[n], rotationMat.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(sineTimer.begin() + cullList[n], sineTimer.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(stopAndGoTimer.begin() + cullList[n], stopAndGoTimer.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	tempTrash = trashSize;
+	for (unsigned int n = 0; n < cullList.size(); n++) {
+		std::iter_swap(zigzagTimer.begin() + cullList[n], zigzagTimer.begin() + currentSize - tempTrash - 1);
+		tempTrash++;
+	}
+
+	//std::iter_swap(visualRotation.begin() + i, visualRotation.begin() + j); CALCULATED PER FRAME ANYWAYS
+	trashSize += cullList.size();
+	cullList.clear();
+
 }
 
 void Bullets::BatchSwap(const int i, const int j) {
 
+	cullList.emplace_back(i);
+
+	/*
 	std::iter_swap(position.begin() + i, position.begin() + j);
+
 	std::iter_swap(velocity.begin() + i, velocity.begin() + j);
 	std::iter_swap(acceleration.begin() + i, acceleration.begin() + j);
 
@@ -134,6 +199,10 @@ void Bullets::BatchSwap(const int i, const int j) {
 	std::iter_swap(sineTimer.begin() + i, sineTimer.begin() + j);
 	std::iter_swap(stopAndGoTimer.begin() + i, stopAndGoTimer.begin() + j);
 	std::iter_swap(zigzagTimer.begin() + i, zigzagTimer.begin() + j);
+
+	BatchSwap(i, currentSize - trashSize - 1);
+	trashSize++;
+	*/
 
 }
 

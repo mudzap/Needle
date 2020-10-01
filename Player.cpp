@@ -5,6 +5,12 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 	controllable = true;
 	conversation = false;
 	collideableBullets.reserve(512);
+
+	//MANUAL SPAWNER CONSTRUCTOR
+	unsigned int bullets = 200;
+	for (int i = 0; i < spawners.size(); i++) {
+		spawners[i] = Spawner(Complex{ 0,0 }, bullets, spawnerArgs[i], playerSpawnerArgs[i].baseProjectile);
+	}
 	
 	SetStateSprites(1);
 
@@ -24,6 +30,20 @@ Player::~Player() {
 }
 
 void Player::InitializePlayer(Player& player) {
+}
+
+void Player::HandleSpawners() {
+
+	for (int i = 0; i < spawners.size(); i++) {
+
+		if (false) {
+			spawners[i].Instantiate(playerSpawnerArgs[i].baseProjectile, Complex{ 0,0 }, spawnerArgs[i]);
+		}
+
+		spawners[i].BatchProcessBullets();
+
+	}
+
 }
 
 void Player::CheckGrazeable(Spawner& spawner) {
