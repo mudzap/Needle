@@ -405,9 +405,9 @@ int Game::OnExecute() {
         shader3D.Bind();
 
         shader3D.SetUniformMat4f("u_VP", camera.vpMat);
-        //shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
-        shader3D.SetUniform3f("lightPos", 60.f * FT::cos(SDL_GetTicks() / 1000.f), 150.f, 60.f * FT::sin(SDL_GetTicks() / 1000.f));
-        //shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
+        shader3D.SetUniform3f("lightDir", 0.f, 0.34202f, 0.93969f);
+        //shader3D.SetUniform3f("lightPos", 60.f * FT::cos(SDL_GetTicks() / 1000.f), 150.f, 60.f * FT::sin(SDL_GetTicks() / 1000.f));
+        shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
         shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
 
 

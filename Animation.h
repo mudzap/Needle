@@ -10,6 +10,7 @@
 #include "Mesh.h"
 #include "Timer.h"
 #include "Hitbox.h"
+#include "Math.h"
 
 struct ipair {
 	unsigned int x;
@@ -47,9 +48,11 @@ class Animation: public Mesh {
 
 		void Draw(const TVertex* instanceData);
 
+		Quad drawQuad;
+
+
 	private:
 
-		Quad drawQuad;
 		unsigned int frameTime;
 
 		std::vector<std::array<Complex,4>> spriteMap;
@@ -65,10 +68,6 @@ class Animation: public Mesh {
 		unsigned int currentFrame;
 
 		unsigned int animationFrameOffset;
-
-		inline int sign(int x) {
-			return (x > 0) - (x < 0);
-		}
 
 };
 

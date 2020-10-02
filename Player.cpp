@@ -73,7 +73,13 @@ void Player::HandleSpawners() {
 }
 
 void Player::CheckGrazeable(Spawner& spawner) {
+
+#ifdef _USE_SSE2_
+	unsigned int size = spawner.currentSize - spawner.trashSize;
+	size = size / 4 + size % 4;
+#else
 	const unsigned int size = spawner.currentSize - spawner.trashSize;
+#endif
 
 	collideableBullets.clear();
 

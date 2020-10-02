@@ -53,6 +53,8 @@ class Enemy: public Transform, public Animation, public Hitbox {
 
 		void HandleEnemy(Player& player);
 
+		void ScissorTest();
+
 		void DrawBullets();
 
 		void Draw();

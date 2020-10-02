@@ -21,8 +21,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "angle", &Complex::Angle,
         "rot", &Complex::FromAngle,
         "norm", &Complex::Normal,
-        "proj", &Complex::Projection,
-        "finvsqrt", &Complex::finvsqrt
+        "proj", &Complex::Projection
         );
 
     sol::usertype<TransformArgs> transformUT = lua.new_usertype<TransformArgs>("transform",

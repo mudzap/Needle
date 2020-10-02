@@ -45,6 +45,8 @@ public:
 
 	void DestroyShader();
 
+	static std::string glslVersion;
+
 private:
 
 	std::string filepathVertex;

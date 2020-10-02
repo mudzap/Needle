@@ -416,13 +416,13 @@ void Camera::GetPlanes() {
 	planes[3][2] = vpMat[2][3] + vpMat[2][1];
 	planes[3][3] = vpMat[3][3] + vpMat[3][1];
 
-	//NEAR (NEEDED?)
+	//NEAR
 	planes[4][0] = vpMat[0][3] - vpMat[0][2];
 	planes[4][1] = vpMat[1][3] - vpMat[1][2];
 	planes[4][2] = vpMat[2][3] - vpMat[2][2];
 	planes[4][3] = vpMat[3][3] - vpMat[3][2];
 
-	//FAR (NEEDED?)
+	//FAR
 	planes[5][0] = vpMat[0][2];
 	planes[5][1] = vpMat[1][2];
 	planes[5][2] = vpMat[2][2];
@@ -430,13 +430,13 @@ void Camera::GetPlanes() {
 
 	float norm;
 
-	norm = Complex::finvsqrt(planes[5][0] * planes[5][0] + planes[5][1] * planes[5][1] + planes[5][2] * planes[5][2]);
+	norm = Math::finvsqrt(planes[5][0] * planes[5][0] + planes[5][1] * planes[5][1] + planes[5][2] * planes[5][2]);
 	planes[5][0] *= norm;
 	planes[5][1] *= norm;
 	planes[5][2] *= norm;
 	planes[5][3] *= norm;
 
-	norm = Complex::finvsqrt(planes[4][0] * planes[4][0] + planes[4][1] * planes[4][1] + planes[4][2] * planes[4][2]);
+	norm = Math::finvsqrt(planes[4][0] * planes[4][0] + planes[4][1] * planes[4][1] + planes[4][2] * planes[4][2]);
 	planes[4][0] *= norm;
 	planes[4][1] *= norm;
 	planes[4][2] *= norm;

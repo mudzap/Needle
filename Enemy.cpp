@@ -153,34 +153,34 @@ void Enemy::HandleEnemy(Player& player) {
 
 		switch (state) {
 
-		case STOP: {
-			transform.velocity *= 1.f / (brakeConstant + 1.f);
-			break;
-		}
+			case STOP: {
+				transform.velocity *= 1.f / (brakeConstant + 1.f);
+				break;
+			}
 
-		case FULL_STOP: {
-			break;
-		}
+			case FULL_STOP: {
+				break;
+			}
 
-		case MOVE_TOWARDS: {
-			transform.velocity += transform.acceleration;
-			break;
-		}
+			case MOVE_TOWARDS: {
+				transform.velocity += transform.acceleration;
+				break;
+			}
 
-		case SPRING_TOWARDS: {
-			transform.velocity += (targetPosition - transform.position) * accelPerUnit;
-			break;
-		}
+			case SPRING_TOWARDS: {
+				transform.velocity += (targetPosition - transform.position) * accelPerUnit;
+				break;
+			}
 
-		case SLOW_TOWARDS: {
-			transform.velocity = (targetPosition - transform.position) * velocityPerUnit;
-			break;
-		}
+			case SLOW_TOWARDS: {
+				transform.velocity = (targetPosition - transform.position) * velocityPerUnit;
+				break;
+			}
 
-		case DRIFT: {
-			transform.velocity *= exponent;
-			break;
-		}
+			case DRIFT: {
+				transform.velocity *= exponent;
+				break;
+			}
 
 		}
 
@@ -210,6 +210,8 @@ void Enemy::HandleEnemy(Player& player) {
 			enemySpawners[i].HandleSpawner();
 		}
 
+		ScissorTest();
+
 	}
 
 	for (int i = 0; i < enemySpawners.size(); i++) {
@@ -218,6 +220,25 @@ void Enemy::HandleEnemy(Player& player) {
 		enemySpawners[i].FillVertices();
 	}
 
+
+}
+
+void Enemy::ScissorTest() {
+
+	//1.5 IS MEANT FOR EXTRA SPACE, IT MEANS THAT AN ENEMY MUST BE OFFSET 2 TIMES ITS QUAD LENGTH (DRAWN) TO BE CULLED
+	//ITS 2 DUE TO THE SCISSOR TEST BEING BASED ON POSITION, RATHER THAN EDGES
+	const float widthCheck = 384.f + drawQuad.w * 1.5f;
+	const float heigthCheck = 448.f + drawQuad.h * 1.5f;
+	
+
+	if (transform.position.x > widthCheck || transform.position.x < -widthCheck ||
+		transform.position.y > heigthCheck || transform.position.y < -heigthCheck) {
+		dead = true;
+	}
+
+	//BatchSwap();
+	//BatchSwap(i, currentSize - trashSize - 1);
+	//trashSize++;
 
 }
 

@@ -187,12 +187,12 @@ void Animation::HandleAnimation() {
 			currentSpriteFrame = 0;
 
 		if (currentState.x != targetState.x) {
-			currentState.x += sign(targetState.x - currentState.x);
+			currentState.x += Math::sign(targetState.x - currentState.x);
 			currentSpriteFrame = 0;
 		}
 
 		if (currentState.y != targetState.y) {
-			currentState.y += sign(targetState.y - currentState.y);
+			currentState.y += Math::sign(targetState.y - currentState.y);
 			currentSpriteFrame = 0;
 		}
 

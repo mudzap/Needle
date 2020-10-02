@@ -1,11 +1,13 @@
 #include "Game.h"
+#include "Shader.h"
 
 bool Game::OnInit() {
 	
     bool success = true;
     
     // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 330";
+    Shader::glslVersion = "#version 330";
+
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
@@ -104,7 +106,7 @@ bool Game::OnInit() {
 
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, context);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init(Shader::glslVersion.c_str());
 
 
     //INIT SDL_MIXER

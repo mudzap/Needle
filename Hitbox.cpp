@@ -1,5 +1,7 @@
 #include "Hitbox.h"
 
+//WHY DO I EXISTS?
+
 Hitbox::Hitbox() {
 }
 

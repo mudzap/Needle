@@ -11,6 +11,8 @@
 #include <thread>
 #include <unordered_map>
 
+//#define _USE_SSE2_
+
 class Player;
 struct SpawnerArgs;
 
@@ -34,20 +36,16 @@ class Bullets: public Mesh {
 		Complex aimSpot;
 
 #ifdef _USE_SSE2_
-		using vector_cmplx = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
-		using vector_float = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
-		using vector_uint = std::vector<float, XSIMD_DEFAULT_ALLOCATOR(Complex)>;
-
-		std::vector<Complex> position;
-		std::vector<Complex> velocity;
-		std::vector<Complex> acceleration;
+		std::vector<Complex_ps> position;
+		std::vector<Complex_ps> velocity;
+		std::vector<Complex_ps> acceleration;
 
 		std::vector<unsigned int> grazeable;
 
-		std::vector<Complex> cartesianVelocity;
+		std::vector<Complex_ps> cartesianVelocity;
 
-		std::vector<Complex> visualRotation;
-		std::vector<Complex> rotationMat;
+		std::vector<Complex_ps> visualRotation;
+		std::vector<Complex_ps> rotationMat;
 
 		std::vector<unsigned int> sineTimer;
 		std::vector<unsigned int> stopAndGoTimer;

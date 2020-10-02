@@ -60,6 +60,7 @@ void Framebuffer::Init(unsigned int width, unsigned int height, FramebufferBehav
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 
+		//THIS IS A BAD IDEA BUT ITS FINE FOR NOW
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width/(i*(DOWNSCALE_FACTOR - 1) + 1), height / (i*(DOWNSCALE_FACTOR - 1) + 1), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture[i], 0);
 

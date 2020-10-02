@@ -8,6 +8,8 @@ Shader::Shader(const std::string& filepathVertex, const std::string& filepathFra
     shader = CreateShader(OpenShader(filepathVertex), OpenShader(filepathFragment));
 }
 
+std::string Shader::glslVersion;
+
 Shader::~Shader() {
     glDeleteProgram(shader);
 }
@@ -27,7 +29,7 @@ std::string Shader::OpenShader(const std::string& path) {
 
     std::ifstream file(path);
     std::string temp;
-    std::string shaderSource;
+    std::string shaderSource = Shader::glslVersion + "\n";
     while (std::getline(file, temp)) {
         shaderSource += temp + "\n";
     }

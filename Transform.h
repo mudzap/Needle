@@ -101,4 +101,56 @@ class Transform
 
 };
 
+class Transform_ps
+{
+
+public:
+
+	Transform_ps();
+	~Transform_ps();
+
+	static inline void TranslateCartesian(std::vector<Complex_ps>& position, const int ID, const Complex_ps translation) {
+		position[ID] += translation;
+	};
+	static inline void Translate(std::vector<Complex_ps>& position, const int ID, const Complex_ps translation, const Complex_ps rotationMat) {
+		position[ID] += translation * rotationMat;
+	};
+	static inline void Accelerate(std::vector<Complex_ps>& velocity, const int ID, const Complex_ps acceleration) {
+		velocity[ID] += acceleration;
+	};
+	static inline void UpdateAngle(std::vector<Complex_ps>& visualRotation, const int ID, const std::vector<Complex_ps>& rotationMat, const std::vector<Complex_ps>& velocity) {
+		visualRotation[ID] = Complex_ps::Normal(rotationMat[ID] * velocity[ID]);
+	};
+	static inline void Rotate(std::vector<Complex_ps>& rotationMat, const int ID, const Complex_ps rotMat) {
+		rotationMat[ID] = Complex_ps::Normal(rotationMat[ID] * rotMat);
+	};
+
+
+	static inline void BatchTranslateCartesian(std::vector<Complex_ps>& position, const std::vector<Complex_ps>& translation, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			position[i] += translation[i];
+	};
+	static inline void BatchTranslate(std::vector<Complex_ps>& position, const std::vector<Complex_ps>& translation, const std::vector<Complex_ps>& rotationMat, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			position[i] += translation[i] * rotationMat[i];
+	};
+	static inline void BatchAccelerate(std::vector<Complex_ps>& velocity, const std::vector<Complex_ps>& acceleration, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			velocity[i] += acceleration[i];
+	};
+	static inline void BatchUpdateAngle(std::vector<Complex_ps>& visualRotation, const std::vector<Complex_ps>& rotationMat, const std::vector<Complex_ps>& velocity, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			visualRotation[i] = Complex_ps::Normal(rotationMat[i] * velocity[i]);
+	};
+	static inline void BatchRotate(std::vector<Complex_ps>& rotationMat, const std::vector<Complex_ps>& rotMat, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			rotationMat[i] = Complex_ps::Normal(rotationMat[i] * rotMat[i]);
+	};
+	static inline void BatchRotate(std::vector<Complex_ps>& rotationMat, const Complex_ps rotMat, unsigned int currentSize) {
+		for (unsigned int i = 0; i < currentSize; i++)
+			rotationMat[i] = Complex_ps::Normal(rotationMat[i] * rotMat);
+	};
+
+};
+
 #endif
