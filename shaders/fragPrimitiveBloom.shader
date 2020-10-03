@@ -1,5 +1,3 @@
-#version 330 core
-
 #define _USE_BLOOM_
 
 layout(location = 0) out vec4 gl_Color;

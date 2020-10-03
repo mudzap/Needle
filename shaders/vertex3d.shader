@@ -1,5 +1,3 @@
-#version 330 core
-
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normals;
 layout(location = 2) in vec3 tangent;
@@ -14,10 +12,10 @@ layout(location = 9) in float Tr;
 out VertexData{
 	vec3 v_FragPos;
 	vec3 TangentLightPos;
+	vec3 TangentLightDir;
 	vec3 TangentViewPos;
 	vec3 TangentFragPos;
 	vec2 v_TexCoord;
-	mat3 v_TBN;
 } v_Out;
 
 out MaterialData{
@@ -29,6 +27,7 @@ out MaterialData{
 } m_Out;
 
 uniform vec3 lightPos;
+uniform vec3 lightDir;
 uniform vec3 viewPos;
 uniform mat4 u_VP;
 
@@ -39,9 +38,9 @@ void main() {
 	v_Out.v_FragPos = position;
 	v_Out.v_TexCoord = texCoord;
 	v_Out.TangentLightPos = TBN * lightPos;
+	v_Out.TangentLightDir = TBN * lightDir;
 	v_Out.TangentViewPos = TBN * viewPos;
 	v_Out.TangentFragPos = TBN * v_Out.v_FragPos;
-	v_Out.v_TBN = TBN;
 
 	m_Out.v_Ka = Ka;
 	m_Out.v_Kd = Kd;
