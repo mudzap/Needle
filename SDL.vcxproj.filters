@@ -228,6 +228,12 @@
     <ClCompile Include="StringFormat.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="PlayUI.cpp">
+      <Filter>Source Files\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RNG.h">
@@ -365,6 +371,12 @@
     <ClInclude Include="StringFormat.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="PlayUI.h">
+      <Filter>Header Files\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="scripts\stage1.lua">
@@ -406,13 +418,10 @@
     <None Include="shaders\fragBloom.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="shaders\fragSingleChannel_old.shader">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="shaders\vertexSingleChannel_old.shader">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="shaders\vertexTransform_old.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\fragPrimitiveBloom.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
