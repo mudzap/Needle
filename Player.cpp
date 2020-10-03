@@ -4,12 +4,13 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 	: playerArgs(player), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Transform(entity), Hitbox(animArgs.hitbox) {
 	controllable = true;
 	conversation = false;
-	collideableBullets.reserve(512);
+
+	boundingRadius = sqrt(hitbox.squaredHitRadius);
 
 	//MANUAL SPAWNER CONSTRUCTOR
 	unsigned int bullets = 100;
-	for (int i = 0; i < spawners.size(); i++) {
-		spawners[i] = Spawner(spawnerOffsets[i], bullets, spawnerArgs[i], playerSpawnerArgs[i]);
+	for (int i = 0; i < playerSpawnerArgs.size(); i++) {
+		spawners[0].emplace_back(Spawner(spawnerOffsets[i], bullets, spawnerArgs[i], playerSpawnerArgs[i]));
 	}
 	
 	SetStateSprites(1);
@@ -31,6 +32,7 @@ Player::~Player() {
 
 void Player::HandlePlayerMovement() {
 
+	powerLevel = playerArgs.power / 25;
 	transform.position += transform.velocity;
 
 	ipair state = { 3, 0 };
@@ -57,16 +59,16 @@ void Player::HandlePlayerCollision(Enemy* enemy) {
 
 void Player::HandleSpawners() {
 
-	for (int i = 0; i < spawners.size(); i++) {
+	for (int i = 0; i < spawners[powerLevel].size(); i++) {
 
-		if (spawners[i].HandlePlayerSpawner() && shooting) {
-			spawners[i].Instantiate(playerSpawnerArgs[i].baseProjectile, transform.position + spawners[i].offset, spawnerArgs[i]);
-			spawners[i].ResetTimer();
+		if (spawners[powerLevel][i].HandlePlayerSpawner() && shooting) {
+			spawners[powerLevel][i].Instantiate(playerSpawnerArgs[i].baseProjectile, transform.position + spawners[powerLevel][i].offset, spawnerArgs[i]);
+			spawners[powerLevel][i].ResetTimer();
 		}
 
-		spawners[i].BatchProcessBullets();
-		spawners[i].ScissorTest();
-		spawners[i].FillVertices();
+		spawners[powerLevel][i].BatchProcessBullets();
+		spawners[powerLevel][i].ScissorTest();
+		spawners[powerLevel][i].FillVertices();
 
 	}
 
@@ -81,13 +83,12 @@ void Player::CheckGrazeable(Spawner& spawner) {
 	const unsigned int size = spawner.currentSize - spawner.trashSize;
 #endif
 
-	collideableBullets.clear();
-
 	for (unsigned int i = 0; i < size; i++) {
 
 		if (Hitbox::CheckCollision(hitbox.squaredHurtRadius, spawner.squaredHitboxRadius, transform.position, spawner.position[i])) {
 			
-			collideableBullets.emplace_back(i);
+			//collideableBullets.emplace_back(i);
+			spawner.PushCollideable(i);
 			if (spawner.grazeable[i] & PFLAG_GRAZEABLE) {
 				playerArgs.grazeScore++;
 				spawner.grazeable[i] &= ~PFLAG_GRAZEABLE;
@@ -100,21 +101,25 @@ void Player::CheckGrazeable(Spawner& spawner) {
 }
 
 void Player::CheckCollideable(Spawner& spawner) {
-	const unsigned int size = collideableBullets.size();
+	//const unsigned int size = collideableBullets.size();
+	const unsigned int size = spawner.collideables;
 
 	for (unsigned int i = 0; i < size; i++) {
 
 		if (Hitbox::CheckCollision(hitbox.squaredHitRadius, spawner.squaredHitboxRadius,
-			transform.position, spawner.position[collideableBullets[i]])) {
+			transform.position, spawner.position[spawner.collideableBullets[i]])) {
 			
-			spawner.BatchSwap(collideableBullets[i]);
+			spawner.BatchSwap(spawner.collideableBullets[i]);
+			spawner.ClearCollideable();
 
 			playerArgs.hearts--;
-			collideableBullets.clear();
+
 			return;
 		}
 
 	}
+
+	spawner.ClearCollideable();
 
 }
 
@@ -128,8 +133,8 @@ void Player::Draw() {
 
 void Player::DrawBullets() {
 
-	for (int i = 0; i < spawners.size(); i++) {
-		spawners[i].Draw(spawners[i].tvertices[0], spawners[i].currentSize - spawners[i].trashSize);
+	for (int i = 0; i < spawners[powerLevel].size(); i++) {
+		spawners[powerLevel][i].Draw(spawners[powerLevel][i].tvertices[0], spawners[powerLevel][i].currentSize - spawners[powerLevel][i].trashSize);
 	}
 
 }

@@ -4,22 +4,28 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
 
     player.shooting = false;
     player.transform.velocity = Complex(0, 0);
+    player.currentSpeed = player.playerArgs.speed;
     camera.velocity = { 0, 0, 0 };
     camera.rotationDelta = { 0, 0 };
 
     const uint8_t* keystate = SDL_GetKeyboardState(NULL);
 
+    if (keystate[SDL_SCANCODE_LSHIFT]) {
+        camera.velocity.y -= 0.4f;
+        player.currentSpeed = player.playerArgs.halfspeed;
+    }
+
     if (keystate[SDL_SCANCODE_UP])
-        player.transform.velocity.y += player.playerArgs.speed;
+        player.transform.velocity.y += player.currentSpeed;
 
     if (keystate[SDL_SCANCODE_DOWN])
-        player.transform.velocity.y -= player.playerArgs.speed;
+        player.transform.velocity.y -= player.currentSpeed;
 
     if (keystate[SDL_SCANCODE_LEFT])
-        player.transform.velocity.x -= player.playerArgs.speed;
+        player.transform.velocity.x -= player.currentSpeed;
 
     if (keystate[SDL_SCANCODE_RIGHT])
-        player.transform.velocity.x += player.playerArgs.speed;
+        player.transform.velocity.x += player.currentSpeed;
 
     if (keystate[SDL_SCANCODE_KP_1])
         lua.script_file("scripts/stage1.lua");
@@ -53,9 +59,6 @@ void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
 
     if (keystate[SDL_SCANCODE_SPACE])
         camera.velocity.y += 0.4f;
-
-    if (keystate[SDL_SCANCODE_LSHIFT])
-        camera.velocity.y -= 0.4f;
 
 
     while (SDL_PollEvent(&event)) {

@@ -13,7 +13,6 @@
 
 //#define _USE_SSE2_
 
-class Player;
 struct SpawnerArgs;
 
 class Bullets: public Mesh {

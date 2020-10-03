@@ -195,8 +195,10 @@ void Enemy::HandleEnemy(Player& player) {
 
 		HandleAnimation();
 
-		for (int i = 0; i < player.spawners.size(); i++) {
-			CheckCollideable(player.spawners[i]);
+		std::vector<Spawner>& playerSpawner = player.GetPlayerSpawners();
+
+		for (int i = 0; i < playerSpawner.size(); i++) {
+			CheckCollideable(playerSpawner[i]);
 		}
 
 #ifdef _MAT4_INSTANCING_

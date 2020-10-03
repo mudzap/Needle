@@ -5,20 +5,22 @@
 
 /*
 TODO:	MAKE PLAYER FINDER
-		UNIFY PLAYER FINDER, ONLY ONE CALL NEEDED PER INITIALIZATION/HANDLER CALL	
+		UNIFY PLAYER FINDER, ONLY ONE CALL NEEDED PER INITIALIZATION/HANDLER CALL
 */
 
-Spawner::Spawner() {
+Spawner::Spawner(){
 }
 
 
 //MANUAL SPAWNER CONSTRUCTOR
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile) :
-	//Bullets(reserveSize),
 	Bullets(projectile, reserveSize),
 	spawner(spawner),
 	projectile(projectile)
 {
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 	InitializeEmptySpawner();
 	handlingFunction = &Spawner::HandleEmpty;
 }
@@ -30,6 +32,9 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 	constant(constant),
 	offset(offset)
 {
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 	InitializeConstantSpawner();
 	handlingFunction = &Spawner::HandleConstantSpawner;
 }
@@ -41,6 +46,9 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 	barrage(barrage),
 	offset(offset)
 {
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 	InitializeBarrageSpawner();
 	handlingFunction = &Spawner::HandleBarrageSpawner;
 }
@@ -52,6 +60,9 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 	random(random),
 	offset(offset)
 {
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 	InitializeRandomSpawner();
 	handlingFunction = &Spawner::HandleRandomSpawner;
 }
@@ -62,6 +73,9 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 	playerSpawner(playerSpawner),
 	offset(offset)
 {
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 	InitializePlayerSpawner();
 	handlingFunction = &Spawner::HandleEmpty;
 }
@@ -71,6 +85,17 @@ Spawner::~Spawner() {
 
 void Spawner::HandleSpawner() {
 	(*this.*handlingFunction)();
+}
+
+void Spawner::ClearCollideable() {
+	collideables = 0;
+}
+
+void Spawner::PushCollideable(unsigned int i) {
+	if (collideables < colliderSize) {
+		collideableBullets[collideables] = i;
+		collideables++;
+	}
 }
 
 inline void Spawner::InitializeConstantSpawner() {
@@ -84,7 +109,7 @@ inline void Spawner::InitializeConstantSpawner() {
 	if (constant.aimed) {
 		//AIM AT PLAYER, GET ANGLE
 	}
-	
+
 }
 
 inline void Spawner::InitializeBarrageSpawner() {
@@ -181,7 +206,7 @@ void Spawner::HandleConstantSpawner() {
 
 	const unsigned int tempTime = Timer::lifeTimeFrames - timer[CONSTANT];
 	const unsigned int resetTime = Timer::lifeTimeFrames - resettableTimer[CONSTANT];
-	
+
 	shouldFire[CONSTANT] = false;
 
 	if (tempTime >= barrage.startTimer) {
@@ -317,7 +342,7 @@ void Spawner::InstantiateConstantPattern() {
 
 	currentBulletAngle[CONSTANT] = constant.initialBulletAngle + spawner.angle - offsetTemp;
 	float temp = currentBulletAngle[CONSTANT];
-	
+
 	for (unsigned int i = 0; i < constant.bulletPerArray; i++) {
 
 		for (unsigned int j = 0; j < constant.bulletArrays; j++) {
@@ -331,7 +356,7 @@ void Spawner::InstantiateConstantPattern() {
 
 			Instantiate(tempProjectile[CONSTANT], transform.position, spawner);
 			currentBulletAngle[CONSTANT] += constant.angleBetweenArray;
-			
+
 		}
 
 		currentBulletAngle[CONSTANT] = temp + constant.angleBetweenBullets;

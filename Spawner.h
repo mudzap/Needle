@@ -5,6 +5,7 @@
 #define BARRAGE 1
 #define RANDOM 2
 
+#include <vector>
 #include <deque>
 #include "RNG.h"
 #include "Projectile.h"
@@ -40,7 +41,7 @@ struct ConstantArgs {
 	unsigned int bulletShotTimer = 0;
 	Complex perArrayAccel = { 0.f, 0.f };
 	Complex perBulletAccel = { 0.f, 0.f };
- };
+};
 const ConstantArgs defaultConstant;
 
 struct BarrageArgs {
@@ -80,9 +81,9 @@ struct RandomArgs {
 	unsigned int bulletShotTimer = 0;
 	Complex perBulletAccel = { 0.f, 0.f };
 
-	float speedRange[2] = {0.9f, 1.1f};
-	float accelRange[2] = {0.01f, 0.02f};
-	float coneRange[2] = {0, 360};
+	float speedRange[2] = { 0.9f, 1.1f };
+	float accelRange[2] = { 0.01f, 0.02f };
+	float coneRange[2] = { 0, 360 };
 	//float loopingCone[2] = { 0, 90 };
 };
 const RandomArgs defaultRandom;
@@ -105,100 +106,105 @@ class Player;
 struct PlayerArgs;
 
 class Spawner : public Transform, public Bullets {
-	public:
+public:
 
-		Spawner();
+	Spawner();
 
-		Spawner(
-			const Complex offset,
-			const unsigned int reserveSize,
-			const SpawnerArgs& spawner,
-			const Projectile& projectile = defaultProjectile
-		);
-		Spawner(
-			const Complex offset,
-			const unsigned int reserveSize,
-			const SpawnerArgs& spawner,
-			const ConstantArgs& constant = defaultConstant
-		);
-		Spawner(
-			const Complex offset,
-			const unsigned int reserveSize,
-			const SpawnerArgs& spawner,
-			const BarrageArgs& barrage = defaultBarrage
-		);
-		Spawner(
-			const Complex offset,
-			const unsigned int reserveSize,
-			const SpawnerArgs& spawner,
-			const RandomArgs& random = defaultRandom
-		);
-		Spawner(
-			const Complex offset,
-			const unsigned int reserveSize,
-			const SpawnerArgs& spawner,
-			const PlayerSpawnerArgs& playerSpawner = defaultPlayerSpawner
-		);
+	Spawner(
+		const Complex offset,
+		const unsigned int reserveSize,
+		const SpawnerArgs& spawner,
+		const Projectile& projectile = defaultProjectile
+	);
+	Spawner(
+		const Complex offset,
+		const unsigned int reserveSize,
+		const SpawnerArgs& spawner,
+		const ConstantArgs& constant = defaultConstant
+	);
+	Spawner(
+		const Complex offset,
+		const unsigned int reserveSize,
+		const SpawnerArgs& spawner,
+		const BarrageArgs& barrage = defaultBarrage
+	);
+	Spawner(
+		const Complex offset,
+		const unsigned int reserveSize,
+		const SpawnerArgs& spawner,
+		const RandomArgs& random = defaultRandom
+	);
+	Spawner(
+		const Complex offset,
+		const unsigned int reserveSize,
+		const SpawnerArgs& spawner,
+		const PlayerSpawnerArgs& playerSpawner = defaultPlayerSpawner
+	);
 
-		~Spawner();
+	~Spawner();
 
-		//inline void InstantiateBullet(Bullets* const pool, const Projectile* projectile, const Complex* position);
+	//inline void InstantiateBullet(Bullets* const pool, const Projectile* projectile, const Complex* position);
 
-		inline void InitializeConstantSpawner();
-		inline void InitializeEmptySpawner();
-		inline void InitializeBarrageSpawner();
-		inline void InitializeRandomSpawner();
-		inline void InitializePlayerSpawner();
+	inline void InitializeConstantSpawner();
+	inline void InitializeEmptySpawner();
+	inline void InitializeBarrageSpawner();
+	inline void InitializeRandomSpawner();
+	inline void InitializePlayerSpawner();
+
+	void ClearCollideable();
+	void PushCollideable(unsigned int i);
+
+	void HandleSpawner();
+	void HandleEmpty();
+	void HandleConstantSpawner();
+	void HandleBarrageSpawner();
+	void HandleRandomSpawner();
+	bool HandlePlayerSpawner();
+
+	void ResetTimer();
 
 
-		void HandleSpawner();
-		void HandleEmpty();
-		void HandleConstantSpawner();
-		void HandleBarrageSpawner();
-		void HandleRandomSpawner();
-		bool HandlePlayerSpawner();
+	inline void GetRandom();
 
-		void ResetTimer();
+	inline void LoopAtCone();
 
+	void InstantiateConstantPattern();
+	void InstantiateBarragePattern();
+	void InstantiateRandomPattern();
 
-		inline void GetRandom();
+	SpawnerArgs spawner;
+	union {
+		Projectile projectile;
+		ConstantArgs constant;
+		BarrageArgs barrage;
+		RandomArgs random;
+		PlayerSpawnerArgs playerSpawner;
+	};
 
-		inline void LoopAtCone();
+	Complex offset;
+	unsigned int* collideableBullets;
+	unsigned int colliderSize;
+	unsigned int collideables = 0;
 
-		void InstantiateConstantPattern();
-		void InstantiateBarragePattern();
-		void InstantiateRandomPattern();
+private:
 
-		SpawnerArgs spawner;
-		union {
-			Projectile projectile;
-			ConstantArgs constant;
-			BarrageArgs barrage;
-			RandomArgs random;
-			PlayerSpawnerArgs playerSpawner;
-		};
+	void (Spawner::* handlingFunction)() = NULL;
 
-		Complex offset;
+	//unsigned int currentBullet = 0;
+	bool stopBarrage;
+	unsigned int barrageResettable;
+	unsigned int barrageBullets;
+	Projectile tempProjectile[3];
 
-	private:
+	//CLEANUP ARRAYS, ONLY ONE OBJECT/PRIMITIVE NEEDED 
 
-		void (Spawner::*handlingFunction)() = NULL;
-
-		//unsigned int currentBullet = 0;
-		bool stopBarrage;
-		unsigned int barrageResettable;
-		unsigned int barrageBullets;
-		Projectile tempProjectile[3];
-
-		//CLEANUP ARRAYS, ONLY ONE OBJECT/PRIMITIVE NEEDED 
-
-		float currentBulletAngle[3];
-		Complex currentBulletSpeed[3];
-		Complex currentBulletAccel[3];
-		Complex playerPosition;
-		unsigned int timer[3];
-		unsigned int resettableTimer[3];
-		bool shouldFire[3];
+	float currentBulletAngle[3];
+	Complex currentBulletSpeed[3];
+	Complex currentBulletAccel[3];
+	Complex playerPosition;
+	unsigned int timer[3];
+	unsigned int resettableTimer[3];
+	bool shouldFire[3];
 
 };
 

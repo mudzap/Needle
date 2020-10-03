@@ -331,8 +331,11 @@ int Game::OnExecute() {
     //int nbFrames = 0;
 
 
-    while (isRunning) {
+    std::vector<std::thread> enemyThreads;
 
+
+    while (isRunning) {
+        
         /*
         nbFrames++;
         if (SDL_GetTicks() - lastTime >= 1000.0) { // If last prinf() was more than 1 sec ago
@@ -350,33 +353,43 @@ int Game::OnExecute() {
 
         //ON LOOP
 
+
         Audio::HandleAudio();
         timer.Process();
 
-        std::thread t2([&] {
+
+        std::thread cameraThread([&] {
 
             //MOVE TO SPAWNER
-            myLaser.HandleNodes();
+            //myLaser.HandleNodes();
 
             camera.HandleCamera();
 
             stage.GetDrawables(camera);
+        
+        });
 
-            });
 
         for (Enemy* enemies : enemyPool.activeEnemies) {
-            player.HandlePlayerCollision(enemies);
-            enemies->HandleEnemy(player);
+            
+            enemyThreads.emplace_back( std::thread([&player, enemies] {
+
+                player.HandlePlayerCollision(enemies);
+                enemies->HandleEnemy(player);
+
+            }) );
+            
         }
+
+        for (auto& th : enemyThreads) th.join();
+        enemyThreads.clear();
 
         player.HandlePlayerMovement();
         player.HandleSpawners();
 
-        t2.join();
-
         OnLoop();
-        
 
+        cameraThread.join();
 
         //ON RENDER
 

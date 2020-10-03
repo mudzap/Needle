@@ -2,6 +2,7 @@
 #define _PLAYER_
 
 #include <deque>
+#include <vector>
 
 #include "Complex.h"
 #include "Spawner.h"
@@ -19,19 +20,20 @@ struct PlayerArgs {
 	unsigned int power = 0;
 	uint32_t grazeScore = 0;
 	uint32_t pointScore = 0;
-	float speed = 5;
+	float speed = 7.f;
+	float halfspeed = speed * 0.5f;
 };
 
 const ProjArgs playerProjectileArgs1 = {
 	.flags = (ProjFlags)0,
-	.initialVel = {8.f, 0.f},
-	.angle = 90.f
+	.initialVel = {20.f, 0.f},
+	.angle = 90.f	
 };
 
 const PlayerSpawnerArgs playerSpawner1 = {
 	.baseProjectile = Projectile(playerProjectileArgs1, RingedBulletCyan),
 	.aimed = false,
-	.bulletShotTimer = 100
+	.bulletShotTimer = 80
 };
 
 class Enemy;
@@ -56,17 +58,27 @@ class Player : public Transform, public Hitbox, public Animation {
 		void Draw();
 		void DrawBullets();
 
+		std::vector<Spawner>& GetPlayerSpawners() {
+			return spawners[powerLevel];
+		};
+
 		PlayerArgs playerArgs;
 
 		bool controllable = true;
 		bool conversation = false;
 		bool shooting = false;
 
-		std::array<Spawner, 2> spawners;
+		//5 STATES, EACH ONE EVERY 25 POWER, 0, 25, 50, 75, 100
+		//INDICATES WHICH SPAWNER FROM THE SPAWNER ARRAY TO USE
+		std::vector<Spawner> spawners[5];
+
+		float currentSpeed = 0.f;
+		std::vector<unsigned int> collideableBullets;
 
 	private:
 
-		std::vector<unsigned int>collideableBullets;
+		int powerLevel = 0;
+		float boundingRadius = 0.f;
 
 		void CheckGrazeable(Spawner& spawner);
 		void CheckCollideable(Spawner& spawner);
@@ -78,18 +90,20 @@ class Player : public Transform, public Hitbox, public Animation {
 
 		void BindPlayerToScreen() {
 
-			if (transform.position.x > 384.f)
-				transform.position.x = 384.f;
-			else if (transform.position.x < -384.f)
-				transform.position.x = -384.f;
+			if (transform.position.x > 384.f - boundingRadius)
+				transform.position.x = 384.f - boundingRadius;
+			else if (transform.position.x < -384.f + boundingRadius)
+				transform.position.x = -384.f + boundingRadius;
 
-			if (transform.position.y > 448.f)
-				transform.position.y = 448.f;
-			else if (transform.position.y < -448.f)
-				transform.position.y = -448.f;
+			if (transform.position.y > 448.f - boundingRadius)
+				transform.position.y = 448.f - boundingRadius;
+			else if (transform.position.y < -448.f + boundingRadius)
+				transform.position.y = -448.f + boundingRadius;
 			
 		}
 
+		//SPAWNER STATES
+		//STATE 1
 		std::array<SpawnerArgs, 2> spawnerArgs = { defaultSpawner, defaultSpawner };
 		std::array<PlayerSpawnerArgs, 2> playerSpawnerArgs = { playerSpawner1, playerSpawner1 };
 		std::array<Complex, 2> spawnerOffsets = { Complex{-20.f, 5.f}, Complex{20.f, 5.f} };

@@ -11,6 +11,8 @@
 #include "Animation.h"
 #include "Player.h"
 
+#include <vector>
+
 enum EnemyState {
 	MOVE_TOWARDS,
 	SPRING_TOWARDS,

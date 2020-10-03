@@ -149,15 +149,17 @@ void Bullets::ScissorTest() {
 	const float widthCheck = 384.f + quad.w * 0.5f;
 	const float heigthCheck = 448.f + quad.h * 0.5f;
 
-	
+	/*
 	for (unsigned int i = 0; i < currentSize - trashSize; i++) {
 
 		if (position[i].x > widthCheck || position[i].x < -widthCheck || position[i].y > heigthCheck || position[i].y < -heigthCheck)
 			cullList.emplace_back(i);
 
 	}
-
+	*/
 	BatchSwap();
+	
+	
 	
 	//BatchSwap(i, currentSize - trashSize - 1);
 	//trashSize++;
@@ -165,7 +167,6 @@ void Bullets::ScissorTest() {
 }
 
 #endif
-
 
 
 void Bullets::BatchSwap() {
@@ -350,6 +351,8 @@ void Bullets::DeleteBullet(const int ID) {
 	sineTimer.erase(sineTimer.begin() + ID);
 	stopAndGoTimer.erase(stopAndGoTimer.begin() + ID);
 	zigzagTimer.erase(zigzagTimer.begin() + ID);
+
+	currentSize--;
 
 }
 
