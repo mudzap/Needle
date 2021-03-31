@@ -8,3 +8,6 @@ sudo cp ../include/AntTweakBar.h /usr/include/
 sudo cp ../lib/libAntTweakBar.so /usr/lib/i386-linux-gnu/ # For 32bit systems, or:
 sudo cp ../lib/libAntTweakBar.so /usr/lib/x86_64-linux-gnu/ # for 64bit systems
 ```
+```bash
+sudo cp -r ./glm /usr/include/glm
+```
