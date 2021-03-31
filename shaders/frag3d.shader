@@ -2,6 +2,8 @@
 #define _USE_RIM_LIGHTING_
 #define _USE_REFLECTIONS_
 
+#define _GAMMA_ 2.0
+
 layout(location = 0) out vec4 gl_Color;
 //layout(location = 1) out vec4 BrightColor;
 
@@ -56,24 +58,28 @@ void main() {
 	vec3 playerHalfwayDir = normalize(playerLightDir + viewDir);
 
 	//DIFFUSE
-	float diff = max(dot(lightDir, normal), 0.0);
-	float playerDiff = max(dot(playerLightDir, normal), 0.0);
+	//float diff = max(dot(lightDir, normal), 0.0);
+	//float playerDiff = max(dot(playerLightDir, normal), 0.0);
+	float diff = pow(0.5*dot(lightDir, normal) + 0.5, _GAMMA_);
+	float playerDiff = pow(0.5*dot(playerLightDir, normal) + 0.5, _GAMMA_) * 0.5;
 	vec3 diffuse = m_In.v_Kd * lightColor * (diff + playerDiff * distanceFade);
 	
 #ifdef _USE_SPECULAR_
 	//SPECULAR
 	//float spec = pow(max(dot(halfwayDir, normal), 0.0), m_In.v_Ns) * mapping.a;
-	float spec = pow(max(dot(halfwayDir, normal), 0.0), m_In.v_Ns);
-	float playerSpec = pow(max(dot(playerHalfwayDir, normal), 0.0), m_In.v_Ns);
+	//float spec = pow(max(dot(halfwayDir, normal), 0.0), m_In.v_Ns);
+	float spec = pow(0.5 * dot(halfwayDir, normal) + 0.5, m_In.v_Ns);
+	//float playerSpec = pow(max(dot(playerHalfwayDir, normal), 0.0), m_In.v_Ns);
+	float playerSpec = pow(0.5 * dot(playerHalfwayDir, normal) + 0.5, m_In.v_Ns);
 	vec3 specular = m_In.v_Ks * lightColor * (spec + playerSpec);
 #endif
 
 #ifdef _USE_RIM_LIGHTING_
 	//RIM LIGHTING
-	float rim = 1 - max(dot(viewDir, normal), 0.0);
-	rim = smoothstep(0.9, 1.0, rim);
-	vec3 RimColor = vec3(0.2) * lightColor;
-	vec3 finalRim = RimColor * vec3(rim);
+	float rim = 1.0 - max(dot(viewDir, normal), 0.0);
+	float upperRim = 1.0 - max(dot(vec3(0.0, 1.0, 0.0), normal), 0.0);
+	//vec3 finalRim = pow(max(rim, upperRim * 0.85), m_In.v_Ns) * lightColor * m_In.v_Ks;
+	vec3 finalRim = pow(rim, m_In.v_Ns) * lightColor * m_In.v_Ks;
 #endif
 
 #if defined _USE_REFLECTIONS_ && defined _USE_SPECULAR_
@@ -85,7 +91,7 @@ void main() {
 
 	//FUCK BRANCHING
 #if defined _USE_SPECULAR_ && defined _USE_RIM_LIGHTING_ && defined _USE_REFLECTIONS_ 
-	vec3 result = (ambient + diffuse + finalRim) * objectColor + specular * (texture(skybox, refl).rgb * reflectionStrength + 1);
+	vec3 result = (finalRim + ambient + diffuse) * objectColor + specular * (texture(skybox, refl).rgb * reflectionStrength + 1);
 	//vec3 result = (ambient + diffuse + finalRim) * objectColor + (texture(skybox, refl).rgb * reflectionStrength);
 
 #elif defined _USE_SPECULAR_ && defined _USE_RIM_LIGHTING_ && !defined _USE_REFLECTIONS_
