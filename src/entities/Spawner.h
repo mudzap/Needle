@@ -7,13 +7,15 @@
 
 #include <vector>
 #include <deque>
-#include "RNG.h"
+
+#include "video/Texture.h"
+#include "SDL2/SDL.h"
+#include "math/Complex.h"
+#include "util/Timer.h"
+#include "math/RNG.h"
+
 #include "Projectile.h"
-#include "Texture.h"
-#include "SDL.h"
 #include "Bullets.h"
-#include "Complex.h"
-#include "Timer.h"
 #include "Transform.h"
 
 struct SpawnerArgs {

@@ -3,8 +3,8 @@
 
 #define MAX_ENEMIES 64
 
-#include "Enemy.h"
-#include "Mesh.h"
+#include "entities/Enemy.h"
+#include "video/Mesh.h"
 
 #include <array>
 #include <algorithm>

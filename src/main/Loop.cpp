@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Timer.h"
+#include "util/Timer.h"
 
 void Game::OnLoop() {
 	Timer::lifeTime = SDL_GetTicks();

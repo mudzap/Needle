@@ -5,9 +5,10 @@
 #define SINE 1
 #define ZIGZAG 2
 
-#include "Complex.h"
+#include "video/Mesh.h"
+#include "math/Complex.h"
+
 #include "Transform.h"
-#include "Mesh.h"
 #include "Hitbox.h"
 
 

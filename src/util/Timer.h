@@ -2,18 +2,19 @@
 #define _TIMER_
 
 
-//#include "Enemy.h"
-#include "Laser.h"
-#include "Spawner.h"
-//#include "Pool.h"
+//#include "entities/Enemy.h"
+#include "entities/Laser.h"
+#include "entities/Spawner.h"
+//#include "entities/Pool.h"
 
 
 extern "C"
 {
-#include "lua/include/lua.h"
-#include "lua/include/lauxlib.h"
-#include "lua/include/lualib.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 }
+
 #include <vector>
 #include <sol/sol.hpp>
 #include <algorithm>

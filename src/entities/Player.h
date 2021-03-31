@@ -4,15 +4,15 @@
 #include <deque>
 #include <vector>
 
-#include "Complex.h"
+#include "data/ProjData.h"
+#include "math/Complex.h"
+#include "video/Mesh.h"
+
 #include "Spawner.h"
 #include "Transform.h"
-#include "Mesh.h"
 #include "Hitbox.h"
 #include "Enemy.h"
 #include "Animation.h"
-
-#include "ProjData.h"
 
 struct PlayerArgs {
 	unsigned short hearts = 2;

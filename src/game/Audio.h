@@ -6,7 +6,8 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
-#include <SDL_mixer.h>
+
+#include <SDL2/SDL_mixer.h>
 
 enum SampleIDs {
 	SFX_EXPLOSION = 0,

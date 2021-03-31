@@ -1,7 +1,7 @@
 #include "Timer.h"
 //#include "Enemy.h"
-#include "Laser.h"
-#include "Spawner.h"
+#include "entities/Laser.h"
+#include "entities/Spawner.h"
 //#include "Pool.h"
 
 uint32_t Timer::countedFrames = 0;

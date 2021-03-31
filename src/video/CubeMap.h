@@ -5,7 +5,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "game/Camera.h"
 
 struct CubeMap: public Model {
 

@@ -2,11 +2,11 @@
 #define _CAMERA_
 
 #include "glm/glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/vector_angle.hpp"
 
-#include "Transform.h"
-#include "Complex.h"
+#include "entities/Transform.h"
+#include "math/Complex.h"
 
 enum CameraMovementState {
 	CM_STOP,

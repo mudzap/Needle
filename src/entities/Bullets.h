@@ -2,14 +2,16 @@
 #define _BULLETS_
 
 #include <vector>
-#include "Projectile.h"
-#include "Complex.h"
-#include "Transform.h"
-#include "Mesh.h"
-#include "Hitbox.h"
 #include <algorithm>
 #include <thread>
 #include <unordered_map>
+
+#include "math/Complex.h"
+#include "video/Mesh.h"
+
+#include "Projectile.h"
+#include "Transform.h"
+#include "Hitbox.h"
 
 //#define _USE_SSE2_
 

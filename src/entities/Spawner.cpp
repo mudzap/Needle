@@ -1,7 +1,7 @@
 #include "Spawner.h"
 #include "Player.h"
-#include "Timer.h"
-#include "Audio.h"
+#include "util/Timer.h"
+#include "game/Audio.h"
 
 /*
 TODO:	MAKE PLAYER FINDER

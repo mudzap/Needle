@@ -1,9 +1,9 @@
 #ifndef _ANIMDATA_
 #define _ANIMDATA_
 
-#include "Mesh.h"
-#include "Animation.h"
-#include "Hitbox.h"
+#include "video/Mesh.h"
+#include "entities/Animation.h"
+#include "entities/Hitbox.h"
 
 //PLAYER
 const HitboxArgs playerHitbox = { 36, 1024 };

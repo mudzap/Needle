@@ -1,9 +1,10 @@
 #ifndef _LUA_DATA_
 #define _LUA_DATA_
 
+#include "util/Script.h"
+
 #include "ProjData.h"
 #include "AnimData.h"
-#include "Script.h"
 
 struct LuaData {
 

@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Shader.h"
+#include "video/Shader.h"
 
 bool Game::OnInit() {
 	

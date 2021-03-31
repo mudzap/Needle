@@ -6,11 +6,12 @@
 #include <array>
 #include <cstdarg>
 
-#include "Complex.h"
-#include "Mesh.h"
-#include "Timer.h"
+#include "math/Complex.h"
+#include "video/Mesh.h"
+#include "util/Timer.h"
+#include "math/Math.h"
+
 #include "Hitbox.h"
-#include "Math.h"
 
 struct AnimationArgs {
 	HitboxArgs hitbox = { 64, 1024 };

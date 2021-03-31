@@ -10,18 +10,19 @@
 #define SPHERE_RADIUS (TILE_W * UNIT_CUBE_DIAGONAL_LENGTH * EASE_CONSTANT)
 
 
-#include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/
 
 #include <vector>
 #include <algorithm>
 #include <string>
 
-#include "Model.h"
-#include "Complex.h"
-#include "Shader.h"
+#include "video/Texture.h"
+#include "video/Model.h"
+#include "math/Complex.h"
+#include "video/Shader.h"
+
 #include "Camera.h"
-#include "Texture.h"
 
 const Complex NORTH = { 0, 1 };
 const Complex EAST = { 1, 0 };

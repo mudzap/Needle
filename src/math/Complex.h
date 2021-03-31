@@ -1,7 +1,6 @@
 #ifndef _COMPLEX_
 #define _COMPLEX_
 
-#include "fasttrigo.h"
 #include "Math.h"
 #include <xmmintrin.h>
 

@@ -12,20 +12,21 @@
 
 extern "C"
 {
-#include "lua/include/lua.h"
-#include "lua/include/lauxlib.h"
-#include "lua/include/lualib.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 }
 
 
 #define GLEW_STATIC
-#include <GL\glew.h>
-#include <SDL_opengl.h>
-#include <gl\glu.h>
-#include "imgui\imgui.h"
-#include "imgui\imgui_impl_sdl.h"
-#include "imgui\imgui_impl_opengl3.h"
-#include <SDL.h>
+#include <GL/glew.h>
+#include <SDL2/SDL_opengl.h>
+//#include <gl/glu.h>
+#include <GL/glu.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include <SDL2/SDL.h>
 
 #include <freetype-gl/freetype-gl.h>
 #include <freetype-gl/texture-atlas.h>
@@ -41,12 +42,11 @@ extern "C"
 #include "assimp/scene.h"           // Output data structure
 #include "assimp/postprocess.h"     // Post processing flags
 
-#include "fasttrigo.h"
-#include <SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include "stb_image.h"
-#include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
-#include "SDL_thread.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include <SDL2/SDL_thread.h>
 #include "stb_image_write.h"
 #include "stb_truetype.h"
 #include "sol/sol.hpp"
@@ -68,37 +68,37 @@ extern "C"
 #include <set>
 #include <cstdarg>
 
-#include "StringFormat.h"
-#include "Texture.h"
-#include "RNG.h"
-#include "Projectile.h"
-#include "Spawner.h"
-#include "Player.h"
-#include "Renderer.h"
-#include "Shader.h"
-#include "Complex.h"
-#include "Hitbox.h"
-#include "Transform.h"
-#include "Mesh.h"
-#include "Font.h"
-#include "Laser.h"
-#include "Enemy.h"
-#include "Timer.h"
-#include "Pool.h"
-#include "Script.h"
-#include "Model.h"
-#include "Camera.h"
-#include "UI.h"
-#include "ProjData.h"
-#include "AnimData.h"
-#include "LuaData.h"
-#include "Animation.h"
-#include "Stage.h"
-#include "Audio.h"
-#include "CubeMap.h"
-#include "Framebuffer.h"
-#include "PlayUI.h"
-#include "Material.h"
+#include "util/StringFormat.h"
+#include "video/Texture.h"
+#include "math/RNG.h"
+#include "entities/Projectile.h"
+#include "entities/Spawner.h"
+#include "entities/Player.h"
+#include "video/Renderer.h"
+#include "video/Shader.h"
+#include "math/Complex.h"
+#include "entities/Hitbox.h"
+#include "entities/Transform.h"
+#include "video/Mesh.h"
+#include "video/Font.h"
+#include "entities/Laser.h"
+#include "entities/Enemy.h"
+#include "util/Timer.h"
+#include "game/Pool.h"
+#include "util/Script.h"
+#include "video/Model.h"
+#include "game/Camera.h"
+#include "menu/UI.h"
+#include "data/ProjData.h"
+#include "data/AnimData.h"
+#include "data/LuaData.h"
+#include "entities/Animation.h"
+#include "game/Stage.h"
+#include "game/Audio.h"
+#include "video/CubeMap.h"
+#include "video/Framebuffer.h"
+#include "menu/PlayUI.h"
+#include "video/Material.h"
 
 #define DOWNSCALE_FACTOR 3
 const int SCREEN_FPS = 60;

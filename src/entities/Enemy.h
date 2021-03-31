@@ -1,15 +1,17 @@
 #ifndef _ENEMY_
 #define _ENEMY_
 
-#include "Transform.h"
-#include "Mesh.h"
-#include "Complex.h"
+
+#include "video/Mesh.h"
+#include "math/Complex.h"
+//#include "util/Timer.h"
+
 #include "Hitbox.h"
 #include "Projectile.h"
-//#include "Timer.h"
 #include "Spawner.h"
 #include "Animation.h"
 #include "Player.h"
+#include "Transform.h"
 
 #include <vector>
 

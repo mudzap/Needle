@@ -14,9 +14,9 @@
 #include <freetype-gl/edtaa3func.h>
 #include <freetype-gl/text-buffer.h>
 
-#include "Complex.h"
-#include "Mesh.h"
-#include "Font.h"
+#include "math/Complex.h"
+#include "video/Mesh.h"
+#include "video/Font.h"
 
 //LETS CONSIDER
 /*	WE NEED:

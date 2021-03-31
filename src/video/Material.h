@@ -1,8 +1,9 @@
 #ifndef _MATERIAL_
 #define _MATERIAL_
 
+#include "math/Math.h"
+
 #include "Texture.h"
-#include "Math.h"
 
 #include <map>
 #include <vector>

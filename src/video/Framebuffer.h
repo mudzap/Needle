@@ -1,13 +1,14 @@
 #ifndef _FRAMEBUFFER_
 #define _FRAMEBUFFER_
 
-#include <GL\glew.h>
-#include <SDL_opengl.h>
-#include <gl\glu.h>
-#include "imgui\imgui.h"
-#include "imgui\imgui_impl_sdl.h"
-#include "imgui\imgui_impl_opengl3.h"
-#include <SDL.h>
+#include <GL/glew.h>
+#include <SDL2/SDL_opengl.h>
+//#include <gl/glu.h>
+#include <GL/glu.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include <SDL2/SDL.h>
 #include <stdio.h>
 
 #include "Mesh.h"

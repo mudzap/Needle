@@ -1,13 +1,15 @@
 #ifndef _LASER_
 #define _LASER_
 
-#include "Mesh.h"
-#include "Transform.h"
-#include "Complex.h"
 #include <vector>
 #include <array>
-#include "Timer.h"
 #include <algorithm>
+
+#include "video/Mesh.h"
+#include "util/Timer.h"
+#include "math/Complex.h"
+
+#include "Transform.h"
 
 struct LaserArgs {
 	unsigned int laserInterval = 2;

@@ -3,21 +3,21 @@
 
 extern "C"
 {
-#include "lua/include/lua.h"
-#include "lua/include/lauxlib.h"
-#include "lua/include/lualib.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 }
 #include "sol/sol.hpp"
 #include <vector>
 
-#include "Mesh.h"
-#include "Complex.h"
-#include "Hitbox.h"
-#include "Projectile.h"
-#include "Enemy.h"
-#include "Pool.h"
-#include "Animation.h"
-#include "Camera.h"
+#include "video/Mesh.h"
+#include "math/Complex.h"
+#include "entities/Hitbox.h"
+#include "entities/Projectile.h"
+#include "entities/Enemy.h"
+#include "game/Pool.h"
+#include "entities/Animation.h"
+#include "game/Camera.h"
 
 enum ScriptIdentifiers {
     PLAYER = 1,

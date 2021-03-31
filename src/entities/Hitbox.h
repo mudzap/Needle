@@ -1,8 +1,9 @@
 #ifndef _HIT_
 #define _HIT_
 
-#include "Complex.h"
 #include <algorithm>
+
+#include "math/Complex.h"
 
 struct HitboxArgs {
 	float squaredHitRadius = 0;

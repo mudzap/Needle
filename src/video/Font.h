@@ -7,16 +7,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
+#include <array>
+
 #include "Texture.h"
 #include "Transform.h"
 #include "Mesh.h"
 
-#include "stb_image_write.h"
-#include "stb_truetype.h"
-#include "stb_rect_pack.h"
+#include "stb/stb_image_write.h"
+#include "stb/stb_truetype.h"
+#include "stb/stb_rect_pack.h"
 
-#include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <freetype-gl/freetype-gl.h>
 #include <freetype-gl/texture-atlas.h>
@@ -27,9 +30,6 @@
 #include <freetype-gl/vertex-buffer.h>
 #include <freetype-gl/edtaa3func.h>
 #include <freetype-gl/text-buffer.h>
-
-#include <vector>
-#include <array>
 
 enum FontType {
 	F_STATIC,

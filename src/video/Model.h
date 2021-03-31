@@ -2,9 +2,10 @@
 #define _MODEL_
 
 #include "glm/glm.hpp"
-#include <GL\glew.h>
-#include <SDL_opengl.h>
-#include <gl\glu.h>
+#include <GL/glew.h>
+#include <SDL2/SDL_opengl.h>
+#include <GL/glu.h>
+//#include <gl/glu.h>
 
 #include <vector>
 #include <algorithm>
@@ -14,7 +15,8 @@
 #include "assimp/scene.h"           // Output data structure
 #include "assimp/postprocess.h"     // Post processing flags
 
-#include "Complex.h"
+#include "math/Complex.h"
+
 #include "Texture.h"
 #include "Material.h"
 

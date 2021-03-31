@@ -5,10 +5,10 @@
 #include <string>
 #include <memory>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 //#include <SDL_image.h>
 #include <string>
-#include "stb_image.h"
+#include "stb/stb_image.h"
 #include "GL/glew.h"
 
 class Texture {

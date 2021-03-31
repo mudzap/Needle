@@ -1,9 +1,10 @@
 #ifndef _TRANSFORM_
 #define _TRANSFORM_
 
-#include "SDL.h"
 #include <vector>
-#include "Complex.h"
+
+#include "SDL2/SDL.h"
+#include "math/Complex.h"
 
 struct TransformArgs {
 

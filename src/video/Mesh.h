@@ -2,7 +2,7 @@
 #define _MESH_
 
 #include <algorithm>
-#include "Complex.h"
+#include "math/Complex.h"
 #include <GL/glew.h>
 #include "glm/glm.hpp"
 #include <vector>

@@ -3,13 +3,13 @@
 
 extern "C"
 {
-#include "lua/include/lua.h"
-#include "lua/include/lauxlib.h"
-#include "lua/include/lualib.h"
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
 }
 #include "sol/sol.hpp"
 
-#include "Projectile.h"
+#include "entities/Projectile.h"
 
 //STRAIGHT BEAMS
 const HitboxArgs BeamHitbox{ 36, 1024 };
