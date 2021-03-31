@@ -4,6 +4,8 @@
 #include "Math.h"
 #include <xmmintrin.h>
 
+#include "FastTrigo/fasttrigo.h"
+
 #ifndef RAD2DEG
 #define RAD2DEG 57.295779513f
 #endif

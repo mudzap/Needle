@@ -8,7 +8,13 @@ message(${BS2B})
 find_library(SDL2 NAMES libSDL2main.a)
 message(${SDL2})
 
-target_compile_options(needle_game PRIVATE -lstdc++fs)
+target_compile_options(needle_game PRIVATE
+        -lstdc++fs
+        -msse2
+        -msse
+        )
+
+target_compile_features(needle_game PUBLIC cxx_std_20)
 
 target_include_directories(needle_game PRIVATE
         ${SDL2}

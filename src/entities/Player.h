@@ -26,15 +26,41 @@ struct PlayerArgs {
 
 const ProjArgs playerProjectileArgs1 = {
 	.flags = (ProjFlags)0,
-	.initialVel = {20.f, 0.f},
+	.initialVel = Complex{20.f, 0.f},
 	.angle = 90.f	
 };
+
+/*	ProjFlags flags = DefaultProj;
+	Complex initialVel = { 1.f, 0.f };
+	Complex acceleration = { 0.f, 0.f };
+	float stopandgoFrequency = -1.f;
+	float sineFrequency = -1.f;
+	float zigzagFrequency = -1.f;
+	float decayRate = 1.0f;
+	float sineAmplitude = 0.f;
+	float zigzagAmplitude = 0.f;
+	float angle = 0.f;
+	float angleDelta = 0.f;
+	Complex gravityConstant = Complex(0.f, 0.f);
+	*/
 
 const PlayerSpawnerArgs playerSpawner1 = {
 	.baseProjectile = Projectile(playerProjectileArgs1, RingedBulletCyan),
 	.aimed = false,
 	.bulletShotTimer = 80
 };
+
+/*	Projectile baseProjectile = defaultProjectile;
+	bool aimed = false;
+
+	float initialBulletAngle = 0.f;
+	unsigned int bulletArrays = 1;
+	float angleBetweenArray = 0.f;
+	unsigned int bulletPerArray = 1;
+	float angleBetweenBullets = 0.f;
+	float bulletOffsetRadius = 0.f;
+	unsigned int bulletShotTimer = 0;
+	*/
 
 class Enemy;
 

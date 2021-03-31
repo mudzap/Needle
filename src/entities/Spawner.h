@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <deque>
+#include <variant>
 
 #include "video/Texture.h"
 #include "SDL2/SDL.h"
@@ -175,13 +176,24 @@ public:
 	void InstantiateRandomPattern();
 
 	SpawnerArgs spawner;
-	union {
+
+	std::variant<Projectile,
+				ConstantArgs,
+				BarrageArgs,
+				RandomArgs,
+				PlayerSpawnerArgs>
+				specialArgs {defaultProjectile};
+
+	/*
+	union { //ANONYMOUS UNION
 		Projectile projectile;
 		ConstantArgs constant;
 		BarrageArgs barrage;
 		RandomArgs random;
 		PlayerSpawnerArgs playerSpawner;
 	};
+	*/
+
 
 	Complex offset;
 	unsigned int* collideableBullets;

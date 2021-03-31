@@ -16,7 +16,7 @@ Spawner::Spawner(){
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile) :
 	Bullets(projectile, reserveSize),
 	spawner(spawner),
-	projectile(projectile)
+	specialArgs(projectile)
 {
 	colliderSize = reserveSize / 4;
 	collideables = 0;
@@ -29,7 +29,7 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const ConstantArgs& constant) :
 	Bullets(constant.baseProjectile, reserveSize),
 	spawner(spawner),
-	constant(constant),
+	specialArgs(constant),
 	offset(offset)
 {
 	colliderSize = reserveSize / 4;
@@ -43,7 +43,7 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage) :
 	Bullets(barrage.baseProjectile, reserveSize),
 	spawner(spawner),
-	barrage(barrage),
+	specialArgs(barrage),
 	offset(offset)
 {
 	colliderSize = reserveSize / 4;
@@ -57,7 +57,7 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random) :
 	Bullets(random.baseProjectile, reserveSize),
 	spawner(spawner),
-	random(random),
+	specialArgs(random),
 	offset(offset)
 {
 	colliderSize = reserveSize / 4;
@@ -70,7 +70,7 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const PlayerSpawnerArgs& playerSpawner) :
 	Bullets(playerSpawner.baseProjectile, reserveSize),
 	spawner(spawner),
-	playerSpawner(playerSpawner),
+	specialArgs(playerSpawner),
 	offset(offset)
 {
 	colliderSize = reserveSize / 4;
@@ -100,13 +100,13 @@ void Spawner::PushCollideable(unsigned int i) {
 
 inline void Spawner::InitializeConstantSpawner() {
 
-	tempProjectile[CONSTANT] = constant.baseProjectile;
-	currentBulletAccel[CONSTANT] = constant.baseProjectile.projectile.acceleration;
-	currentBulletSpeed[CONSTANT] = constant.baseProjectile.projectile.initialVel;
+	tempProjectile[CONSTANT] = specialArgs.baseProjectile;
+	currentBulletAccel[CONSTANT] = specialArgs.baseProjectile.projectile.acceleration;
+	currentBulletSpeed[CONSTANT] = specialArgs.baseProjectile.projectile.initialVel;
 	timer[CONSTANT] = Timer::lifeTimeFrames;
 	resettableTimer[CONSTANT] = Timer::lifeTimeFrames;
 
-	if (constant.aimed) {
+	if (specialArgs.aimed) {
 		//AIM AT PLAYER, GET ANGLE
 	}
 
@@ -114,13 +114,13 @@ inline void Spawner::InitializeConstantSpawner() {
 
 inline void Spawner::InitializeBarrageSpawner() {
 
-	tempProjectile[BARRAGE] = barrage.baseProjectile;
-	currentBulletAccel[BARRAGE] = barrage.baseProjectile.projectile.acceleration;
-	currentBulletSpeed[BARRAGE] = barrage.baseProjectile.projectile.initialVel;
+	tempProjectile[BARRAGE] = specialArgs.baseProjectile;
+	currentBulletAccel[BARRAGE] = specialArgs.baseProjectile.projectile.acceleration;
+	currentBulletSpeed[BARRAGE] = specialArgs.baseProjectile.projectile.initialVel;
 	timer[BARRAGE] = Timer::lifeTimeFrames;
 	resettableTimer[BARRAGE] = Timer::lifeTimeFrames;
 
-	if (barrage.aimed) {
+	if (specialArgs.aimed) {
 		//AIM AT PLAYER, GET ANGLE
 	}
 
@@ -128,7 +128,7 @@ inline void Spawner::InitializeBarrageSpawner() {
 }
 inline void Spawner::InitializeRandomSpawner() {
 
-	tempProjectile[RANDOM] = random.baseProjectile;
+	tempProjectile[RANDOM] = specialArgs.baseProjectile;
 	GetRandom();
 	timer[RANDOM] = Timer::lifeTimeFrames;
 	resettableTimer[RANDOM] = Timer::lifeTimeFrames;
@@ -137,7 +137,7 @@ inline void Spawner::InitializeRandomSpawner() {
 
 inline void Spawner::InitializeEmptySpawner() {
 
-	tempProjectile[0] = projectile;
+	tempProjectile[0] = specialArgs;
 	timer[0] = Timer::lifeTimeFrames;
 	resettableTimer[0] = Timer::lifeTimeFrames;
 
@@ -150,7 +150,7 @@ inline void Spawner::InitializeEmptySpawner() {
 
 inline void Spawner::InitializePlayerSpawner() {
 
-	tempProjectile[0] = projectile;
+	tempProjectile[0] = specialArgs;
 	timer[0] = Timer::lifeTimeFrames;
 	resettableTimer[0] = Timer::lifeTimeFrames;
 
@@ -170,7 +170,7 @@ bool Spawner::HandlePlayerSpawner() {
 	if (spawner.loopingConeEnd != spawner.loopingConeStart)
 		LoopAtCone();
 
-	if (Timer::lifeTimeFrames - timer[0] >= playerSpawner.bulletShotTimer) {
+	if (Timer::lifeTimeFrames - timer[0] >= specialArgs.bulletShotTimer) {
 		return true;
 	}
 	else {
@@ -209,24 +209,24 @@ void Spawner::HandleConstantSpawner() {
 
 	shouldFire[CONSTANT] = false;
 
-	if (tempTime >= barrage.startTimer) {
+	if (tempTime >= specialArgs.startTimer) {
 
-		if (barrage.stopTimer <= 0)
+		if (specialArgs.stopTimer <= 0)
 			shouldFire[CONSTANT] = true;
 
-		if (barrage.stopTimer + barrage.startTimer > tempTime)
+		if (specialArgs.stopTimer + specialArgs.startTimer > tempTime)
 			shouldFire[CONSTANT] = true;
 
 	}
 
-	if (shouldFire[CONSTANT] && resetTime > constant.bulletShotTimer) {
+	if (shouldFire[CONSTANT] && resetTime > specialArgs.bulletShotTimer) {
 
 		InstantiateConstantPattern();
 		resettableTimer[CONSTANT] = Timer::lifeTimeFrames;
 
-		currentBulletSpeed[CONSTANT] += constant.perBulletAccel;
+		currentBulletSpeed[CONSTANT] += specialArgs.perBulletAccel;
 
-		if (constant.aimed) {
+		if (specialArgs.aimed) {
 			//AIM AT PLAYER, GET ANGLE
 		}
 
@@ -245,24 +245,24 @@ void Spawner::HandleBarrageSpawner() {
 
 	shouldFire[BARRAGE] = false;
 
-	if (tempTime >= barrage.startTimer) {
+	if (tempTime >= specialArgs.startTimer) {
 
-		if (barrage.stopTimer <= 0)
+		if (specialArgs.stopTimer <= 0)
 			shouldFire[BARRAGE] = true;
 
-		if (barrage.stopTimer + barrage.startTimer > tempTime)
+		if (specialArgs.stopTimer + specialArgs.startTimer > tempTime)
 			shouldFire[BARRAGE] = true;
 
 	}
 
-	if (barrageResettable - Timer::lifeTimeFrames > barrage.barrageTimer) {
+	if (barrageResettable - Timer::lifeTimeFrames > specialArgs.barrageTimer) {
 		stopBarrage = false;
 		barrageBullets = 0;
 	}
 
-	if (shouldFire[BARRAGE] && resetTime > barrage.bulletShotTimer && !stopBarrage) {
+	if (shouldFire[BARRAGE] && resetTime > specialArgs.bulletShotTimer && !stopBarrage) {
 
-		if (barrage.aimed) {
+		if (specialArgs.aimed) {
 			//AIM AT PLAYER, GET ANGLE
 		}
 
@@ -270,10 +270,10 @@ void Spawner::HandleBarrageSpawner() {
 		resettableTimer[BARRAGE] = Timer::lifeTimeFrames;
 		barrageBullets++;
 
-		currentBulletSpeed[BARRAGE] += barrage.perBulletAccel;
+		currentBulletSpeed[BARRAGE] += specialArgs.perBulletAccel;
 
-		if (barrageBullets >= barrage.bulletsPerBarrage - 1) {
-			currentBulletSpeed[BARRAGE] = barrage.baseProjectile.projectile.initialVel;
+		if (barrageBullets >= specialArgs.bulletsPerBarrage - 1) {
+			currentBulletSpeed[BARRAGE] = specialArgs.baseProjectile.projectile.initialVel;
 			stopBarrage = true;
 			barrageResettable = Timer::lifeTimeFrames;
 		}
@@ -293,26 +293,26 @@ void Spawner::HandleRandomSpawner() {
 
 	shouldFire[RANDOM] = false;
 
-	if (tempTime >= random.startTimer) {
+	if (tempTime >= specialArgs.startTimer) {
 
-		if (random.aimed) {
+		if (specialArgs.aimed) {
 			//AIM AT PLAYER, GET ANGLE
 		}
 
-		if (random.stopTimer <= 0)
+		if (specialArgs.stopTimer <= 0)
 			shouldFire[RANDOM] = true;
 
-		if (random.stopTimer + random.startTimer > tempTime)
+		if (specialArgs.stopTimer + specialArgs.startTimer > tempTime)
 			shouldFire[RANDOM] = true;
 
 	}
 
 	if (shouldFire[RANDOM]) {
 
-		for (uint16_t i = 0; i < barrage.bulletPerArray; i++) {
+		for (uint16_t i = 0; i < specialArgs.bulletPerArray; i++) {
 
 			GetRandom();
-			currentBulletSpeed[RANDOM] += random.perBulletAccel;
+			currentBulletSpeed[RANDOM] += specialArgs.perBulletAccel;
 
 			InstantiateRandomPattern();
 		}
@@ -322,9 +322,9 @@ void Spawner::HandleRandomSpawner() {
 
 //ELIMINATE STATE
 inline void Spawner::GetRandom() {
-	currentBulletAngle[RANDOM] = RNG::Range(random.coneRange[0], random.coneRange[1]);
-	currentBulletSpeed[RANDOM].x = RNG::Range(random.speedRange[0], random.speedRange[1]);
-	currentBulletAccel[RANDOM].x = RNG::Range(random.accelRange[0], random.accelRange[1]);
+	currentBulletAngle[RANDOM] = RNG::Range(specialArgs.coneRange[0], specialArgs.coneRange[1]);
+	currentBulletSpeed[RANDOM].x = RNG::Range(specialArgs.speedRange[0], specialArgs.speedRange[1]);
+	currentBulletAccel[RANDOM].x = RNG::Range(specialArgs.accelRange[0], specialArgs.accelRange[1]);
 }
 
 
@@ -338,14 +338,14 @@ inline void Spawner::LoopAtCone() {
 
 //REMOVE STATE
 void Spawner::InstantiateConstantPattern() {
-	const float offsetTemp = constant.angleBetweenBullets * (constant.bulletPerArray - 1) * 0.5f;
+	const float offsetTemp = specialArgs.angleBetweenBullets * (specialArgs.bulletPerArray - 1) * 0.5f;
 
-	currentBulletAngle[CONSTANT] = constant.initialBulletAngle + spawner.angle - offsetTemp;
+	currentBulletAngle[CONSTANT] = specialArgs.initialBulletAngle + specialArgs.angle - offsetTemp;
 	float temp = currentBulletAngle[CONSTANT];
 
-	for (unsigned int i = 0; i < constant.bulletPerArray; i++) {
+	for (unsigned int i = 0; i < specialArgs.bulletPerArray; i++) {
 
-		for (unsigned int j = 0; j < constant.bulletArrays; j++) {
+		for (unsigned int j = 0; j < specialArgs.bulletArrays; j++) {
 
 			tempProjectile[CONSTANT].projectile =
 			{
@@ -355,11 +355,11 @@ void Spawner::InstantiateConstantPattern() {
 			};
 
 			Instantiate(tempProjectile[CONSTANT], transform.position, spawner);
-			currentBulletAngle[CONSTANT] += constant.angleBetweenArray;
+			currentBulletAngle[CONSTANT] += specialArgs.angleBetweenArray;
 
 		}
 
-		currentBulletAngle[CONSTANT] = temp + constant.angleBetweenBullets;
+		currentBulletAngle[CONSTANT] = temp + specialArgs.angleBetweenBullets;
 		temp = currentBulletAngle[CONSTANT];
 
 	}
@@ -369,14 +369,14 @@ void Spawner::InstantiateConstantPattern() {
 }
 
 void Spawner::InstantiateBarragePattern() {
-	const float offsetTemp = barrage.angleBetweenBullets * (barrage.bulletPerArray - 1) * 0.5f;
+	const float offsetTemp = specialArgs.angleBetweenBullets * (specialArgs.bulletPerArray - 1) * 0.5f;
 
-	currentBulletAngle[BARRAGE] = barrage.initialBulletAngle + spawner.angle - offsetTemp;
+	currentBulletAngle[BARRAGE] = specialArgs.initialBulletAngle + spawner.angle - offsetTemp;
 	float temp = currentBulletAngle[BARRAGE];
 
-	for (unsigned int i = 0; i < barrage.bulletPerArray; i++) {
+	for (unsigned int i = 0; i < specialArgs.bulletPerArray; i++) {
 
-		for (unsigned int j = 0; j < barrage.bulletArrays; j++) {
+		for (unsigned int j = 0; j < specialArgs.bulletArrays; j++) {
 
 			tempProjectile[BARRAGE].projectile =
 			{
@@ -386,11 +386,11 @@ void Spawner::InstantiateBarragePattern() {
 			};
 
 			Instantiate(tempProjectile[BARRAGE], transform.position, spawner);
-			currentBulletAngle[BARRAGE] += barrage.angleBetweenArray;
+			currentBulletAngle[BARRAGE] += specialArgs.angleBetweenArray;
 
 		}
 
-		currentBulletAngle[BARRAGE] = temp + barrage.angleBetweenBullets;
+		currentBulletAngle[BARRAGE] = temp + specialArgs.angleBetweenBullets;
 		temp = currentBulletAngle[BARRAGE];
 
 	}
@@ -398,10 +398,10 @@ void Spawner::InstantiateBarragePattern() {
 }
 
 void Spawner::InstantiateRandomPattern() {
-	currentBulletAngle[RANDOM] = random.initialBulletAngle + spawner.angle;
+	currentBulletAngle[RANDOM] = specialArgs.initialBulletAngle + spawner.angle;
 
-	for (uint8_t i = 0; i < random.bulletArrays; i++) {
-		currentBulletAngle[RANDOM] += (i - 1) * random.angleBetweenArray;
+	for (uint8_t i = 0; i < specialArgs.bulletArrays; i++) {
+		currentBulletAngle[RANDOM] += (i - 1) * specialArgs.angleBetweenArray;
 
 		tempProjectile[RANDOM].projectile =
 		{
