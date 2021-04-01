@@ -3,10 +3,19 @@
 Mesh::Mesh() : size(0) {
 }
 
+/*
 Mesh::Mesh(const Quad& quad) : size(0) {
 
 	InitTransformBuffers();
-	InitMesh(quad);
+	InitQuad(quad);
+
+}
+*/
+
+void Mesh::InitMesh(const Quad& quad) {
+	size = 0;
+	InitTransformBuffers();
+	InitQuad(quad);
 
 }
 
@@ -241,7 +250,7 @@ void Mesh::Init3DBuffers() {
 }
 
 // SINGLE MESH, CONSTANT
-void Mesh::InitMesh(const Quad& args) {
+void Mesh::InitQuad(const Quad& args) {
 	const float textConst = 1.f / 1024.f;
 
 	Quad quad = args;

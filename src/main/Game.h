@@ -120,10 +120,18 @@ class Game {
 
         bool OnInit();
         int initGL();
-        void OnEvent(SDL_Event& Event, Player& player, sol::state &lua);
+        int initShaders();
+        int initLua();
+        int initMaterials();
+
+        void OnEvent();
+
         void OnLoop();
+
         void OnRender();
         void Render(Renderer& renderer);
+        void RenderImGuiDebug();
+
         void OnCleanup();
 
         void printProgramLog(int program);
@@ -134,6 +142,7 @@ class Game {
         Timer timer;
         Pool enemyPool;
 
+        //Shaders
         Shader shader;
         Shader uiShader;
         Shader fboShader;
@@ -141,12 +150,16 @@ class Game {
         Shader shader3D;
         Shader shaderCube;
         Shader fboIntermediateShader;
+        Shader gaussianShader;
 
+        //Materials
         TextureMap<512, 3> materials = TextureMap<512, 3>(6);
-
-        //Framebuffer frameBuffer;
-        //Framebuffer gaussianFramebuffer[2];
-        //Framebuffer intermediateFramebuffer;
+        Texture texture;
+        Texture normalTest;
+        Texture uiTexture;
+        Texture cubeMap;
+        CubeMap skybox;
+        
 
         Framebuffer frameBuffer = Framebuffer();
         Framebuffer gaussianFramebuffer[2] = {
@@ -163,9 +176,13 @@ class Game {
         glm::mat4 modelMat;
         glm::mat4 projectionMat;
 
+
+        //SDL
+        SDL_Event event;
         SDL_Window* window;
         SDL_GLContext context;
 
+        //Window sizes
         float newWidth = DEFAULT_W;
         float newHeight = DEFAULT_H;
         float newScale = 1.f;
@@ -176,11 +193,25 @@ class Game {
         float newXPlayOffset = DEFAULT_X_OFFSET;
         float newYPlayOffset = DEFAULT_Y_OFFSET;
 
+        //ImGui Debug
+        int frames = 60;
+        float delta1[3] = { 0, 0, 0 };
+        float delta2[3] = { 0, 0, 0 };
+        float delta3[3] = { 0, 0, 0 };
 
+        int aframes = 60;
+        float adelta1[2] = { 0, 0 };
+        float adelta2[2] = { 0, 0 };
+        float adelta3[2] = { 0, 0 };
+        
+        char InputBuf[256] = { 0 };
 
-    private:
+        //Player
+        Player player;
 
-        //std::string vertexShader, fragmentShader;
+        //Lua
+        sol::state lua;
+        sol::function stage1Main; //Only for debug for now
 
 };
 

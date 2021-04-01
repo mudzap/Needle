@@ -20,6 +20,7 @@ bool Game::OnInit() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
+
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 	
     //SDL_OPENGL | SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER
@@ -129,18 +130,153 @@ int Game::initGL()
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 
+    glViewport(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_PLAY_W, DEFAULT_PLAY_H);
     glScissor(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_PLAY_W, DEFAULT_PLAY_H);
-    glAlphaFunc(GL_LEQUAL, 0.5); 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glAlphaFunc(GL_LEQUAL, 0.5); 
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_SCISSOR_TEST);
-    glEnable(GL_ALPHA_TEST);
-    glEnable(GL_BLEND);
+    //glEnable(GL_ALPHA_TEST);
+    //glEnable(GL_BLEND);
 
+    glDisable(GL_MULTISAMPLE);
+    glDisable(GL_SCISSOR_TEST);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    glDisable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     return success;
 }
+
+int Game::initShaders()
+{
+    //Success flag
+    bool success = true;
+
+    orthoPlay = glm::ortho(-DEFAULT_PLAY_W / 2, DEFAULT_PLAY_W / 2, -DEFAULT_PLAY_H / 2, DEFAULT_PLAY_H / 2, 0.0f, 1.0f);
+    orthoFull = glm::ortho(-DEFAULT_W / 2, DEFAULT_W / 2, -DEFAULT_H / 2, DEFAULT_H / 2, 0.f, 1.0f);
+    camera.projection = glm::perspective(glm::radians(60.f), DEFAULT_PLAY_W / DEFAULT_PLAY_H, 1.f, 750.f);
+ 
+    printf("Initializing transform shader\n");
+#ifdef _MAT4_INSTANCING_
+    shader.InitShader("shaders/vertexTransform_old.shader", "shaders/fragTransform.shader");
+    shader.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+    shader.SetUniformMat4f("u_Projection", orthoPlay);
+    shader.SetUniform1f("scale", 1);
+#else
+    shader.InitShader("shaders/vertexTransform.shader", "shaders/fragTransform.shader");
+    shader.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+    shader.SetUniformMat4f("u_Projection", orthoPlay);
+#endif
+
+    printf("Initializing bloom shader\n");
+    fboShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragBloom.shader");
+    fboShader.Bind();
+    fboShader.SetUniform1i("scene", 4);
+    fboShader.SetUniform1i("bloomBlur", 5);
+    fboShader.SetUniform1f("exposure", 0.7f);
+
+    printf("Initializing intermediate bloom shader\n");
+    fboIntermediateShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitiveBloom.shader");
+    fboIntermediateShader.Bind();
+    fboIntermediateShader.SetUniform1i("u_Texture", 4);
+
+    printf("Initializing ui shader\n");
+    uiShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitive.shader");
+    uiShader.Bind();
+    uiShader.SetUniform1i("u_Texture", 7);
+    //uiShader.SetUniformMat4f("u_Projection", orthoPlay);
+
+    printf("Initializing text shader\n");
+    textShader.InitShader("shaders/vertexSingleChannel.shader", "shaders/fragSingleChannel.shader");
+    textShader.Bind();
+    textShader.SetUniform1i("u_Texture", 1);
+    textShader.SetUniformMat4f("u_Projection", orthoFull);
+
+    printf("Initializing 3d shader\n");
+    shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
+    shader3D.Bind();
+    shader3D.SetUniform1i("u_Texture", 2);
+    shader3D.SetUniform1i("u_Normal", 6);
+    shader3D.SetUniform1i("skybox", 0);
+    shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
+    shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
+    shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
+
+    printf("Initializing skybox shader\n");
+    shaderCube.InitShader("shaders/skyboxVertexShader.shader", "shaders/skyboxFragShader.shader");
+    shaderCube.Bind();
+    shaderCube.SetUniform1f("skybox", 0);
+    shaderCube.SetUniformMat4f("u_VP", camera.projection * camera.view);
+
+    printf("Initializing gaussian blur shader\n");
+    gaussianShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragGaussian.shader");
+    gaussianShader.Bind();
+    gaussianShader.SetUniform1i("u_Texture", 5);
+
+    return success;
+
+}
+
+int Game::initLua() {
+
+    bool success = true;
+
+    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine);
+
+    Script::CreateUsertypes(lua);
+    LuaData::LoadProjData(lua);
+    LuaData::LoadAnimData(lua);
+
+    lua["cam"] = camera;
+    lua["enemies"] = &enemyPool; //MOVE THIS TO SCRIPT CLASS
+    lua["doAfterFrames"] = &Timer::AddLuaTimer;
+       
+    lua.script_file("scripts/stage1.lua");
+    stage1Main = lua["main"];
+
+    return success;
+
+}
+
+int Game::initMaterials() {
+
+    bool success = true;
+    
+    texture.LoadTexture("assets/sprites/entities.png");
+    normalTest.LoadTextureMipmap("assets/sprites/stone_normal.png");
+    uiTexture.LoadTexture("assets/sprites/ui.png");
+
+    std::vector<std::string> testPaths = { "assets/sprites/entities.png","assets/sprites/entities.png","assets/sprites/entities.png" };
+    materials.AddTextureSet(testPaths);
+
+    materials.LoadTextureSets();
+
+    materials.BindTextures();
+    //materials.UnbindTextures();
+    materials.FlushTextures();
+
+    cubeMap.LoadTextureCubeMap({
+        "assets/sprites/px.png",
+        "assets/sprites/nx.png",
+        "assets/sprites/py.png",
+        "assets/sprites/ny.png",
+        "assets/sprites/pz.png",
+        "assets/sprites/nz.png"
+    });
+
+    return success;
+
+}
+
 
 void Game::printProgramLog(int program)
 {

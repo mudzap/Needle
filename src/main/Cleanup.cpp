@@ -19,7 +19,6 @@ void Game::OnCleanup () {
 
 	SDL_Quit();
 
-
 	// quit SDL_mixer
 	Mix_CloseAudio();
 }

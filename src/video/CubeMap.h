@@ -11,6 +11,7 @@ struct CubeMap: public Model {
 
     CubeMap();
     ~CubeMap();
+    void Init();
     void Draw(Shader& shader, Camera& camera);
 
     float skyboxVertices[3*6*6] = {

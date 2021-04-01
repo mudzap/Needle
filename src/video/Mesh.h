@@ -55,7 +55,7 @@ class Mesh {
 
 	public:
 
-		Mesh(const Quad& quad);
+		//Mesh(const Quad& quad);
 		Mesh(const unsigned int size);
 		Mesh();
 		~Mesh();
@@ -72,6 +72,7 @@ class Mesh {
 		void InitPrimitiveBuffers();
 		void Init3DBuffers();
 
+		void InitQuad(const Quad& quad);
 		void InitMesh(const Quad& quad);
 
 		void ResetDraw();

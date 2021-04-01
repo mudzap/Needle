@@ -73,7 +73,7 @@ void Bullets::InitSpawner(const Projectile& projectile) {
 	}
 #endif
 
-	InitMesh(quad);
+	InitQuad(quad);
 
 #ifdef _USE_SSE2_
 

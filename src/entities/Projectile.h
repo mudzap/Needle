@@ -106,7 +106,7 @@ struct CommonArgs {
 	}
 
 };
-const CommonArgs defaultCommonectileArgs;
+const CommonArgs defaultCommonProjectileArgs;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////7/////////////////////////////////////////////
@@ -124,6 +124,6 @@ class Projectile {
 		
 };
 
-const Projectile defaultProjectile = Projectile(defaultProjectileArgs, defaultCommonectileArgs);
+const Projectile defaultProjectile = Projectile(defaultProjectileArgs, defaultCommonProjectileArgs);
 
 #endif

@@ -1,4 +1,7 @@
 #include "Player.h"
+
+Player::Player() {
+}
 	
 Player::Player(const PlayerArgs& player, const TransformArgs& entity, const AnimationArgs& animArgs)
 	: playerArgs(player), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Transform(entity), Hitbox(animArgs.hitbox) {

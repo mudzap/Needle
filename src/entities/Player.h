@@ -24,7 +24,9 @@ struct PlayerArgs {
 	float halfspeed = speed * 0.5f;
 };
 
-const ProjArgs playerProjectileArgs1 = {
+const PlayerArgs defaultPlayerArgs;
+
+static const ProjArgs playerProjectileArgs1 = {
 	.flags = (ProjFlags)0,
 	.initialVel = Complex{20.f, 0.f},
 	.angle = 90.f	
@@ -44,7 +46,7 @@ const ProjArgs playerProjectileArgs1 = {
 	Complex gravityConstant = Complex(0.f, 0.f);
 	*/
 
-const PlayerSpawnerArgs playerSpawner1 = {
+static const PlayerSpawnerArgs playerSpawner1 = {
 	.baseProjectile = Projectile(playerProjectileArgs1, RingedBulletCyan),
 	.aimed = false,
 	.bulletShotTimer = 80
@@ -68,6 +70,7 @@ class Player : public Transform, public Hitbox, public Animation {
 
 	public:
 
+		Player();
 		Player(const PlayerArgs& player, const TransformArgs& entity, const AnimationArgs& animArgs);
 		~Player();
 

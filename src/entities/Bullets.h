@@ -75,7 +75,7 @@ class Bullets: public Mesh {
 		void Instantiate(const Projectile& projectile, const Complex& bulletPosition, const SpawnerArgs& spawner);
 
 		void InitBullet(const int ID);
-		//void InitMesh();
+		//void InitQuad();
 
 		void ProcessBullet(const int ID);
 		void BatchProcessBullets();

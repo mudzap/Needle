@@ -1,6 +1,6 @@
 #include "Game.h"
 
-void Game::OnEvent(SDL_Event& event, Player& player, sol::state& lua) {
+void Game::OnEvent() {
 
     player.shooting = false;
     player.transform.velocity = Complex(0, 0);

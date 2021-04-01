@@ -14,96 +14,14 @@ int Game::OnExecute() {
 
     OnInit();
 
-    RNG::setSeed(5);
+    RNG::setSeed(5);    
 
-    glViewport(DEFAULT_X_OFFSET, DEFAULT_Y_OFFSET, DEFAULT_PLAY_W, DEFAULT_PLAY_H);
+    initShaders();
 
-    orthoPlay = glm::ortho(-DEFAULT_PLAY_W / 2, DEFAULT_PLAY_W / 2, -DEFAULT_PLAY_H / 2, DEFAULT_PLAY_H / 2, 0.0f, 1.0f);
-    orthoFull = glm::ortho(-DEFAULT_W / 2, DEFAULT_W / 2, -DEFAULT_H / 2, DEFAULT_H / 2, 0.f, 1.0f);
-    camera.projection = glm::perspective(glm::radians(60.f), DEFAULT_PLAY_W / DEFAULT_PLAY_H, 1.f, 750.f);
- 
-#ifdef _MAT4_INSTANCING_
-    shader.InitShader("shaders/vertexTransform_old.shader", "shaders/fragTransform.shader");
-    shader.Bind();
-    shader.SetUniform1i("u_Texture", 0);
-    shader.SetUniformMat4f("u_Projection", orthoPlay);
-    shader.SetUniform1f("scale", 1);
-#else
-    shader.InitShader("shaders/vertexTransform.shader", "shaders/fragTransform.shader");
-    shader.Bind();
-    shader.SetUniform1i("u_Texture", 0);
-    shader.SetUniformMat4f("u_Projection", orthoPlay);
-#endif
-
-    fboShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragBloom.shader");
-    fboShader.Bind();
-    fboShader.SetUniform1i("scene", 4);
-    fboShader.SetUniform1i("bloomBlur", 5);
-    fboShader.SetUniform1f("exposure", 0.7f);
-
-    fboIntermediateShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitiveBloom.shader");
-    fboIntermediateShader.Bind();
-    fboIntermediateShader.SetUniform1i("u_Texture", 4);
-
-    uiShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitive.shader");
-    uiShader.Bind();
-    uiShader.SetUniform1i("u_Texture", 7);
-    uiShader.SetUniformMat4f("u_Projection", orthoPlay);
-
-    textShader.InitShader("shaders/vertexSingleChannel.shader", "shaders/fragSingleChannel.shader");
-    textShader.Bind();
-    textShader.SetUniform1i("u_Texture", 1);
-    textShader.SetUniformMat4f("u_Projection", orthoFull);
-
-    shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
-    shader3D.Bind();
-    shader3D.SetUniform1i("u_Texture", 2);
-    shader3D.SetUniform1i("u_Normal", 6);
-    shader3D.SetUniform1i("skybox", 0);
-    shader3D.SetUniformMat4f("u_VP", camera.projection * camera.view);
-    shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
-    shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
-
-
-    shaderCube.InitShader("shaders/skyboxVertexShader.shader", "shaders/skyboxFragShader.shader");
-    shaderCube.Bind();
-    shaderCube.SetUniform1f("skybox", 0);
-    shaderCube.SetUniformMat4f("u_VP", camera.projection * camera.view);
-
-    Shader gaussianShader;
-    gaussianShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragGaussian.shader");
-    gaussianShader.Bind();
-    gaussianShader.SetUniform1i("u_Texture", 5);
-
-    // TEXTURES
-
-    CubeMap skybox;
-
-    Texture texture;
-    texture.LoadTexture("assets/sprites/entities.png");
-    Texture normalTest;
-    normalTest.LoadTextureMipmap("assets/sprites/stone_normal.png");
-    Texture uiTexture;
-    uiTexture.LoadTexture("assets/sprites/ui.png");
-
-    std::vector<std::string> testPaths = { "assets/sprites/entities.png","assets/sprites/entities.png","assets/sprites/entities.png" };
-    materials.AddTextureSet(testPaths);
-
-    materials.LoadTextureSets();
-
-    materials.BindTextures();
-    //materials.UnbindTextures();
-    materials.FlushTextures();
-
-    Texture cubeMap;
-    cubeMap.LoadTextureCubeMap({
-        "assets/sprites/px.png",
-        "assets/sprites/nx.png",
-        "assets/sprites/py.png",
-        "assets/sprites/ny.png",
-        "assets/sprites/pz.png",
-        "assets/sprites/nz.png"
-    });
+    // TEXTURES & MATERIALS
+    initMaterials();
+    
+    skybox.Init();
 
 
     // STAGE
@@ -124,7 +42,6 @@ int Game::OnExecute() {
     //Audio::LoadSample("audio/bell.wav");
 
 
-
     // PLAYER
 
     PlayerArgs playerArgs;
@@ -132,10 +49,10 @@ int Game::OnExecute() {
         .position = Complex(0.f, -200.f),
         .velocity = Complex::zero,
     }; 
-    Player player(playerArgs, playerTransform, playerAnimation);
+    player = Player(playerArgs, playerTransform, playerAnimation);
 
     // LASER, MOVE TO SPAWNER
-
+    /*
     LaserArgs laser1;
     TransformArgs laser1Transform{
         .position = {-300.f,-200.f},
@@ -143,28 +60,12 @@ int Game::OnExecute() {
         .rotation = Complex::FromAngle(90.f),
         .rotationDelta = Complex::FromAngle(-2.f)
     };
-
     Laser myLaser(laser1, laser1Transform);
+    */
 
 
     // LUA
-
-    sol::state lua;
-    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine);
-
-    Script::CreateUsertypes(lua);
-    LuaData::LoadProjData(lua);
-    LuaData::LoadAnimData(lua);
-
-    lua["cam"] = &camera;
-    lua["enemies"] = &enemyPool; //MOVE THIS TO SCRIPT CLASS
-    lua["doAfterFrames"] = &Timer::AddLuaTimer;
-       
-    lua.script_file("scripts/stage1.lua");
-    sol::function stage1Main = lua["main"];
-
-
-    SDL_Event event;
+    initLua();
 
 
     //UI
@@ -266,19 +167,6 @@ int Game::OnExecute() {
     ftgl::texture_font_delete(font);
     ftgl::texture_font_delete(fontJap0);
 
-    //GUI
-
-    int frames = 60;
-    float delta1[3] = { 0, 0, 0 };
-    float delta2[3] = { 0, 0, 0 };
-    float delta3[3] = { 0, 0, 0 };
-
-    int aframes = 60;
-    float adelta1[2] = { 0, 0 };
-    float adelta2[2] = { 0, 0 };
-    float adelta3[2] = { 0, 0 };
-    
-    char InputBuf[256] = { 0 };
 
 
     glDisable(GL_MULTISAMPLE);
@@ -344,7 +232,7 @@ int Game::OnExecute() {
 
         //ON EVENT
 
-        OnEvent(event, player, lua);
+        OnEvent();
 
 
         //ON LOOP
@@ -519,114 +407,14 @@ int Game::OnExecute() {
         
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
-        
         ImGui::NewFrame();
         
+        RenderImGuiDebug();
 
-        {
-            ImGui::PushFont(font1);
-            ImGui::Begin("Game");
-            ImGui::Text("Average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::PopFont();
-            ImGui::End();
-        }
-        
-        {
-            ImGui::PushFont(font1);
-            ImGui::Begin("Camera");
-            ImGui::InputFloat3("Position", &camera.position.x, "%.3f");
-            ImGui::InputFloat3("Target", &camera.target.x, "%.3f");
-            ImGui::InputFloat2("Angles", &camera.angles.x, "%.4f");
-            if (ImGui::Button("Override"))
-            {
-                camera.CameraStop();
-                camera.CameraFloat();
-            } ImGui::SameLine();
-            if (ImGui::Button("Reset"))
-            {
-                camera.position = glm::vec3{ 0, 0, 0 };
-                camera.angles = glm::vec2{ 0, 0 };
-                camera.CameraStop();
-                camera.CameraFloat();
-            }
-
-            ImGui::Separator();
-            ImGui::Text("Movement:");
-            ImGui::InputInt("Frames", &frames);
-            ImGui::InputFloat3("Delta_1", delta1, "%.3f");
-            ImGui::InputFloat3("Delta_2", delta2, "%.3f");
-            ImGui::InputFloat3("Delta_3", delta3, "%.3f");
-
-            if (ImGui::Button("Lerp"))
-            {
-                camera.LinearInterpTo(frames, delta1[0], delta1[1], delta1[2]);
-            } ImGui::SameLine();
-            if (ImGui::Button("Cerp"))
-            {
-                camera.CubicInterpBoth(frames, delta1[0], delta1[1], delta1[2]);
-            } ImGui::SameLine();
-            if (ImGui::Button("BezierQuad"))
-            {
-                camera.QuadraticBezier(frames, delta1[0], delta1[1], delta1[2], delta2[0], delta2[1], delta2[2]);
-            } ImGui::SameLine();
-            if (ImGui::Button("BezierCubic"))
-            {
-                camera.CubicBezier(frames, delta1[0], delta1[1], delta1[2], delta2[0], delta2[1], delta2[2], delta3[0], delta3[1], delta3[2]);
-            }
-
-            ImGui::Separator();
-            ImGui::Text("Rotation:");
-            ImGui::InputInt("Frames", &aframes);
-            ImGui::InputFloat2("ADelta_1", adelta1, "%.3f");
-            ImGui::InputFloat2("ADelta_2", adelta2, "%.3f");
-            ImGui::InputFloat2("ADelta_3", adelta3, "%.3f");
-
-            if (ImGui::Button("ALerp"))
-            {
-                camera.LinearInterpToAngle(aframes, adelta1[0], adelta1[1]);
-            } ImGui::SameLine();
-            if (ImGui::Button("ACerp"))
-            {
-                camera.CubicInterpBothAngle(aframes, adelta1[0], adelta1[1]);
-            } ImGui::SameLine();
-            if (ImGui::Button("ABezierQuad"))
-            {
-                camera.QuadraticBezierAngle(aframes, adelta1[0], adelta1[1], adelta2[0], adelta2[1]);
-            } ImGui::SameLine();
-            if (ImGui::Button("ABezierCubic"))
-            {
-                camera.CubicBezierAngle(aframes, adelta1[0], adelta1[1], adelta2[0], adelta2[1], adelta3[0], adelta3[1]);
-            }
-
-            ImGui::PopFont();
-            ImGui::End();
-        }
-
-        {
-            ImGui::PushFont(font1);
-            ImGui::Begin("Lua");            
-            if (ImGui::Button("Start Main Script"))
-            {
-                lua.script_file("scripts/stage1.lua");
-            }
-            ImGui::Separator();
-            ImGui::TextWrapped("Lua console\n");
-            if (ImGui::InputText("", InputBuf, IM_ARRAYSIZE(InputBuf), ImGuiInputTextFlags_EnterReturnsTrue))
-            {
-                char* input_end = InputBuf + strlen(InputBuf);
-                while (input_end > InputBuf && input_end[-1] == ' ') input_end--; *input_end = 0;
-                if (InputBuf[0])
-                    lua.script(InputBuf);
-                strcpy(InputBuf, "");
-            }
-            ImGui::PopFont();
-            ImGui::End();
-        }  
-        
-        
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        
+
+
         
         SDL_GL_SwapWindow(window);
 
