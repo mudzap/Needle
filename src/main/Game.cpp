@@ -12,13 +12,16 @@ Game::Game() {
 
 int Game::OnExecute() {
 
+    SHMY_LOGD("Initializing\n");
     OnInit();
 
     RNG::setSeed(5);    
 
+    SHMY_LOGD("Initializing shaders\n");
     initShaders();
 
     // TEXTURES & MATERIALS
+    SHMY_LOGD("Initializing materials\n");
     initMaterials();
     
     skybox.Init();
@@ -26,14 +29,8 @@ int Game::OnExecute() {
 
     // STAGE
     
-    Stage stage;
-    stage.LoadModel("assets/models/stairs.obj", "assets/sprites/stone.png", 2);
-    stage.LoadModel("assets/models/sphere.obj", "assets/sprites/stone.png", 3);
-    
-    stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 0);
-    stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 1);
-    stage.FillBuffer();
-
+    SHMY_LOGD("Initializing stage\n");
+    initStage();
 
     // AUDIO
 
@@ -65,13 +62,16 @@ int Game::OnExecute() {
 
 
     // LUA
+    SHMY_LOGD("Initializing lua\n");
     initLua();
 
 
     //UI
 
-    PlayUI gameUI;
+    SHMY_LOGD("Initializing UI\n");
+    gameUI.Init();
 
+    SHMY_LOGD("Initializing ImGui fonts\n");
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImFont* font1 = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto-Regular.ttf", 20);
     ImFont* font2 = io.Fonts->AddFontFromFileTTF("assets/fonts/EBGaramond-BoldItalic.ttf", 15);
@@ -82,6 +82,7 @@ int Game::OnExecute() {
     //std::string textJap0 = "ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをんゔゕゖ゙゚゛゜ゝゞゟ゠ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヷヸヹヺ・ーヽヾヿ｟｠｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞ、。〃〄々〆〇〈〉《》「」『』【】〒〓〔〕〖〗〘〙〚〛〜〝〞〟〠〡〢〣〤〥〦〧〨〩〪〭〮〯〫〬〰〱〲〳〴〵〶〷〸〹〺〻〼〽〾〿ㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ";
     //std::string textJap1 = "日一国会人年大十二本中長出三同時政事自行社見月分議後前民生連五発間対上部東者党地合市業内相方四定今回新場金員九入選立開手米力学問高代明実円関決子動京全目表戦経通外最言氏現理調体化田当八六約主題下首意法不来作性的要用制治度務強気小七成期公持野協取都和統以機平総加山思家話世受区領多県続進正安設保改数記院女初北午指権心界支第産結百派点教報済書府活原先共得解名交資予川向際査勝面委告軍文反元重近千考判認画海参売利組知案道信策集在件団別物側任引使求所次水半品昨論計死官増係感特情投示変打男基私各始島直両朝革価式確村提運終挙果西勢減台広容必応演電歳住争談能無再位置企真流格有疑口過局少放税検藤町常校料沢裁状工建語球営空職証土与急止送援供可役構木割聞身費付施切由説転食比難防補車優夫研収断井何南石足違消境神番規術護展態導鮮備宅害配副算視条幹独警宮究育席輸訪楽起万着乗店述残想線率病農州武声質念待試族象銀域助労例衛然早張映限親額監環験追審商葉義伝働形景落欧担好退準賞訴辺造英被株頭技低毎医復仕去姿味負閣韓渡失移差衆個門写評課末守若脳極種美岡影命含福蔵量望松非撃佐核観察整段横融型白深字答夜製票況音申様財港識注呼渉達";
 
+    SHMY_LOGD("Initializing ft-gl texture atlases\n");
     // Texture atlas to store individual glyphs
     ftgl::texture_atlas_t* atlas = texture_atlas_new(1024, 1024, 1);
 
@@ -100,6 +101,7 @@ int Game::OnExecute() {
     ftgl::texture_font_load_glyphs(fontJap0, textJap.c_str());
     ftgl::texture_font_load_glyphs(fontJapOutline0, textJap.c_str());
 
+    SHMY_LOGD("Writing atlas to assets/sprites/ATLAS.png\n");
     stbi_write_png("assets/sprites/ATLAS.png", 1024, 1024, 1, atlas->data, 1024);
 
 
@@ -114,7 +116,8 @@ int Game::OnExecute() {
     sizeEvery += 2 * numbers.length();
     sizeEvery *= 2;
 
-    Font myFont(sizeEvery, F_STATIC);
+    SHMY_LOGD("Initializing fonts\n");
+    myFont.Init(sizeEvery, F_STATIC);
     myFont.LoadTexture(1024, 1024, atlas);
 
     glm::vec2 pens[4] = { { 230.f, 418.f }, { 230.f, 356.f }, { 230.f, 294.f }, { 230.f, 232.f } };
@@ -137,6 +140,7 @@ int Game::OnExecute() {
         {0.6f,   0.6f,   0.6f,   1.f}
     };
 
+    SHMY_LOGV("Adding gradients and text to fonts\n");
     myFont.AddTextGradient(fontOutline, englishText[0], colors, &pens0[0]);
     myFont.AddTextGradient(fontOutline, englishText[1], colors, &pens0[1]);
     myFont.AddTextGradient(fontOutline, englishText[2], colors, &pens0[2]);
@@ -162,8 +166,10 @@ int Game::OnExecute() {
     myFont.AddTextGradient(fontJap0, japaneseText[2], colors, &japPens0[2], 3);
     myFont.AddTextGradient(fontJap0, japaneseText[3], colors, &japPens0[3], 3);
 
+    SHMY_LOGV("Prefilling font buffers\n");
     myFont.FillBuffers();
 
+    SHMY_LOGV("Deleting ft-gl atlases\n");
     ftgl::texture_font_delete(font);
     ftgl::texture_font_delete(fontJap0);
 
@@ -180,6 +186,7 @@ int Game::OnExecute() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    SHMY_LOGD("Initializing framebuffers\n");
     frameBuffer.Init(DEFAULT_PLAY_W, DEFAULT_PLAY_H, FB_COLOR, 2, false);
     gaussianFramebuffer[0].Init(DEFAULT_PLAY_W / DOWNSCALE_FACTOR, DEFAULT_PLAY_H / DOWNSCALE_FACTOR, FB_COLOR, 1);
     gaussianFramebuffer[1].Init(DEFAULT_PLAY_W / DOWNSCALE_FACTOR, DEFAULT_PLAY_H / DOWNSCALE_FACTOR, FB_COLOR, 1);
@@ -214,10 +221,6 @@ int Game::OnExecute() {
     //int lastTime = SDL_GetTicks();
     //int nbFrames = 0;
 
-
-    std::vector<std::thread> enemyThreads;
-
-
     while (isRunning) {
         
         /*
@@ -231,179 +234,16 @@ int Game::OnExecute() {
 
 
         //ON EVENT
-
+        SHMY_LOGV("Handling events\n");
         OnEvent();
 
-
         //ON LOOP
-
-
-        //Audio::HandleAudio();
-        timer.Process();
-
-
-        std::thread cameraThread([&] {
-
-            //MOVE TO SPAWNER
-            //myLaser.HandleNodes();
-
-            camera.HandleCamera();
-
-            stage.GetDrawables(camera);
-        
-        });
-
-
-        for (Enemy enemies : enemyPool.enemies) {
-            
-            //enemyThreads.emplace_back( std::thread([&player, enemies] {
-
-                player.HandlePlayerCollision(enemies);
-                enemies.HandleEnemy(player);
-
-            //}) );
-            
-        }
-
-        /*
-        for (auto& th : enemyThreads) th.join();
-        enemyThreads.clear();
-        */
-
-        player.HandlePlayerMovement();
-        player.HandleSpawners();
-
+        SHMY_LOGV("Handling logic\n");
         OnLoop();
 
-        cameraThread.join();
-
         //ON RENDER
-
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-
-        //glClearColor(0.0f, 0.1f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-
-        //START FRAMEBUFFER
-
-        intermediateFramebuffer.Bind();
-
-        //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glViewport(0, 0, newPlayWidth, newPlayHeight);
-        glScissor(0, 0, newPlayWidth, newPlayHeight);
-
-
-
-        //DRAW STAGE
-
-        shader3D.Bind();
-
-        shader3D.SetUniformMat4f("u_VP", camera.vpMat);
-        shader3D.SetUniform3f("lightDir", 0.f, 0.34202f, 0.93969f);
-        //shader3D.SetUniform3f("lightPos", 60.f * FT::cos(SDL_GetTicks() / 1000.f), 150.f, 60.f * FT::sin(SDL_GetTicks() / 1000.f));
-        shader3D.SetUniform3f("lightPos", camera.position.x, camera.position.y, camera.position.z);
-        shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
-
-
-        stage.DrawTilesOcclude(shader3D);
-
-        //DRAW SKYBOX
-
-        shaderCube.Bind();
-        skybox.Draw(shaderCube, camera);
-
-
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
-
-
-        //DRAW ENTITIES
-
-        shader.Bind();
-
-        player.DrawBullets();
-        player.Draw();
-
-        for (Enemy enemy : enemyPool.enemies) {
-            enemy.DrawBullets();
-        }
-        for (Enemy enemy : enemyPool.enemies) {
-            enemy.Draw();
-        }
-
-        //MOVE TO SPAWNER
-        //myLaser.ResetDraw();
-
-        // FINISH FRAMEBUFFER
-        fboIntermediateShader.Bind();
-        frameBuffer.Bind();
-
-        //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        intermediateFramebuffer.BindTexture(4);
-        intermediateFramebuffer.Draw();
-
-        glViewport(0, 0, newPlayWidth/DOWNSCALE_FACTOR, newPlayHeight/DOWNSCALE_FACTOR);
-        glScissor(0, 0, newPlayWidth/DOWNSCALE_FACTOR, newPlayHeight/DOWNSCALE_FACTOR);
-
-
-        bool horizontal = true, first_iteration = true;
-        int amount = 3; //KIND OF PERFORMANCE HEAVY
-        gaussianShader.Bind();
-
-        for (unsigned int i = 0; i < amount; i++)
-        {
-            gaussianFramebuffer[horizontal].Bind();
-            gaussianFramebuffer[horizontal].BindTexture(5);
-            gaussianShader.SetUniform1i("horizontal", horizontal);
-
-            if (first_iteration) {
-                frameBuffer.BindTexture(5, 2);
-                frameBuffer.Draw();
-            }
-            else {
-                gaussianFramebuffer[!horizontal].BindTexture(5);
-                gaussianFramebuffer[!horizontal].Draw();
-            }
-
-            horizontal = !horizontal;
-
-            if (first_iteration)
-                first_iteration = false;
-        }
-        frameBuffer.Unbind(); //UNBINDS ALL FRAMEBUFFERS, SHOULD BE STATIC
-
-        glViewport(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
-        glScissor(newXPlayOffset, newYPlayOffset, newPlayWidth, newPlayHeight);
-
-        fboShader.Bind();
-        frameBuffer.Draw();
-
-        frameBuffer.BindTexture(4, 1);
-        gaussianFramebuffer[!horizontal].BindTexture(5);
-
-
-
-
-        //TEXT
-        glViewport(newXOffset, newYOffset, newWidth, newHeight);
-        glScissor(newXOffset, newYOffset, newWidth, newHeight);
-
-
-        uiShader.Bind();
-        gameUI.Draw();
-
-        textShader.Bind();
-        //MOVE TO UI
-        myFont.StaticDraw();
-
-        
+        SHMY_LOGV("Rendering\n");
+        OnRender();        
         
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);

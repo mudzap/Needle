@@ -2,6 +2,9 @@
 
 PlayUI::PlayUI() {
 
+}
+
+void PlayUI::Init() {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ibo);
@@ -21,7 +24,6 @@ PlayUI::PlayUI() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(unsigned int), playIndices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
-
 }
 
 void PlayUI::Draw() {

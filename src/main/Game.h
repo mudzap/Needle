@@ -101,6 +101,8 @@ extern "C"
 #include "menu/PlayUI.h"
 #include "video/Material.h"
 
+#include "util/Log.h"
+
 #define DOWNSCALE_FACTOR 3
 const int SCREEN_FPS = 60;
 const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
@@ -123,6 +125,7 @@ class Game {
         int initShaders();
         int initLua();
         int initMaterials();
+        int initStage();
 
         void OnEvent();
 
@@ -141,6 +144,9 @@ class Game {
         Camera camera;
         Timer timer;
         Pool enemyPool;
+
+        //Font
+        Font myFont;
 
         //Shaders
         Shader shader;
@@ -176,6 +182,8 @@ class Game {
         glm::mat4 modelMat;
         glm::mat4 projectionMat;
 
+        //UI
+        PlayUI gameUI;
 
         //SDL
         SDL_Event event;
@@ -212,6 +220,9 @@ class Game {
         //Lua
         sol::state lua;
         sol::function stage1Main; //Only for debug for now
+
+        //Stage
+        Stage stage;
 
 };
 

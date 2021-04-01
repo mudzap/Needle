@@ -30,7 +30,7 @@ bool Game::OnInit() {
     window = SDL_CreateWindow("Shinmyoumaru", 32, 32, DEFAULT_W, DEFAULT_H, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if (window == NULL) {
-        printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+        SHMY_LOGE("Window could not be created! SDL Error: %s\n", SDL_GetError());
         success = false;
     }
 
@@ -38,7 +38,7 @@ bool Game::OnInit() {
     context = SDL_GL_CreateContext(window);
     if (context == NULL)
     {
-        printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
+        SHMY_LOGE("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
         success = false;
     }
     else
@@ -49,23 +49,23 @@ bool Game::OnInit() {
         GLenum glewError = glewInit();
         if (glewError != GLEW_OK)
         {
-            printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+            SHMY_LOGE("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
         }
 
         //Use Vsync
         if (SDL_GL_SetSwapInterval(-1) < 0)
         {
-            printf("Warning: Unable to set Adaptive VSync! SDL Error: %s\n", SDL_GetError());
+            SHMY_LOGD("Warning: Unable to set Adaptive VSync! SDL Error: %s\n", SDL_GetError());
 
             if (SDL_GL_SetSwapInterval(1) < 0)
-                printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+                SHMY_LOGD("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
                 
         }
 
         //Initialize OpenGL
         if (!initGL())
         {
-            printf("Unable to initialize OpenGL!\n");
+            SHMY_LOGE("Unable to initialize OpenGL!\n");
             success = false;
         }
 
@@ -94,7 +94,7 @@ bool Game::OnInit() {
 
     if (err)
     {
-        fprintf(stderr, "Failed to initialize OpenGL loader!\n");
+        SHMY_LOGE("Failed to initialize OpenGL loader!\n");
         return 1;
     }
 
@@ -116,7 +116,7 @@ bool Game::OnInit() {
 
     //INIT SDL_MIXER
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
-        printf("Couldn't initialize SDL_mixer.");
+        SHMY_LOGE("Couldn't initialize SDL_mixer.");
         success = false;
     }
 
@@ -163,7 +163,7 @@ int Game::initShaders()
     orthoFull = glm::ortho(-DEFAULT_W / 2, DEFAULT_W / 2, -DEFAULT_H / 2, DEFAULT_H / 2, 0.f, 1.0f);
     camera.projection = glm::perspective(glm::radians(60.f), DEFAULT_PLAY_W / DEFAULT_PLAY_H, 1.f, 750.f);
  
-    printf("Initializing transform shader\n");
+    SHMY_LOGV("Initializing transform shader\n");
 #ifdef _MAT4_INSTANCING_
     shader.InitShader("shaders/vertexTransform_old.shader", "shaders/fragTransform.shader");
     shader.Bind();
@@ -177,31 +177,31 @@ int Game::initShaders()
     shader.SetUniformMat4f("u_Projection", orthoPlay);
 #endif
 
-    printf("Initializing bloom shader\n");
+    SHMY_LOGV("Initializing bloom shader\n");
     fboShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragBloom.shader");
     fboShader.Bind();
     fboShader.SetUniform1i("scene", 4);
     fboShader.SetUniform1i("bloomBlur", 5);
     fboShader.SetUniform1f("exposure", 0.7f);
 
-    printf("Initializing intermediate bloom shader\n");
+    SHMY_LOGV("Initializing intermediate bloom shader\n");
     fboIntermediateShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitiveBloom.shader");
     fboIntermediateShader.Bind();
     fboIntermediateShader.SetUniform1i("u_Texture", 4);
 
-    printf("Initializing ui shader\n");
+    SHMY_LOGV("Initializing ui shader\n");
     uiShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragPrimitive.shader");
     uiShader.Bind();
     uiShader.SetUniform1i("u_Texture", 7);
     //uiShader.SetUniformMat4f("u_Projection", orthoPlay);
 
-    printf("Initializing text shader\n");
+    SHMY_LOGV("Initializing text shader\n");
     textShader.InitShader("shaders/vertexSingleChannel.shader", "shaders/fragSingleChannel.shader");
     textShader.Bind();
     textShader.SetUniform1i("u_Texture", 1);
     textShader.SetUniformMat4f("u_Projection", orthoFull);
 
-    printf("Initializing 3d shader\n");
+    SHMY_LOGV("Initializing 3d shader\n");
     shader3D.InitShader("shaders/vertex3d.shader", "shaders/frag3d.shader");
     shader3D.Bind();
     shader3D.SetUniform1i("u_Texture", 2);
@@ -211,13 +211,13 @@ int Game::initShaders()
     shader3D.SetUniform3f("lightPos", 0.f, 200.f, 0.f);
     shader3D.SetUniform3f("viewPos", camera.position.x, camera.position.y, camera.position.z);
 
-    printf("Initializing skybox shader\n");
+    SHMY_LOGV("Initializing skybox shader\n");
     shaderCube.InitShader("shaders/skyboxVertexShader.shader", "shaders/skyboxFragShader.shader");
     shaderCube.Bind();
     shaderCube.SetUniform1f("skybox", 0);
     shaderCube.SetUniformMat4f("u_VP", camera.projection * camera.view);
 
-    printf("Initializing gaussian blur shader\n");
+    SHMY_LOGV("Initializing gaussian blur shader\n");
     gaussianShader.InitShader("shaders/vertexPrimitive.shader", "shaders/fragGaussian.shader");
     gaussianShader.Bind();
     gaussianShader.SetUniform1i("u_Texture", 5);
@@ -277,6 +277,21 @@ int Game::initMaterials() {
 
 }
 
+int Game::initStage() {
+
+    bool success = true;
+
+    stage.LoadModel("assets/models/stairs.obj", "assets/sprites/stone.png", 2);
+    stage.LoadModel("assets/models/sphere.obj", "assets/sprites/stone.png", 3);
+    
+    stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 0);
+    stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 1);
+    stage.FillBuffer();
+
+    return success;
+
+}
+
 
 void Game::printProgramLog(int program)
 {
@@ -298,7 +313,7 @@ void Game::printProgramLog(int program)
         if (infoLogLength > 0)
         {
             //Print Log
-            printf("%s\n", infoLog);
+            SHMY_LOGD("%s\n", infoLog);
         }
 
         //Deallocate string
@@ -306,6 +321,6 @@ void Game::printProgramLog(int program)
     }
     else
     {
-        printf("Name %d is not a program\n", program);
+        SHMY_LOGD("Name %d is not a program\n", program);
     }
 }

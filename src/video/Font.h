@@ -51,9 +51,13 @@ class Font {
 
 	public:
 
-		Font(unsigned int expectedSize = 0, FontType type = F_STATIC);
+		Font();
+
+		void Init(unsigned int expectedSize = 0, FontType type = F_STATIC);
 
 		~Font();
+
+		//void Init(unsigned int expectedSize = 0, FontType type = F_STATIC);
 
 		void StaticDraw();
 		void DynamicDraw();

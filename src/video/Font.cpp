@@ -1,16 +1,31 @@
 #include "Font.h"
 
-Font::Font(unsigned int expectedSize, FontType type) : size(expectedSize) {
+Font::Font() {
+
+}
+
+void Font::Init(unsigned int expectedSize, FontType type) {
+    size = expectedSize;
 
     characters.reserve(expectedSize);
     indices.reserve(expectedSize*6);
     InitBuffers(expectedSize, type);
-
 }
 
 Font::~Font() {
     glDeleteTextures(1, &atlas);
 }
+
+/*
+void Font::Init(unsigned int expectedSize, FontType type) {
+
+    size = expectedSize;
+    characters.reserve(expectedSize);
+    indices.reserve(expectedSize*6);
+    InitBuffers(expectedSize, type);
+
+}
+*/
 
 void Font::DynamicDraw() {
 

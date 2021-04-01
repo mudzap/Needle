@@ -20,6 +20,8 @@ class PlayUI {
 
 		PlayUI();
 
+		void Init();
+
 		void Draw();
 
 	private:
@@ -28,6 +30,7 @@ class PlayUI {
 		unsigned int vbo = 0;
 		unsigned int ibo = 0;
 
+		/* What was I thinking lmao */
 		Vertex playUI[16] = {
 			{{-640.f / 640.0f, 480.f / 480.0f}, {0.f / _UI_TSIZE_, 1024.f / _UI_TSIZE_}},//
 			{{-576.f / 640.0f, 480.f / 480.0f}, {68.f / _UI_TSIZE_, 1024.f / _UI_TSIZE_}},
