@@ -1,5 +1,4 @@
 ﻿#include "Game.h"
-#include "data/ProjData.h"
 
 Game::Game() {
 

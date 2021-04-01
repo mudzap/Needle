@@ -11,12 +11,12 @@
 #include <array>
 
 #include "Texture.h"
-#include "Transform.h"
 #include "Mesh.h"
 
 #include "stb/stb_image_write.h"
 #include "stb/stb_truetype.h"
 #include "stb/stb_rect_pack.h"
+#include "entities/Transform.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -177,24 +177,15 @@ public:
 
 	SpawnerArgs spawner;
 
-	std::variant<Projectile,
-				ConstantArgs,
-				BarrageArgs,
-				RandomArgs,
-				PlayerSpawnerArgs>
-				specialArgs {defaultProjectile};
-
-	/*
-	union { //ANONYMOUS UNION
+	//union doesn't work for some reason
+	//union { //ANONYMOUS UNION
 		Projectile projectile;
 		ConstantArgs constant;
 		BarrageArgs barrage;
 		RandomArgs random;
 		PlayerSpawnerArgs playerSpawner;
-	};
-	*/
-
-
+	//};
+	
 	Complex offset;
 	unsigned int* collideableBullets;
 	unsigned int colliderSize;

@@ -4,9 +4,10 @@
 //const float _DEFAULT_W_ = 1280;
 //const float _DEFAULT_H_ = 960;
 
-#include "Mesh.h"
 #include <vector>
 #include <array>
+
+#include "video/Mesh.h"
 
 #define _UI_TSIZE_ 1024.f
 #define _DEFAULT_W_ = 640.0f;

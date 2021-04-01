@@ -1,13 +1,14 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#define GLM_FORCE_INLINE
-
+//#define GLM_FORCE_INLINE
 //#define GLM_FORCE_ALIGNED
 //#define GLM_FORCE_SSE2
 
-#define GLM_FORCE_NO_CTOR_INIT
-#define GLM_FORCE_SIZE_T_LENGTH
+//#define GLM_FORCE_NO_CTOR_INIT
+//#define GLM_FORCE_SIZE_T_LENGTH
+
+//#define GLM_ENABLE_EXPERIMENTAL
 
 
 extern "C"
@@ -17,16 +18,18 @@ extern "C"
 #include <lualib.h>
 }
 
+#define GL_GLEXT_PROTOTYPES
 
-#define GLEW_STATIC
+//#define GLEW_STATIC
 #include <GL/glew.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_mixer.h>
 //#include <gl/glu.h>
 #include <GL/glu.h>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include <SDL2/SDL.h>
 
 #include <freetype-gl/freetype-gl.h>
 #include <freetype-gl/texture-atlas.h>
@@ -42,13 +45,11 @@ extern "C"
 #include "assimp/scene.h"           // Output data structure
 #include "assimp/postprocess.h"     // Post processing flags
 
-#include <SDL2/SDL_mixer.h>
-#include "stb_image.h"
+#include "stb/stb_image.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include <SDL2/SDL_thread.h>
-#include "stb_image_write.h"
-#include "stb_truetype.h"
+#include "stb/stb_image_write.h"
+#include "stb/stb_truetype.h"
 #include "sol/sol.hpp"
 #include <stdio.h>
 #include <array>
