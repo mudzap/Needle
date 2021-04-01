@@ -80,13 +80,13 @@ int Game::OnExecute() {
     CubeMap skybox;
 
     Texture texture;
-    texture.LoadTexture("sprites/entities.png");
+    texture.LoadTexture("assets/sprites/entities.png");
     Texture normalTest;
-    normalTest.LoadTextureMipmap("sprites/stone_normal.png");
+    normalTest.LoadTextureMipmap("assets/sprites/stone_normal.png");
     Texture uiTexture;
-    uiTexture.LoadTexture("sprites/ui.png");
+    uiTexture.LoadTexture("assets/sprites/ui.png");
 
-    std::vector<std::string> testPaths = { "sprites/entities.png","sprites/entities.png","sprites/entities.png" };
+    std::vector<std::string> testPaths = { "assets/sprites/entities.png","assets/sprites/entities.png","assets/sprites/entities.png" };
     materials.AddTextureSet(testPaths);
 
     materials.LoadTextureSets();
@@ -97,20 +97,20 @@ int Game::OnExecute() {
 
     Texture cubeMap;
     cubeMap.LoadTextureCubeMap({
-        "sprites/px.png",
-        "sprites/nx.png",
-        "sprites/py.png",
-        "sprites/ny.png",
-        "sprites/pz.png",
-        "sprites/nz.png"
+        "assets/sprites/px.png",
+        "assets/sprites/nx.png",
+        "assets/sprites/py.png",
+        "assets/sprites/ny.png",
+        "assets/sprites/pz.png",
+        "assets/sprites/nz.png"
     });
 
 
     // STAGE
     
     Stage stage;
-    stage.LoadModel("models/stairs.obj", "sprites/stone.png", 2);
-    stage.LoadModel("models/sphere.obj", "sprites/stone.png", 3);
+    stage.LoadModel("assets/models/stairs.obj", "assets/sprites/stone.png", 2);
+    stage.LoadModel("assets/models/sphere.obj", "assets/sprites/stone.png", 3);
     
     stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 0);
     stage.PushBackStageTile(NORTH, { 0, 0, 0 }, 1);
@@ -119,7 +119,7 @@ int Game::OnExecute() {
 
     // AUDIO
 
-    //Audio::LoadMusic("audio/Warp Tapes 89-93 Part 1.wav");
+    //Audio::LoadMusic("assets/audio/Warp Tapes 89-93 Part 1.wav");
     //Audio::PlayMusic();
     //Audio::LoadSample("audio/bell.wav");
 
@@ -172,8 +172,8 @@ int Game::OnExecute() {
     PlayUI gameUI;
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImFont* font1 = io.Fonts->AddFontFromFileTTF("fonts/Roboto-Regular.ttf", 20);
-    ImFont* font2 = io.Fonts->AddFontFromFileTTF("fonts/EBGaramond-BoldItalic.ttf", 15);
+    ImFont* font1 = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto-Regular.ttf", 20);
+    ImFont* font2 = io.Fonts->AddFontFromFileTTF("assets/fonts/EBGaramond-BoldItalic.ttf", 15);
 
     // Text to be printed
     std::string text = "High-Score: Graze:Bomb:0123456789,";
@@ -185,10 +185,10 @@ int Game::OnExecute() {
     ftgl::texture_atlas_t* atlas = texture_atlas_new(1024, 1024, 1);
 
     // Build a new texture font from its description and size
-    ftgl::texture_font_t* font = texture_font_new_from_file(atlas, 36, "fonts/Roboto-Bold.ttf");
-    ftgl::texture_font_t* fontOutline = texture_font_new_from_file(atlas, 36, "fonts/Roboto-Bold.ttf");
-    ftgl::texture_font_t* fontJap0 = texture_font_new_from_file(atlas, 26, "fonts/NotoSerifJP-Black.otf");
-    ftgl::texture_font_t* fontJapOutline0 = texture_font_new_from_file(atlas, 26, "fonts/NotoSerifJP-Black.otf");
+    ftgl::texture_font_t* font = texture_font_new_from_file(atlas, 36, "assets/fonts/Roboto-Bold.ttf");
+    ftgl::texture_font_t* fontOutline = texture_font_new_from_file(atlas, 36, "assets/fonts/Roboto-Bold.ttf");
+    ftgl::texture_font_t* fontJap0 = texture_font_new_from_file(atlas, 26, "assets/fonts/NotoSerifJP-Black.otf");
+    ftgl::texture_font_t* fontJapOutline0 = texture_font_new_from_file(atlas, 26, "assets/fonts/NotoSerifJP-Black.otf");
     fontOutline->rendermode = RENDER_OUTLINE_EDGE;
     fontOutline->outline_thickness = 2.0;
     fontJapOutline0->rendermode = RENDER_OUTLINE_EDGE;
@@ -199,7 +199,7 @@ int Game::OnExecute() {
     ftgl::texture_font_load_glyphs(fontJap0, textJap.c_str());
     ftgl::texture_font_load_glyphs(fontJapOutline0, textJap.c_str());
 
-    stbi_write_png("sprites/ATLAS.png", 1024, 1024, 1, atlas->data, 1024);
+    stbi_write_png("assets/sprites/ATLAS.png", 1024, 1024, 1, atlas->data, 1024);
 
 
     std::string englishText[4] = {"Hi-Score :", "Score :", "Graze :", "Bomb :" };
