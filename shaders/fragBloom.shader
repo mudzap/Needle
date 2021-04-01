@@ -1,4 +1,4 @@
-layout(location = 0) out vec4 gl_Color;
+layout(location = 0) out vec4 fragColor;
 
 
 in vec2 v_TexCoord;
@@ -22,6 +22,6 @@ void main()
     // also gamma correct while we're at it       
     //result = pow(result, vec3(1.0 / gamma));
 
-    gl_Color = vec4(hdrColor, 1.0);
+    fragColor = vec4(hdrColor, 1.0);
 
 }

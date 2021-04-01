@@ -6,10 +6,12 @@ bool Game::OnInit() {
     bool success = true;
     
     // GL 3.0 + GLSL 130
-    Shader::glslVersion = "#version 330";
+    Shader::glslVersion = "#version 330 core";
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -22,6 +24,7 @@ bool Game::OnInit() {
 	
     //SDL_OPENGL | SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER
 	//SDL_WINDOW_BORDERLESS | SDL_WINDOW_OPENGL
+    printf((char*)glGetString(GL_VERSION));
 
     window = SDL_CreateWindow("Shinmyoumaru", 32, 32, DEFAULT_W, DEFAULT_H, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
@@ -39,6 +42,7 @@ bool Game::OnInit() {
     }
     else
     {
+
         //Initialize GLEW
         glewExperimental = GL_TRUE;
         GLenum glewError = glewInit();

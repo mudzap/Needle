@@ -1,4 +1,4 @@
-layout(location = 0) out vec4 gl_Color;
+layout(location = 0) out vec4 fragColor;
 
 in vec2 v_TexCoord;
 
@@ -27,5 +27,5 @@ void main()
             result += texture(u_Texture, v_TexCoord - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
         }
     }
-    gl_Color = vec4(result, 1.0);
+    fragColor = vec4(result, 1.0);
 }

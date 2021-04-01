@@ -4,7 +4,7 @@
 
 #define _GAMMA_ 2.0
 
-layout(location = 0) out vec4 gl_Color;
+layout(location = 0) out vec4 fragColor;
 //layout(location = 1) out vec4 BrightColor;
 
 in VertexData{
@@ -108,6 +108,6 @@ void main() {
 
 #endif
 
-	gl_Color = vec4(result, 1.0);
+	fragColor = vec4(result, 1.0);
 
 }
