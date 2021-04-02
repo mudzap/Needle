@@ -7,7 +7,6 @@
 
 #include <SDL2/SDL.h>
 //#include <SDL_image.h>
-#include <string>
 #include "stb/stb_image.h"
 #include "GL/glew.h"
 

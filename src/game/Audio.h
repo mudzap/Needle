@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL_mixer.h>
 
+#include "util/Log.h"
+
 enum SampleIDs {
 	SFX_EXPLOSION = 0,
 	SFX_SHOT_SMALL = 1,
@@ -30,22 +32,22 @@ enum SampleIDs {
 };
 
 const std::vector<std::string> sampleDirectories = {
-	"audio/explosion.wav",
-	"audio/shot_16wav",
-	"audio/shot_32.wav",
-	"audio/shot_64.wav",
-	"audio/shot_128.wav",
-	"audio/shot_laser.wav",
-	"audio/player_shot.wav",
-	"audio/player_powerup.wav",
-	"audio/player_graze.wav",
-	"audio/player_hit.wav",
-	"audio/player_death.wav",
-	"audio/enemy_death.wav",
-	"audio/bomb.wav",
-	"audio/menu_go.wav",
-	"audio/menu_back.wav",
-	"audio/menu_change.wav"
+	"assets/audio/explosion.wav",
+	"assets/audio/shot_16wav",
+	"assets/audio/shot_32.wav",
+	"assets/audio/shot_64.wav",
+	"assets/audio/shot_128.wav",
+	"assets/audio/shot_laser.wav",
+	"assets/audio/player_shot.wav",
+	"assets/audio/player_powerup.wav",
+	"assets/audio/player_graze.wav",
+	"assets/audio/player_hit.wav",
+	"assets/audio/player_death.wav",
+	"assets/audio/enemy_death.wav",
+	"assets/audio/bomb.wav",
+	"assets/audio/menu_go.wav",
+	"assets/audio/menu_back.wav",
+	"assets/audio/menu_change.wav"
 };
 
 

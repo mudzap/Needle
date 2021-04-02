@@ -9,11 +9,13 @@
 #include "math/Complex.h"
 #include "video/Mesh.h"
 
-#include "Projectile.h"
-#include "Transform.h"
-#include "Hitbox.h"
+//#include "Projectile.h"
+//#include "Transform.h"
+//#include "Hitbox.h"
 
 //#define _USE_SSE2_
+
+class Projectile;
 
 struct SpawnerArgs;
 

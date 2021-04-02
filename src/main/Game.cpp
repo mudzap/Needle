@@ -34,9 +34,9 @@ int Game::OnExecute() {
 
     // AUDIO
 
-    //Audio::LoadMusic("assets/audio/Warp Tapes 89-93 Part 1.wav");
-    //Audio::PlayMusic();
-    //Audio::LoadSample("audio/bell.wav");
+    Audio::LoadMusic("assets/audio/Warp Tapes 89-93 Part 1.wav");
+    Audio::PlayMusic();
+    Audio::LoadSample("audio/bell.wav");
 
 
     // PLAYER
@@ -232,24 +232,26 @@ int Game::OnExecute() {
             lastTime = SDL_GetTicks();
         } */
 
-
         //ON EVENT
         SHMY_LOGV("Handling events\n");
         OnEvent();
 
-        //ON LOOP
+        //ON LOOP 
         SHMY_LOGV("Handling logic\n");
-        OnLoop();
+        if(!isPaused)
+            OnLoop();
 
         //ON RENDER
         SHMY_LOGV("Rendering\n");
-        OnRender();        
-        
+        OnRender();       
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
-        
+                
         RenderImGuiDebug();
+        if(isPaused)
+            RenderImGuiPause();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

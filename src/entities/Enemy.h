@@ -7,7 +7,7 @@
 //#include "util/Timer.h"
 
 #include "Hitbox.h"
-#include "Projectile.h"
+//#include "Projectile.h"
 #include "Spawner.h"
 #include "Animation.h"
 #include "Player.h"
@@ -24,7 +24,8 @@ enum EnemyState {
 	DRIFT
 };
 
-class Player;
+//class Player;
+class Projectile;
 
 class Enemy: public Transform, public Animation, public Hitbox {
 

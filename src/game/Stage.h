@@ -46,6 +46,7 @@ struct StageTileInformation {
 	}
 };
 
+
 class Stage : public Model {
 
 	public:

@@ -86,6 +86,9 @@ message(FREETYPE_GL_FOUND=${FREETYPE_GL_FOUND})
 
 
 add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
+#add_compile_definitions(IMGUI_DEFINE_MATH_OPERATORS)
+#add_compile_definitions(IMGUI_DEFINE_PLACEMENT_NEW)
+#add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLEW)
 
 find_package(glm REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})

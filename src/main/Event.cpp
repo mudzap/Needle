@@ -59,12 +59,30 @@ void Game::OnEvent() {
 
     if (keystate[SDL_SCANCODE_SPACE])
         camera.velocity.y += 0.4f;
+        
 
 
     while (SDL_PollEvent(&event)) {
 
         ImGui_ImplSDL2_ProcessEvent(&event);
 
+        bool backSignal;
+
+        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+            if(isInMenu) {
+                backSignal = true;
+            }
+
+            if (isInGame && !isPaused) {
+                isPaused = !isPaused;
+                isInMenu = !isInMenu;
+            }
+            
+            if (backSignal && isPaused && isInGame) {
+                isPaused = !isPaused;
+                isInMenu = !isInMenu;
+            }
+        }
 
         if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
             isRunning = false;
@@ -74,6 +92,9 @@ void Game::OnEvent() {
 
             const float ar = DEFAULT_W / DEFAULT_H;
             const float newAr = (float)event.window.data1 / (float)event.window.data2;
+            float oldScaleComp = 1/newScale;
+            ImVec2 oldOffset = ImVec2(newXOffset, newYOffset);
+            
 
             if (newAr < ar) {
                 newScale = event.window.data1 / DEFAULT_W;
@@ -96,6 +117,18 @@ void Game::OnEvent() {
 
             newPlayWidth = newScale * DEFAULT_PLAY_W;
             newPlayHeight = newScale * DEFAULT_PLAY_H;
+
+            float oldScale = oldScaleComp * newScale;
+            ImVec2 newOffset = ImVec2(newXOffset, newYOffset);
+
+            for (const auto &viewport : ImGui::GetCurrentContext()->Viewports)
+            {
+                ImGui::TranslateWindowsInViewport(viewport, oldOffset, newOffset);
+                ImGui::ScaleWindowsInViewport(viewport, oldScale);
+            }
+            ImGui::GetStyle().ScaleAllSizes(newScale);
+            ImGui::GetIO().FontGlobalScale = newScale;
+
 
             //orthoPlay = glm::ortho(-newPlayWidth / 2, newPlayWidth / 2, -newPlayHeight / 2, newPlayHeight / 2, 0.0f, 1.0f);
             //orthoFull = glm::ortho(-newWidth / 2, newWidth / 2, -newHeight / 2, newHeight / 2, 0.f, 1.0f);

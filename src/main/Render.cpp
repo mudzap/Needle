@@ -235,3 +235,44 @@ void Game::RenderImGuiDebug() {
     }  
 
 }
+
+
+void Game::RenderImGuiPause() {
+
+    //ImGui::GetMainViewport()->Pos
+    //SetNextWindowRelativePos
+    ImGuiWindowFlags window_flags = 0;
+    //window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoScrollbar;
+    //window_flags |= ImGuiWindowFlags_MenuBar;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    //window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_NoNav;
+    window_flags |= ImGuiWindowFlags_NoBackground;
+
+    //const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+    //ImGui::SetNextWindowPos(ImGui::GetMainViewport()->Pos + ImVec2(80, 500), ImGuiCond_FirstUseEver);
+
+    {
+        ImGui::SetNextWindowPos(ImVec2(20 + newXOffset, 500 + newYOffset), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+        //ImGui::PushFont(font);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+        ImGui::Begin("Pause menu", (bool*)__null, window_flags);
+
+        if (ImGui::Button("Resume")) {}
+
+        if (ImGui::Button("Restart")) {}
+
+        if (ImGui::Button("Exit to main menu")) {}
+
+
+        ImGui::End();
+        ImGui::PopStyleVar();
+        //ImGui::PopFont();
+    }
+
+}
+
+

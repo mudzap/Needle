@@ -10,7 +10,6 @@
 
 //#define GLM_ENABLE_EXPERIMENTAL
 
-
 extern "C"
 {
 #include <lua.h>
@@ -30,6 +29,7 @@ extern "C"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_internal.h"
 
 #include <freetype-gl/freetype-gl.h>
 #include <freetype-gl/texture-atlas.h>
@@ -58,7 +58,6 @@ extern "C"
 #include <sstream>
 #include <iostream>
 #include <filesystem>
-#include <array>
 #include <algorithm>
 #include <thread>
 #include <map>
@@ -134,6 +133,7 @@ class Game {
         void OnRender();
         void Render(Renderer& renderer);
         void RenderImGuiDebug();
+        void RenderImGuiPause();
 
         void OnCleanup();
 
@@ -184,6 +184,9 @@ class Game {
 
         //UI
         PlayUI gameUI;
+        bool isPaused = false;
+        bool isInMenu = false;
+        bool isInGame = true;
 
         //SDL
         SDL_Event event;
