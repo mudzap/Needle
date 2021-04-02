@@ -143,7 +143,7 @@ class Game {
 
         Camera camera;
         Timer timer;
-        Pool enemyPool;
+        EnemyPool enemyPool;
 
         //Font
         Font myFont;

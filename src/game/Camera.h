@@ -6,7 +6,6 @@
 #include "glm/gtx/vector_angle.hpp"
 
 #include "entities/Transform.h"
-#include "math/Complex.h"
 
 enum CameraMovementState {
 	CM_STOP,

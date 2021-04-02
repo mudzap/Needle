@@ -34,6 +34,9 @@ add_subdirectory(app)
 #ASSETS
 add_subdirectory(assets)
 
+#DOXYGEN
+add_subdirectory(docs)
+
 #TESTING
 if(BUILD_TESTING)
   add_subdirectory(tests)

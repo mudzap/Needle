@@ -1,3 +1,8 @@
+CMakeDoxygenDefaults.cmake
+CMakeDoxyfile.in
+latex
+html
+Doxyfile
 build
 DartConfiguration.tcl
 assets

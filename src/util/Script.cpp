@@ -124,11 +124,11 @@ void Script::CreateUsertypes(sol::state& lua) {
         "addRandom", &Enemy::AddSpawnerRandom
         );
 
-    sol::usertype<Pool> poolUT = lua.new_usertype<Pool>("pool",
-        sol::constructors<Pool()>(),
-        "createEnemy", &Pool::CreateEnemyComplex,
-        "destroyEnemy", &Pool::DestroyEnemy,
-        "destroyAll", &Pool::DestroyAllEnemies
+    sol::usertype<EnemyPool> poolUT = lua.new_usertype<EnemyPool>("pool",
+        sol::constructors<EnemyPool()>(),
+        "createEnemy", &EnemyPool::CreateEnemyComplex,
+        "destroyEnemy", &EnemyPool::DestroyEnemy,
+        "destroyAll", &EnemyPool::DestroyAllEnemies
         );
 
     sol::usertype<SpawnerArgs> spawnerUT = lua.new_usertype<SpawnerArgs>("spawnerArgs",
