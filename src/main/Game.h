@@ -222,7 +222,7 @@ class Game {
 
         //Lua
         sol::state lua;
-        sol::function stage1Main; //Only for debug for now
+        sol::function stage1Main; ///< Only for debug for now
 
         //Stage
         Stage stage;

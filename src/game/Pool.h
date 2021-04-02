@@ -34,11 +34,11 @@ class Pool {
 
 	private:
 
-		std::array<T, N> elements; /*	Handle - Element map	*/
-		std::set<int> activeElements;	/* Keeps track of active elements (by means of its handle) */
-		std::set<int> inactiveElements;	/* Keeps track of inactive elements (ditto)*/
+		std::array<T, N> elements; /**<	Handle - Element map	*/
+		std::set<int> activeElements;	/**< Keeps track of active elements (by means of its handle) */
+		std::set<int> inactiveElements;	/**< Keeps track of inactive elements (ditto)*/
 
-		int currentIndex = 0; 	/* The handle itself */
+		int currentIndex = 0; 	/**< The handle itself */
 		int active = 0;
 
 };
