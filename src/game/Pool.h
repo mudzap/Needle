@@ -10,54 +10,50 @@
 #include <algorithm>
 #include <set>
 
+//Changes!
+//You feed pool a list of handles, it returns a list of pointers
+//Enemies and spawners are independent now, they use handles exclusively
+//Spawners will keep operating separated of enemies
+//You can command them with their handles
+//Adding a spawner to an enemy means requesting a handle and storing it.
+
 class Pool {
 
 	public:
 
 		std::array<Enemy, MAX_ENEMIES> enemies;
-		//std::set<Enemy*> activeEnemies;
+		std::set<Enemy*> activeEnemies;
 
-		inline Enemy* CreateEnemyTransform(const TransformArgs& entity, const AnimationArgs& anim, int health) {
-			Enemy* const enemyReference = &enemies[enemyPointer];
+		Enemy* CreateEnemyTransform(const TransformArgs& entity, const AnimationArgs& anim, int health) {
+			Enemy* enemyReference = &enemies[enemyPointer];
 
 			enemies[enemyPointer].RecreateTransform(entity, anim, health);
-			//enemies[enemyPointer] = std::move(Enemy(entity, anim, health));
 			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
-
-			//if (activeEnemies.find(enemyReference) == activeEnemies.end())
-			//	activeEnemies.emplace(enemyReference);
 
 			return enemyReference;
 		};
 
-		inline Enemy* CreateEnemyComplex(const Complex position, const AnimationArgs& anim, int health) {
-			Enemy* const enemyReference = &enemies[enemyPointer];
+		Enemy* CreateEnemyComplex(const Complex position, const AnimationArgs& anim, int health) {
+			Enemy* enemyReference = &enemies[enemyPointer];
 
 			enemies[enemyPointer].RecreatePosition(position, anim, health);
-			//enemies[enemyPointer] = std::move(Enemy(position, anim, health));
 			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
-
-			//if (activeEnemies.find(enemyReference) == activeEnemies.end())
-			//	activeEnemies.emplace(enemyReference);
 
 			return enemyReference;
 		};
 
-		inline void DestroyEnemy(Enemy &enemy) {
-			//enemyReference->~Enemy();
-			//activeEnemies.erase(enemyReference);
+		void DestroyEnemy(Enemy &enemy) {
 			enemy.dead = true;
 		};
 
-		inline void DestroyAllEnemies() {
+		void DestroyAllEnemies() {
 			for (Enemy elem : enemies) {
 				DestroyEnemy(elem);
 			}
-			//activeEnemies.clear();
 			
 		};
 
-		inline void HandlePool(Player& player) {
+		void HandlePool(Player& player) {
 			for (Enemy elem : enemies) {
 				elem.HandleEnemy(player);
 			}

@@ -255,7 +255,8 @@ void Game::RenderImGuiPause() {
     //ImGui::SetNextWindowPos(ImGui::GetMainViewport()->Pos + ImVec2(80, 500), ImGuiCond_FirstUseEver);
 
     {
-        ImGui::SetNextWindowPos(ImVec2(20 + newXOffset, 500 + newYOffset), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(-300, -200), ImGuiCond_FirstUseEver);
+        //ImGui::SetNextWindowPos(ImVec2(20 + newXOffset, 500 + newYOffset), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
         //ImGui::PushFont(font);
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);

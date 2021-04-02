@@ -62,7 +62,7 @@ function main()
 	-- TIMING
 	doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
 	doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
-	--doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
+	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
 
 	doAfterFrames(0, function() testEnemy:slowToXY(cmplx.new(-150, -50), 0.06) end)
 	doAfterFrames(60, function() testEnemy:slowToXY(cmplx.new(50, 300), 0.06) end)
@@ -70,7 +70,7 @@ function main()
 	doAfterFrames(130, function() testEnemy:circle(cmplx.new(200, 50)) end)
 	doAfterFrames(220, function() testEnemy:driftBrake(0.95) end)
 	doAfterFrames(280, function() testEnemy:slowToXY(cmplx.new(-350, -300), 0.04) end)
-	--doAfterFrames(600, function() enemies:destroyEnemy(testEnemy) end)
+	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy) end)
 
 end
 

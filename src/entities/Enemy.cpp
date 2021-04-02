@@ -2,7 +2,6 @@
 
 Enemy::Enemy() {
 
-	//InitTransformBuffers();
 	dead = true;
 
 	enemySpawners.reserve(8);
@@ -10,8 +9,6 @@ Enemy::Enemy() {
 
 Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health)
 	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	//InitTransformBuffers();
 
 	enemySpawners.reserve(8);
 
@@ -23,8 +20,6 @@ Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const u
 
 Enemy::Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health)
 	: Transform(defaultTransform), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	//InitTransformBuffers();
 
 	enemySpawners.reserve(8);
 
@@ -41,20 +36,19 @@ Enemy::~Enemy() {
 
 void Enemy::RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health) {
 
+	this->health = health;
 	transform = entity;
 	drawQuad = animArgs.drawQuad;
 	dimensions = animArgs.states;
 	frameTime = animArgs.frameTime;
 	hitbox = animArgs.hitbox;
-	this->health = health;
 	dead = false;
 	state = STOP;
 
 	//REMOVE
 	InitTransformBuffers();
 
-	//enemySpawners.reserve(8);
-	SetStateSprites(3);
+	//SetStateSprites(3);
 
 	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
 
@@ -74,8 +68,7 @@ void Enemy::RecreatePosition(const Complex position, const AnimationArgs& animAr
 	//REMOVE
 	InitTransformBuffers();
 
-	//enemySpawners.reserve(8);
-	SetStateSprites(3);
+	//SetStateSprites(3);
 
 	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
 
