@@ -1,11 +1,8 @@
 #ifndef _POOL_
 #define _POOL_
 
-#include "entities/Enemy.h"
-#include "entities/Entity.h"
 #include "video/Mesh.h"
 #include "util/Log.h"
-#include "entities/Player.h"
 #include <array>
 #include <algorithm>
 #include <set>
@@ -27,7 +24,8 @@ struct KeyContainer {
 	int ID = -1;
 };
 
-//class Enemy;
+class Enemy;
+class Player;
 
 template<typename T, int N>
 class Pool {
@@ -51,7 +49,6 @@ class Pool {
 			}
 
 			elements[returnHandle].activeSetPtr = &activeElements;
-			elements[returnHandle].inactiveSetPtr = &inactiveElements;
 			elements[returnHandle].ID = returnHandle;
 
 			return KeyContainer{&elements[returnHandle], returnHandle};

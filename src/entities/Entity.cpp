@@ -1,11 +1,5 @@
 #include "Entity.h"
 
-Entity::Entity() {
-
-    childrenID.fill({-1});
-
-}
-
 void Entity::MakeInactive() {
 
     //This error shouldn't ocurr, I might consider removing it
@@ -18,8 +12,6 @@ void Entity::MakeInactive() {
     } else if(auto it = activeSetPtr->find(ID) != activeSetPtr->end()) {
         
         activeSetPtr->erase(it);   
-        inactiveSetPtr->insert(ID);
-
         ID = -1;
 
     }

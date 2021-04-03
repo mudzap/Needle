@@ -6,6 +6,7 @@ Enemy::Enemy() {
 
 }
 
+/*
 Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health)
 	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
 
@@ -25,9 +26,7 @@ Enemy::Enemy(const Complex position, const AnimationArgs& animArgs, const unsign
 	transform.position = position;
 
 }
-
-Enemy::~Enemy() {
-}
+*/
 
 void Enemy::RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health) {
 
@@ -146,12 +145,7 @@ void Enemy::CircleAround(Complex position) {
 	state = SPRING_TOWARDS;
 }
 
-void Enemy::AddSpawner(
-	const Spawner& spawner
-) {
-	//enemySpawners.emplace_back(spawner);
-}
-
+/*
 void Enemy::AddSpawnerManual(
 	const Complex offset,
 	const unsigned int reserveSize,
@@ -182,6 +176,7 @@ void Enemy::AddSpawnerRandom(
 	const RandomArgs& random) {
 	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, random));
 }
+*/
 
 
 void Enemy::Handle(Player& player) {

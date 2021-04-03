@@ -29,19 +29,29 @@ enum EnemyState {
 	DRIFT
 };
 
+template<typename T, int N>
+class Pool;
+
 //class Player;
 class Projectile;
 
-class Enemy: public Transform, public Animation, public Hitbox,	public Entity {
+class Enemy:
+	public Transform,
+	public Animation,
+	public Hitbox,
+	public Entity,
+	public Children<Spawner, MAX_SPAWNERS> {
 
 	public:
 
 		//TAKES ITEM, SPAWNER, 
 		Enemy();
+		/*
 		Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health);
 		Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health);
-		~Enemy();
+		*/
 
+		/* GENERALLY MEANT FOR LUA */
 		void RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health);
 		void RecreatePosition(const Complex position, const AnimationArgs& animArgs, const unsigned int health);
 
@@ -59,18 +69,20 @@ class Enemy: public Transform, public Animation, public Hitbox,	public Entity {
 		void Drift2(float friction);
 		void CircleAround(Complex positon);
 
-		void AddSpawner(const Spawner& spawner);
+		/*
+		void AddSpawner(int ID);
 		void AddSpawnerManual(const Complex offset,  const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile);
 		void AddSpawnerConstant(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const ConstantArgs& constant);
 		void AddSpawnerBarrage(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage);
 		void AddSpawnerRandom(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random);
+		*/
+		/* END LUA FUNCS */
 
 		void Handle(Player& player);
 
 		void ScissorTest();
 
 		void DrawBullets();
-
 		void Draw();
 
 		void CheckCollideable(Spawner& spawner);
@@ -80,6 +92,7 @@ class Enemy: public Transform, public Animation, public Hitbox,	public Entity {
 
 	private:
 
+		//MOVE TO TRANSFORM?
 		Complex direction;
 		float exponent;
 		float velocityPerUnit;

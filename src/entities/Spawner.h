@@ -19,6 +19,8 @@
 #include "Bullets.h"
 #include "Transform.h"
 
+#define MAX_SPAWNERS 128
+
 struct SpawnerArgs {
 	float angle = 0.f;
 	float angleDelta = 0.f;
@@ -175,6 +177,9 @@ public:
 	void InstantiateBarragePattern();
 	void InstantiateRandomPattern();
 
+	void Sleep();
+	void WakeUp();
+
 	SpawnerArgs spawner;
 
 	//union doesn't work for some reason
@@ -199,17 +204,18 @@ private:
 	bool stopBarrage;
 	unsigned int barrageResettable;
 	unsigned int barrageBullets;
-	Projectile tempProjectile[3];
+	Projectile tempProjectile;
 
 	//CLEANUP ARRAYS, ONLY ONE OBJECT/PRIMITIVE NEEDED 
 
-	float currentBulletAngle[3];
-	Complex currentBulletSpeed[3];
-	Complex currentBulletAccel[3];
+	float currentBulletAngle;
+	Complex currentBulletSpeed;
+	Complex currentBulletAccel;
 	Complex playerPosition;
-	unsigned int timer[3];
-	unsigned int resettableTimer[3];
-	bool shouldFire[3];
+	unsigned int timer;
+	unsigned int resettableTimer;
+	bool shouldFire;
+	bool asleep;
 
 };
 

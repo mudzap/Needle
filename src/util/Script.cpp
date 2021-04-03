@@ -103,7 +103,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         );
 
     sol::usertype<Enemy> enemyUT = lua.new_usertype<Enemy>("enemy",
-        sol::constructors<Enemy(Complex, AnimationArgs, int)>(),
+        sol::constructors<Enemy()>(),
         "recreateTransform", &Enemy::RecreateTransform,
         "recreatePos", &Enemy::RecreatePosition,
         "setPos", &Enemy::SetPosition,
@@ -118,12 +118,12 @@ void Script::CreateUsertypes(sol::state& lua) {
         "stopBrake", &Enemy::Stop2,
         "drift", &Enemy::Drift1,
         "driftBrake", &Enemy::Drift2,
-        "circle", &Enemy::CircleAround,
+        "circle", &Enemy::CircleAround/*,
         "addSpawner", &Enemy::AddSpawner,
         "addManual", &Enemy::AddSpawnerManual,
-            "addConstant", &Enemy::AddSpawnerConstant,
+        "addConstant", &Enemy::AddSpawnerConstant,
         "addBarrage", &Enemy::AddSpawnerBarrage,
-        "addRandom", &Enemy::AddSpawnerRandom
+        "addRandom", &Enemy::AddSpawnerRandom*/
         );
 
     sol::usertype<KeyContainer<Enemy>> eKeyUT = lua.new_usertype<KeyContainer<Enemy>>("enemyKey",
