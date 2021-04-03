@@ -27,12 +27,12 @@ void Game::OnLoop() {
 	});
 
 	SHMY_LOGV("Processing enemy and players\n");
-	for (Enemy enemies : enemyPool.enemies) {
+	/*for (Enemy enemies : enemyPool.enemies) {
 		
 		player.HandlePlayerCollision(enemies);
 		enemies.Handle(player);
 		
-	}
+	}*/
 
 	SHMY_LOGV("Handling player movements and bullets\n");
 	player.HandlePlayerMovement();

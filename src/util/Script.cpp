@@ -121,7 +121,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "circle", &Enemy::CircleAround,
         "addSpawner", &Enemy::AddSpawner,
         "addManual", &Enemy::AddSpawnerManual,
-        "addConstant", &Enemy::AddSpawnerConstant,
+            "addConstant", &Enemy::AddSpawnerConstant,
         "addBarrage", &Enemy::AddSpawnerBarrage,
         "addRandom", &Enemy::AddSpawnerRandom
         );
@@ -147,13 +147,14 @@ void Script::CreateUsertypes(sol::state& lua) {
         "destroyAllEnemies", &EnemPool<MAX_ENEMIES>::FreeAllHandles
     );
 
-
+    /*
     sol::usertype<EnemyPool> poolUT = lua.new_usertype<EnemyPool>("pool",
         sol::constructors<EnemyPool()>(),
         "createEnemy", &EnemyPool::CreateEnemyComplex,
         "destroyEnemy", &EnemyPool::DestroyEnemy,
         "destroyAll", &EnemyPool::DestroyAllEnemies
         );
+    */
 
     sol::usertype<SpawnerArgs> spawnerUT = lua.new_usertype<SpawnerArgs>("spawnerArgs",
         sol::constructors<SpawnerArgs()>(),

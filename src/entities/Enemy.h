@@ -5,7 +5,6 @@
 #include "video/Mesh.h"
 #include "math/Complex.h"
 //#include "util/Timer.h"
-//#include "game/Pool.h"
 #include "util/Log.h"
 
 #include "Hitbox.h"
@@ -14,6 +13,7 @@
 #include "Animation.h"
 #include "Player.h"
 #include "Transform.h"
+#include "Entity.h"
 
 #include <vector>
 #include <memory>
@@ -32,13 +32,7 @@ enum EnemyState {
 //class Player;
 class Projectile;
 
-template<int N>
-class EnemPool;
-
-template<typename T, int N>
-class Pool;
-
-class Enemy: public Transform, public Animation, public Hitbox {
+class Enemy: public Transform, public Animation, public Hitbox,	public Entity {
 
 	public:
 
@@ -81,16 +75,10 @@ class Enemy: public Transform, public Animation, public Hitbox {
 
 		void CheckCollideable(Spawner& spawner);
 
-		int enemyID = 0;
 		EnemyState state = STOP;
 		bool dead = true;
 
-		Pool<Enemy, MAX_ENEMIES>* parentPool = NULL;
-		int ID = -1;
-
 	private:
-
-		void MakeInactive();
 
 		Complex direction;
 		float exponent;

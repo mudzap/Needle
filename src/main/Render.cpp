@@ -50,12 +50,14 @@ void Game::OnRender() {
     player.DrawBullets();
     player.Draw();
 
+    /*
     for (Enemy enemy : enemyPool.enemies) {
         enemy.DrawBullets();
     }
     for (Enemy enemy : enemyPool.enemies) {
         enemy.Draw();
     }
+    */
 
     //MOVE TO SPAWNER
     //myLaser.ResetDraw();

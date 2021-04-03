@@ -2,13 +2,16 @@
 #define _POOL_
 
 #include "entities/Enemy.h"
+#include "entities/Entity.h"
 #include "video/Mesh.h"
 #include "util/Log.h"
-
+#include "entities/Player.h"
 #include <array>
 #include <algorithm>
 #include <set>
 #include <memory>
+
+#define MAX_ENEMIES_D 64
 
 //Changes!
 //You feed pool a list of handles, it returns a list of pointers
@@ -17,13 +20,14 @@
 //You can command them with their handles
 //Adding a spawner to an enemy means requesting a handle and storing it.
 
-
-/** Allows for better type safety and easier bookkeeping */
+/** Allows for better type safety and easier bookkeeping in Pool */
 template<typename T>
 struct KeyContainer {
 	T* type_ptr = NULL;
 	int ID = -1;
 };
+
+//class Enemy;
 
 template<typename T, int N>
 class Pool {
@@ -34,7 +38,7 @@ class Pool {
 
 			int returnHandle = 0;
 
-			if(active >= N) {   //If the set of active elements contains the handle to all the elements
+			if(activeElements.size() >= N) {   //If the set of active elements contains the handle to all the elements
 				SHMY_LOGD("Pool filled! Replacing on index %d\n", currentIndex);
 				returnHandle = currentIndex;   //Replace
 				currentIndex = (currentIndex + 1) % N;
@@ -44,10 +48,10 @@ class Pool {
 				returnHandle = *it;
 				inactiveElements.erase(inactiveElements.cbegin());
 				activeElements.insert(returnHandle);
-				active++;
 			}
 
-			elements[returnHandle].parentPool = this;
+			elements[returnHandle].activeSetPtr = &activeElements;
+			elements[returnHandle].inactiveSetPtr = &inactiveElements;
 			elements[returnHandle].ID = returnHandle;
 
 			return KeyContainer{&elements[returnHandle], returnHandle};
@@ -66,24 +70,25 @@ class Pool {
 
 		void FreeHandle(KeyContainer<T>* handle){
 
-			if(handle->type_ptr == NULL || handle->ID < 0) {
-				SHMY_LOGE("Tried to free handle with no object assigned\n");
-			}
+			if(handle->ID < 0 || inactiveElements.find(handle->ID) != inactiveElements.end()) {
 
-			if(auto it = activeElements.find(handle->ID) != activeElements.end()) {
+				SHMY_LOGE("Tried to free handle with no object assigned, or handle previously freed\n");
+
+			} else if(auto it = activeElements.find(handle->ID) != activeElements.end()) {
+				
 				activeElements.erase(it);   
 				inactiveElements.insert(handle->ID);
-				active--;
+
 			}
 
-			handle->type_ptr = NULL;
 			handle->ID = -1;
+			handle->type_ptr = NULL;
 
 		}
 		void FreeHandles(KeyContainer<T> handle[], int desiredElements){
 
 			for(int i = 0; i < desiredElements; i++) {
-				Pool<T,N>::FreeHandle(&handle[i]);
+				FreeHandle(&handle[i]);
 			}
 
 		}
@@ -95,7 +100,6 @@ class Pool {
 			activeElements.clear();
 			inactiveElements.clear();
 			currentIndex = 0;
-			active = 0;
 
 		}
 
@@ -116,7 +120,6 @@ class Pool {
 		std::set<int> inactiveElements;	/**< Keeps track of inactive elements (ditto)*/
 
 		int currentIndex = 0; 	/**< The handle itself */
-		int active = 0;
 
 };
 
@@ -139,54 +142,55 @@ class EnemPool: public Pool<Enemy, N> {
 
 };
 
+//DEPRECATED
 
-//DEPRECATED /*
 class EnemyPool {
-
+/*
 	public:
 
-		std::array<Enemy, MAX_ENEMIES> enemies;
+		std::array<Enemy, MAX_ENEMIES_D> enemies;
 		std::set<Enemy*> activeEnemies;
 
 		Enemy* CreateEnemyTransform(const TransformArgs& entity, const AnimationArgs& anim, int health) {
 			Enemy* enemyReference = &enemies[enemyPointer];
 
 			enemies[enemyPointer].RecreateTransform(entity, anim, health);
-			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
+			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES_D;
 
 			return enemyReference;
-		};
+		}
 
 		Enemy* CreateEnemyComplex(const Complex position, const AnimationArgs& anim, int health) {
 			Enemy* enemyReference = &enemies[enemyPointer];
 
 			enemies[enemyPointer].RecreatePosition(position, anim, health);
-			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES;
+			enemyPointer = (enemyPointer + 1) % MAX_ENEMIES_D;
 
 			return enemyReference;
-		};
+		}
 
 		void DestroyEnemy(Enemy &enemy) {
 			enemy.dead = true;
-		};
+		}
 
 		void DestroyAllEnemies() {
 			for (Enemy elem : enemies) {
 				DestroyEnemy(elem);
 			}
 			
-		};
+		}
 
 		void HandlePool(Player& player) {
 			for (Enemy elem : enemies) {
 				elem.Handle(player);
 			}
-		};
+		}
 
 
 	private:
 
 		int enemyPointer = 0;
+		*/
 
 };
 

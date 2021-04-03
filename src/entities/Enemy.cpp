@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "game/Pool.h"
 
 Enemy::Enemy() {
 
@@ -333,7 +332,7 @@ void Enemy::CheckCollideable(Spawner& spawner) {
 	}
 }
 
-
+/*
 void Enemy::MakeInactive() {
 
 	std::unique_ptr<KeyContainer<Enemy>> thisEnemy = std::make_unique<KeyContainer<Enemy>>(KeyContainer<Enemy>{this, ID});
@@ -345,3 +344,4 @@ void Enemy::MakeInactive() {
 	}
 
 }
+*/
