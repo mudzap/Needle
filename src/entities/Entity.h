@@ -1,14 +1,22 @@
 #ifndef _ENTITY_
 #define _ENTITY_
 
+#define MAX_CHILDREN_PER_ENTITY 16
+
 #include <set>
 #include <memory>
+#include <array>
 
 #include "util/Log.h"
 
 class Entity {
 
     public:
+
+        Entity();
+
+        std::array<int, MAX_CHILDREN_PER_ENTITY> childrenID; //< Stores IDs of children objects
+        Entity* target; //< Separate pointer for defined target (player, enemy, other function)
 
 		std::set<int>* activeSetPtr = NULL;
 		std::set<int>* inactiveSetPtr = NULL;
@@ -17,25 +25,7 @@ class Entity {
 
     protected:
     
-        void MakeInactive() {
-
-            //This error shouldn't ocurr, I might consider removing it
-            //It has almost no overhead anyways, so lets keep it.
-
-            if(ID < 0) {
-				
-                SHMY_LOGE("Tried to free handle with no object assigned\n");
-
-            } else if(auto it = activeSetPtr->find(ID) != activeSetPtr->end()) {
-				
-                activeSetPtr->erase(it);   
-				inactiveSetPtr->insert(ID);
-
-				ID = -1;
-                
-			}
-
-        }
+        void MakeInactive();
 
 };
 

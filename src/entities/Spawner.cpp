@@ -112,7 +112,7 @@ inline void Spawner::InitializeConstantSpawner() {
 
 }
 
-inline void Spawner::InitializeBarrageSpawner() {
+void Spawner::InitializeBarrageSpawner() {
 
 	tempProjectile[BARRAGE] = barrage.baseProjectile;
 	currentBulletAccel[BARRAGE] = barrage.baseProjectile.projectile.acceleration;
@@ -126,7 +126,7 @@ inline void Spawner::InitializeBarrageSpawner() {
 
 
 }
-inline void Spawner::InitializeRandomSpawner() {
+void Spawner::InitializeRandomSpawner() {
 
 	tempProjectile[RANDOM] = random.baseProjectile;
 	GetRandom();
@@ -135,7 +135,7 @@ inline void Spawner::InitializeRandomSpawner() {
 
 }
 
-inline void Spawner::InitializeEmptySpawner() {
+void Spawner::InitializeEmptySpawner() {
 
 	tempProjectile[0] = projectile;
 	timer[0] = Timer::lifeTimeFrames;
@@ -148,7 +148,7 @@ inline void Spawner::InitializeEmptySpawner() {
 	*/
 }
 
-inline void Spawner::InitializePlayerSpawner() {
+void Spawner::InitializePlayerSpawner() {
 
 	tempProjectile[0] = projectile;
 	timer[0] = Timer::lifeTimeFrames;

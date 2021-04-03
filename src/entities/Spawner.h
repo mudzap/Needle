@@ -148,11 +148,11 @@ public:
 
 	//inline void InstantiateBullet(Bullets* const pool, const Projectile* projectile, const Complex* position);
 
-	inline void InitializeConstantSpawner();
-	inline void InitializeEmptySpawner();
-	inline void InitializeBarrageSpawner();
-	inline void InitializeRandomSpawner();
-	inline void InitializePlayerSpawner();
+	void InitializeConstantSpawner();
+	void InitializeEmptySpawner();
+	void InitializeBarrageSpawner();
+	void InitializeRandomSpawner();
+	void InitializePlayerSpawner();
 
 	void ClearCollideable();
 	void PushCollideable(unsigned int i);
@@ -167,9 +167,9 @@ public:
 	void ResetTimer();
 
 
-	inline void GetRandom();
+	void GetRandom();
 
-	inline void LoopAtCone();
+	void LoopAtCone();
 
 	void InstantiateConstantPattern();
 	void InstantiateBarragePattern();
