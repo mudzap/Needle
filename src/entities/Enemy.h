@@ -46,10 +46,6 @@ class Enemy:
 
 		//TAKES ITEM, SPAWNER, 
 		Enemy();
-		/*
-		Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health);
-		Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health);
-		*/
 
 		/* GENERALLY MEANT FOR LUA */
 		void RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health);
@@ -68,14 +64,6 @@ class Enemy:
 		void Drift1();
 		void Drift2(float friction);
 		void CircleAround(Complex positon);
-
-		/*
-		void AddSpawner(int ID);
-		void AddSpawnerManual(const Complex offset,  const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile);
-		void AddSpawnerConstant(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const ConstantArgs& constant);
-		void AddSpawnerBarrage(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage);
-		void AddSpawnerRandom(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random);
-		*/
 		/* END LUA FUNCS */
 
 		void Handle(Player& player);

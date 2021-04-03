@@ -35,23 +35,24 @@ class Children {
 
     public:
 
-        void AddChild(int ID) {
-            //enemySpawners.emplace_back(spawner);
-            int newID = childrenPool->GetHandle().ID;
-            childrenID.insert(newID);
+        void AddChild(KeyContainer<T> handle) {
+            childrenID.insert(handle);
         }
 
-        void KillChild(int ID) {
-            //enemySpawners.emplace_back(spawner);
-            int newID = childrenPool->GetHandle().ID;
-            childrenID.insert(newID);
+        void KillChild(KeyContainer<T> handle) {
+            childrenID.erase(handle);
+            childrenPool->FreeHandle(handle);
+        }
+
+        void SleepChild(KeyContainer<T> handle) {
+            childrenID.erase(handle);
         }
 
     protected:
 
         Pool<T, N>* childrenPool;
 
-        std::set<int> childrenID; //< Stores IDs of children objects which inherit the entity transforms
+        std::set<KeyContainer<T>> childrenID; //< Stores IDs of children objects which inherit the entity transforms
 
 };
 

@@ -6,28 +6,6 @@ Enemy::Enemy() {
 
 }
 
-/*
-Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health)
-	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	SetStateSprites(3);
-
-	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
-
-}
-
-Enemy::Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health)
-	: Transform(defaultTransform), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	SetStateSprites(3);
-
-	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
-
-	transform.position = position;
-
-}
-*/
-
 void Enemy::RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health) {
 
 	this->health = health;
@@ -145,43 +123,13 @@ void Enemy::CircleAround(Complex position) {
 	state = SPRING_TOWARDS;
 }
 
-/*
-void Enemy::AddSpawnerManual(
-	const Complex offset,
-	const unsigned int reserveSize,
-	const SpawnerArgs& spawner,
-	const Projectile& projectile
-) {
-	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, projectile));
-}
-
-void Enemy::AddSpawnerConstant(
-	const Complex offset,
-	const unsigned int reserveSize,
-	const SpawnerArgs& spawner,
-	const ConstantArgs& constant) {
-	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, constant));
-}
-void Enemy::AddSpawnerBarrage(
-	const Complex offset,
-	const unsigned int reserveSize,
-	const SpawnerArgs& spawner,
-	const BarrageArgs& barrage) {
-	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, barrage));
-}
-void Enemy::AddSpawnerRandom(
-	const Complex offset,
-	const unsigned int reserveSize,
-	const SpawnerArgs& spawner,
-	const RandomArgs& random) {
-	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, random));
-}
-*/
-
-
 void Enemy::Handle(Player& player) {
 
 	if (dead) {
+		
+		for (KeyContainer<Spawner> handle : childrenID) {
+			handle.type_ptr->Sleep();
+		}
 
 		MakeInactive();
 
@@ -285,6 +233,8 @@ void Enemy::ScissorTest() {
 
 }
 
+
+//NOT DONE HERE
 void Enemy::DrawBullets() {
 
 /*
@@ -326,17 +276,3 @@ void Enemy::CheckCollideable(Spawner& spawner) {
 
 	}
 }
-
-/*
-void Enemy::MakeInactive() {
-
-	std::unique_ptr<KeyContainer<Enemy>> thisEnemy = std::make_unique<KeyContainer<Enemy>>(KeyContainer<Enemy>{this, ID});
-
-	if(parentPool == NULL || ID > 0 ) {
-		SHMY_LOGE("This enemy doesn't belong to a pool, ID: %d\n", ID);
-	} else {
-		parentPool->FreeHandle(thisEnemy.get());
-	}
-
-}
-*/
