@@ -30,7 +30,7 @@ void Game::OnLoop() {
 	for (Enemy enemies : enemyPool.enemies) {
 		
 		player.HandlePlayerCollision(enemies);
-		enemies.HandleEnemy(player);
+		enemies.Handle(player);
 		
 	}
 

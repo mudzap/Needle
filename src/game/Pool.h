@@ -1,10 +1,9 @@
 #ifndef _POOL_
 #define _POOL_
 
-#define MAX_ENEMIES 64
-
 #include "entities/Enemy.h"
 #include "video/Mesh.h"
+#include "util/Log.h"
 
 #include <array>
 #include <algorithm>
@@ -18,21 +17,99 @@
 //You can command them with their handles
 //Adding a spawner to an enemy means requesting a handle and storing it.
 
+
+/** Allows for better type safety and easier bookkeeping */
+template<typename T>
+struct KeyContainer {
+	T* type_ptr = NULL;
+	int ID = -1;
+};
+
 template<typename T, int N>
 class Pool {
 
 	public:
 
-		int getHandles(int handle[], int desiredElements);
-		std::unique_ptr<T*[]> getElement(int handle[], int desiredElements);
-		
-		static void freeHandle(Pool<T,N>& pool, int handle);
-		static void freeHandles(Pool<T,N>& pool, int handle[], int desiredElements);
-		static void freeAllHandles(Pool<T,N>& pool);
+		KeyContainer<T> GetHandle(){
 
-		int processElements();
+			int returnHandle = 0;
 
-	private:
+			if(active >= N) {   //If the set of active elements contains the handle to all the elements
+				SHMY_LOGD("Pool filled! Replacing on index %d\n", currentIndex);
+				returnHandle = currentIndex;   //Replace
+				currentIndex = (currentIndex + 1) % N;
+			} else {    //Otherwise, give from the inactive elements set
+				//int newHandle = inactiveElemets.cbegin();
+				auto it = inactiveElements.begin();
+				returnHandle = *it;
+				inactiveElements.erase(inactiveElements.cbegin());
+				activeElements.insert(returnHandle);
+				active++;
+			}
+
+			elements[returnHandle].parentPool = this;
+			elements[returnHandle].ID = returnHandle;
+
+			return KeyContainer{&elements[returnHandle], returnHandle};
+
+		}
+
+		void GetHandles(KeyContainer<T> handle[], int desiredElements){
+
+			int i = 0;
+			while(desiredElements > i) {
+				handle[i] = GetHandle();
+				i++;
+			}
+
+		}
+
+		void FreeHandle(KeyContainer<T>* handle){
+
+			if(handle->type_ptr == NULL || handle->ID < 0) {
+				SHMY_LOGE("Tried to free handle with no object assigned\n");
+			}
+
+			if(auto it = activeElements.find(handle->ID) != activeElements.end()) {
+				activeElements.erase(it);   
+				inactiveElements.insert(handle->ID);
+				active--;
+			}
+
+			handle->type_ptr = NULL;
+			handle->ID = -1;
+
+		}
+		void FreeHandles(KeyContainer<T> handle[], int desiredElements){
+
+			for(int i = 0; i < desiredElements; i++) {
+				Pool<T,N>::FreeHandle(&handle[i]);
+			}
+
+		}
+		/** DANGEROUS, ONLY CALL AT END OF LEVEL, WHEN FREEING UP ALL THE HANDLES */
+		void FreeAllHandles(){
+
+			//Resets everything
+			SHMY_LOGD("Resetting Pool\n");
+			activeElements.clear();
+			inactiveElements.clear();
+			currentIndex = 0;
+			active = 0;
+
+		}
+
+		int ProcessElements(){
+
+			for(int i: this->activeElements) {
+				this->elements[i].Handle();
+			}
+
+			return 0;
+
+		}
+
+	protected:
 
 		std::array<T, N> elements; /**<	Handle - Element map	*/
 		std::set<int> activeElements;	/**< Keeps track of active elements (by means of its handle) */
@@ -43,9 +120,27 @@ class Pool {
 
 };
 
+template<int N>
+class EnemPool: public Pool<Enemy, N> {
+
+	public:
+
+		int ProcessElements(Player& player){  ///< Overload for enemy pool
+
+			for(int i: this->activeElements) {
+				this->elements[i].Handle(player);
+			}
+
+			return 0;
+
+		}
+
+		std::unique_ptr<Player> target;
+
+};
 
 
-//DEPRECATED
+//DEPRECATED /*
 class EnemyPool {
 
 	public:
@@ -84,7 +179,7 @@ class EnemyPool {
 
 		void HandlePool(Player& player) {
 			for (Enemy elem : enemies) {
-				elem.HandleEnemy(player);
+				elem.Handle(player);
 			}
 		};
 

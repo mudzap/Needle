@@ -55,8 +55,10 @@ void Player::HandlePlayerMovement() {
 
 void Player::HandlePlayerCollision(Enemy& enemy) {
 
+/*
 	for (int i = 0; i < enemy.enemySpawners.size(); i++)
 		CheckCollisionRoutine(enemy.enemySpawners[i]);
+*/
 
 };
 

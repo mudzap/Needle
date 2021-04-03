@@ -5,6 +5,8 @@
 #include "video/Mesh.h"
 #include "math/Complex.h"
 //#include "util/Timer.h"
+//#include "game/Pool.h"
+#include "util/Log.h"
 
 #include "Hitbox.h"
 //#include "Projectile.h"
@@ -14,6 +16,9 @@
 #include "Transform.h"
 
 #include <vector>
+#include <memory>
+
+#define MAX_ENEMIES 64
 
 enum EnemyState {
 	MOVE_TOWARDS,
@@ -26,6 +31,12 @@ enum EnemyState {
 
 //class Player;
 class Projectile;
+
+template<int N>
+class EnemPool;
+
+template<typename T, int N>
+class Pool;
 
 class Enemy: public Transform, public Animation, public Hitbox {
 
@@ -60,7 +71,7 @@ class Enemy: public Transform, public Animation, public Hitbox {
 		void AddSpawnerBarrage(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage);
 		void AddSpawnerRandom(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random);
 
-		void HandleEnemy(Player& player);
+		void Handle(Player& player);
 
 		void ScissorTest();
 
@@ -70,13 +81,16 @@ class Enemy: public Transform, public Animation, public Hitbox {
 
 		void CheckCollideable(Spawner& spawner);
 
-		std::vector<Spawner> enemySpawners;
-
 		int enemyID = 0;
 		EnemyState state = STOP;
 		bool dead = true;
 
+		Pool<Enemy, MAX_ENEMIES>* parentPool = NULL;
+		int ID = -1;
+
 	private:
+
+		void MakeInactive();
 
 		Complex direction;
 		float exponent;

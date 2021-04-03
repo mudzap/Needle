@@ -83,8 +83,8 @@ Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const Spa
 Spawner::~Spawner() {
 }
 
-void Spawner::HandleSpawner() {
-	(*this.*handlingFunction)();
+void Spawner::Handle() {
+	(*this.*handlingFunction)(); //Should have went with polyomorphism, but noooo, "muh oop bad"
 }
 
 void Spawner::ClearCollideable() {

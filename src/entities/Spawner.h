@@ -157,7 +157,7 @@ public:
 	void ClearCollideable();
 	void PushCollideable(unsigned int i);
 
-	void HandleSpawner();
+	void Handle();
 	void HandleEmpty();
 	void HandleConstantSpawner();
 	void HandleBarrageSpawner();

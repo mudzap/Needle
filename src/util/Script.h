@@ -26,7 +26,6 @@ enum ScriptIdentifiers {
     UI = 4
 };
 
-
 struct Script
 {
     public:

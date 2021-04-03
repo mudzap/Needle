@@ -104,6 +104,8 @@ void Script::CreateUsertypes(sol::state& lua) {
 
     sol::usertype<Enemy> enemyUT = lua.new_usertype<Enemy>("enemy",
         sol::constructors<Enemy(Complex, AnimationArgs, int)>(),
+        "recreateTransform", &Enemy::RecreateTransform,
+        "recreatePos", &Enemy::RecreatePosition,
         "setPos", &Enemy::SetPosition,
         "destroy", &Enemy::Destroy,
         "moveToXY", &Enemy::MoveTowards1,
@@ -123,6 +125,28 @@ void Script::CreateUsertypes(sol::state& lua) {
         "addBarrage", &Enemy::AddSpawnerBarrage,
         "addRandom", &Enemy::AddSpawnerRandom
         );
+
+    sol::usertype<KeyContainer<Enemy>> eKeyUT = lua.new_usertype<KeyContainer<Enemy>>("enemyKey",
+        sol::constructors <KeyContainer<Enemy>()>(),
+        "enemy_p", &KeyContainer<Enemy>::type_ptr,
+        "id", &KeyContainer<Enemy>::ID
+    );
+
+    sol::usertype<KeyContainer<Spawner>> sKeyUT = lua.new_usertype<KeyContainer<Spawner>>("spawnerKey",
+        sol::constructors <KeyContainer<Spawner>()>(),
+        "spawner_p", &KeyContainer<Spawner>::type_ptr,
+        "id", &KeyContainer<Spawner>::ID
+    );
+
+    sol::usertype<EnemPool<MAX_ENEMIES>> enemyPoolUT = lua.new_usertype<EnemPool<MAX_ENEMIES>>("enemyPool",
+        sol::constructors<>(),
+        "getEnemy", &EnemPool<MAX_ENEMIES>::GetHandle,
+        "getEnemies", &EnemPool<MAX_ENEMIES>::GetHandles,
+        "getEnemy", &EnemPool<MAX_ENEMIES>::FreeHandle,
+        "getEnemies", &EnemPool<MAX_ENEMIES>::FreeHandles,
+        "destroyAllEnemies", &EnemPool<MAX_ENEMIES>::FreeAllHandles
+    );
+
 
     sol::usertype<EnemyPool> poolUT = lua.new_usertype<EnemyPool>("pool",
         sol::constructors<EnemyPool()>(),

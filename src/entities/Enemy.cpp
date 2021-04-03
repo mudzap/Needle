@@ -1,16 +1,14 @@
 #include "Enemy.h"
+#include "game/Pool.h"
 
 Enemy::Enemy() {
 
 	dead = true;
 
-	enemySpawners.reserve(8);
 }
 
 Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health)
 	: Transform(entity), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	enemySpawners.reserve(8);
 
 	SetStateSprites(3);
 
@@ -20,8 +18,6 @@ Enemy::Enemy(const TransformArgs& entity, const AnimationArgs& animArgs, const u
 
 Enemy::Enemy(const Complex position, const AnimationArgs& animArgs, const unsigned int health)
 	: Transform(defaultTransform), Animation(animArgs.drawQuad, animArgs.states, animArgs.frameTime), Hitbox(animArgs.hitbox), health(health) {
-
-	enemySpawners.reserve(8);
 
 	SetStateSprites(3);
 
@@ -154,7 +150,7 @@ void Enemy::CircleAround(Complex position) {
 void Enemy::AddSpawner(
 	const Spawner& spawner
 ) {
-	enemySpawners.emplace_back(spawner);
+	//enemySpawners.emplace_back(spawner);
 }
 
 void Enemy::AddSpawnerManual(
@@ -163,7 +159,7 @@ void Enemy::AddSpawnerManual(
 	const SpawnerArgs& spawner,
 	const Projectile& projectile
 ) {
-	enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, projectile));
+	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, projectile));
 }
 
 void Enemy::AddSpawnerConstant(
@@ -171,27 +167,31 @@ void Enemy::AddSpawnerConstant(
 	const unsigned int reserveSize,
 	const SpawnerArgs& spawner,
 	const ConstantArgs& constant) {
-	enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, constant));
+	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, constant));
 }
 void Enemy::AddSpawnerBarrage(
 	const Complex offset,
 	const unsigned int reserveSize,
 	const SpawnerArgs& spawner,
 	const BarrageArgs& barrage) {
-	enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, barrage));
+	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, barrage));
 }
 void Enemy::AddSpawnerRandom(
 	const Complex offset,
 	const unsigned int reserveSize,
 	const SpawnerArgs& spawner,
 	const RandomArgs& random) {
-	enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, random));
+	//enemySpawners.emplace_back(Spawner(offset, reserveSize, spawner, random));
 }
 
 
-void Enemy::HandleEnemy(Player& player) {
+void Enemy::Handle(Player& player) {
 
-	if (!dead) {
+	if (dead) {
+
+		MakeInactive();
+
+	} else {
 
 		Transform::TranslateCartesian(transform.velocity);
 
@@ -251,21 +251,24 @@ void Enemy::HandleEnemy(Player& player) {
 		tvertices[0] = { transform.position, {1.0, 0.0} };
 #endif
 
+		/*		DEPRECATED, MOVING TOWARDS NON-DEPENDANT SPAWNERS
 		for (int i = 0; i < enemySpawners.size(); i++) {
 			enemySpawners[i].transform.position = transform.position + enemySpawners[i].offset;
-			enemySpawners[i].HandleSpawner();
+			enemySpawners[i].Handle();
 		}
+		*/
 
 		ScissorTest();
 
 	}
 
+	/*		DITTO
 	for (int i = 0; i < enemySpawners.size(); i++) {
 		enemySpawners[i].BatchProcessBullets();
 		enemySpawners[i].ScissorTest();
 		enemySpawners[i].FillVertices();
 	}
-
+	*/
 
 }
 
@@ -290,9 +293,11 @@ void Enemy::ScissorTest() {
 
 void Enemy::DrawBullets() {
 
+/*
 	for (int i = 0; i < enemySpawners.size(); i++) {
 		enemySpawners[i].Draw(enemySpawners[i].tvertices[0], enemySpawners[i].currentSize - enemySpawners[i].trashSize);
 	}
+*/
 
 }
 
@@ -326,4 +331,17 @@ void Enemy::CheckCollideable(Spawner& spawner) {
 		}
 
 	}
+}
+
+
+void Enemy::MakeInactive() {
+
+	std::unique_ptr<KeyContainer<Enemy>> thisEnemy = std::make_unique<KeyContainer<Enemy>>(KeyContainer<Enemy>{this, ID});
+
+	if(parentPool == NULL || ID > 0 ) {
+		SHMY_LOGE("This enemy doesn't belong to a pool, ID: %d\n", ID);
+	} else {
+		parentPool->FreeHandle(thisEnemy.get());
+	}
+
 }
