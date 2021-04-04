@@ -241,7 +241,7 @@ int Game::initLua() {
     lua["cam"] = camera;
     lua["enemies"] = &enemyPool;
     lua["spawners"] = &spawnerPool;
-    lua["doAfterFrames"] = &Timer::AddLuaTimer;
+    lua["do_after_frames"] = &Timer::AddLuaTimer;
        
     stage1Main = lua["main"];
 

@@ -54,7 +54,7 @@ class Pool {
 			elements[returnHandle].activeSetPtr = &activeElements;
 			elements[returnHandle].ID = returnHandle;
 
-			return KeyContainer{&elements[returnHandle], returnHandle};
+			return KeyContainer<T>{&elements[returnHandle], returnHandle};
 
 		}
 

@@ -10,6 +10,7 @@
 #include "video/Mesh.h"
 #include "util/Timer.h"
 #include "math/Math.h"
+#include "util/Log.h"
 
 #include "Hitbox.h"
 
@@ -29,6 +30,8 @@ class Animation: public Mesh {
 		Animation();
 		Animation(const Quad& drawQuad, const ipair animStates, const unsigned int frameTime);
 		~Animation();
+
+		void Recreate(const AnimationArgs& animationArgs, const int stateSprites);
 
 		//void SetStateSprites(unsigned int frames, unsigned int number, ipair states ...);
 		void SetStateSprites(const unsigned int frames, const ipair state);

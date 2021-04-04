@@ -2,19 +2,12 @@
 #include "util/Timer.h"
 
 
-Bullets::Bullets() {
-}
+void Bullets::InitSpawner(const Projectile& projectile, const int reserveSize) {
 
-Bullets::Bullets(const Projectile& projectile, const int reserveSize)
-	: indexPointer(0), trashSize(0), reserveSize(reserveSize), currentSize(0) {
-	InitSpawner(projectile);
-}
-
-Bullets::~Bullets() {
-
-}
-
-void Bullets::InitSpawner(const Projectile& projectile) {
+	indexPointer = 0;
+	trashSize = 0;
+	currentSize = 0;
+	this->reserveSize = reserveSize;
 
 	InitTransformBuffers(reserveSize);
 

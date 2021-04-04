@@ -222,7 +222,7 @@ void Game::RenderImGuiDebug() {
         {
             
             SHMY_LOGD("Starting lua script\n");
-            sol::error e = lua.script_file("scripts/stage1.lua");
+            sol::error e = lua.safe_script_file("scripts/stage1.lua");
             printf("%s\n", e.what());
 
         }

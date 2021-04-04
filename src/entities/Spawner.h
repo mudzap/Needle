@@ -114,42 +114,42 @@ struct PlayerArgs;
 class Spawner : public Transform, public Bullets, public Entity {
 public:
 
-	Spawner();
+	~Spawner();
 
-	Spawner(
+	void RecreateManual(
 		const Complex offset,
 		const unsigned int reserveSize,
 		const SpawnerArgs& spawner,
 		const Projectile& projectile = defaultProjectile
 	);
-	Spawner(
+	void RecreateConstant(
 		const Complex offset,
 		const unsigned int reserveSize,
 		const SpawnerArgs& spawner,
-		const ConstantArgs& constant = defaultConstant
+		const ConstantArgs&	 constant = defaultConstant
 	);
-	Spawner(
+	void RecreateBarrage(
 		const Complex offset,
 		const unsigned int reserveSize,
 		const SpawnerArgs& spawner,
 		const BarrageArgs& barrage = defaultBarrage
 	);
-	Spawner(
+	void RecreateRandom(
 		const Complex offset,
 		const unsigned int reserveSize,
 		const SpawnerArgs& spawner,
 		const RandomArgs& random = defaultRandom
 	);
-	Spawner(
+	void RecreateEmpty(
 		const Complex offset,
 		const unsigned int reserveSize,
 		const SpawnerArgs& spawner,
 		const PlayerSpawnerArgs& playerSpawner = defaultPlayerSpawner
 	);
 
-	~Spawner();
-
 	//inline void InstantiateBullet(Bullets* const pool, const Projectile* projectile, const Complex* position);
+
+	void InitCore(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner);
 
 	void InitializeConstantSpawner();
 	void InitializeEmptySpawner();

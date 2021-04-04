@@ -23,13 +23,7 @@ class Bullets: public Mesh {
 
 	public:
 
-		Bullets();
-		Bullets(const Projectile& projectile, const int reserveSize);
-		//Bullets(const int reserveSize);
-		~Bullets();
-
-		void InitSpawner(const Projectile& projectile);
-		//void InitSpawner();
+		void InitSpawner(const Projectile& projectile, const int reserveSize);
 		void ClearBullet(const int ID);
 		void BatchClearBullets();
 		void ScissorTest();

@@ -8,83 +8,74 @@ TODO:	MAKE PLAYER FINDER
 		UNIFY PLAYER FINDER, ONLY ONE CALL NEEDED PER INITIALIZATION/HANDLER CALL
 */
 
-Spawner::Spawner(){
+Spawner::~Spawner(){
+	delete[] collideableBullets;
 }
 
-
 //MANUAL SPAWNER CONSTRUCTOR
-Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile) :
-	Bullets(projectile, reserveSize),
-	spawner(spawner),
-	projectile(projectile)
-{
-	colliderSize = reserveSize / 4;
-	collideables = 0;
-	collideableBullets = new unsigned int[reserveSize / 4];
+void Spawner::RecreateManual(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const Projectile& projectile) {
+	InitSpawner(projectile, reserveSize);
+	InitCore(offset, reserveSize, spawner);
+
+	this->projectile = projectile;
 	InitializeEmptySpawner();
 	handlingFunction = &Spawner::HandleEmpty;
 }
 
 //CONSTANT SPAWNER CONSTRUCTOR
-Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const ConstantArgs& constant) :
-	Bullets(constant.baseProjectile, reserveSize),
-	spawner(spawner),
-	constant(constant),
-	offset(offset)
-{
-	colliderSize = reserveSize / 4;
-	collideables = 0;
-	collideableBullets = new unsigned int[reserveSize / 4];
+void Spawner::RecreateConstant(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const ConstantArgs& constant) {
+	InitSpawner(constant.baseProjectile, reserveSize);
+	InitCore(offset, reserveSize, spawner);
+
+	this->constant = constant;
 	InitializeConstantSpawner();
 	handlingFunction = &Spawner::HandleConstantSpawner;
 }
 
 //BARRAGE SPAWNER CONSTRUCTOR
-Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage) :
-	Bullets(barrage.baseProjectile, reserveSize),
-	spawner(spawner),
-	barrage(barrage),
-	offset(offset)
-{
-	colliderSize = reserveSize / 4;
-	collideables = 0;
-	collideableBullets = new unsigned int[reserveSize / 4];
+void Spawner::RecreateBarrage(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const BarrageArgs& barrage) {
+	InitSpawner(barrage.baseProjectile, reserveSize);
+	InitCore(offset, reserveSize, spawner);
+	
+	this->barrage = barrage;
 	InitializeBarrageSpawner();
 	handlingFunction = &Spawner::HandleBarrageSpawner;
 }
 
 //RANDOM SPAWNER CONSTRUCTOR
-Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random) :
-	Bullets(random.baseProjectile, reserveSize),
-	spawner(spawner),
-	random(random),
-	offset(offset)
-{
-	colliderSize = reserveSize / 4;
-	collideables = 0;
-	collideableBullets = new unsigned int[reserveSize / 4];
+void Spawner::RecreateRandom(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const RandomArgs& random) {
+	InitSpawner(random.baseProjectile, reserveSize);
+	InitCore(offset, reserveSize, spawner);
+
+	this->random = random;
 	InitializeRandomSpawner();
 	handlingFunction = &Spawner::HandleRandomSpawner;
 }
 
-Spawner::Spawner(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const PlayerSpawnerArgs& playerSpawner) :
-	Bullets(playerSpawner.baseProjectile, reserveSize),
-	spawner(spawner),
-	playerSpawner(playerSpawner),
-	offset(offset)
-{
-	colliderSize = reserveSize / 4;
-	collideables = 0;
-	collideableBullets = new unsigned int[reserveSize / 4];
+//PLAYER SPAWNER CONSTRUCTOR
+void Spawner::RecreateEmpty(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner, const PlayerSpawnerArgs& playerSpawner) {
+	InitSpawner(playerSpawner.baseProjectile, reserveSize);
+	InitCore(offset, reserveSize, spawner);
+	
+	this->playerSpawner = playerSpawner;
 	InitializePlayerSpawner();
 	handlingFunction = &Spawner::HandleEmpty;
 }
 
-Spawner::~Spawner() {
+void Spawner::InitCore(const Complex offset, const unsigned int reserveSize, const SpawnerArgs& spawner) {
+	this->offset = offset;
+	this->spawner = spawner;
+
+	//Why? What the fuck did I want to do with these? Do I use them in the player class?
+	//Lets just adapt a new pool instead of this
+	colliderSize = reserveSize / 4;
+	collideables = 0;
+	collideableBullets = new unsigned int[reserveSize / 4];
 }
 
 void Spawner::Handle() {
 	(*this.*handlingFunction)(); //Should have went with polyomorphism, but noooo, "muh oop bad"
+	//Maybe its not that bad lmao
 }
 
 void Spawner::ClearCollideable() {

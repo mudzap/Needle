@@ -8,7 +8,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "y", &Quad::y,
         "w", &Quad::w,
         "h", &Quad::h
-        );
+    );
 
     sol::usertype<Complex> cmplxUT = lua.new_usertype<Complex>("Cmplx",
         sol::constructors <Complex(float, float)>(),
@@ -22,7 +22,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "rot", &Complex::FromAngle,
         "norm", &Complex::Normal,
         "proj", &Complex::Projection
-        );
+    );
 
     sol::usertype<TransformArgs> transformUT = lua.new_usertype<TransformArgs>("Transform",
         sol::constructors <TransformArgs>(),
@@ -32,17 +32,17 @@ void Script::CreateUsertypes(sol::state& lua) {
         "rot", &TransformArgs::rotation,
         "rot_d", &TransformArgs::rotationDelta,
         "vis_rot", &TransformArgs::visualRotation
-        );
+    );
 
     sol::usertype<HitboxArgs> hitboxUT = lua.new_usertype<HitboxArgs>("Hitbox_Args",
         sol::constructors <HitboxArgs>(),
         "hit", &HitboxArgs::squaredHitRadius,
         "hurt", &HitboxArgs::squaredHurtRadius
-        );
+    );
 
     sol::usertype<CommonFlags> commonFlagsUT = lua.new_usertype<CommonFlags>("Common_Ent_Flag",
         sol::constructors <CommonFlags>()
-        );
+    );
     lua["C_IS_SAKURA"] = PFLAG_IS_SAKURA;
     lua["C_SPAWN_PARTICLE"] = PFLAG_SPAWN_PARTICLE;
     lua["C_DESTROY_PARTICLE"] = PFLAG_DESTROY_PARTICLE;
@@ -53,13 +53,13 @@ void Script::CreateUsertypes(sol::state& lua) {
         "flags", &CommonArgs::flags,
         "hitbox", &CommonArgs::hitbox,
         "quad", &CommonArgs::quad
-        );
+    );
 
     sol::usertype<ipair> ipairUT = lua.new_usertype<ipair>("Ipair",
         sol::constructors <ipair>(),
         "x", &ipair::x,
         "y", &ipair::y
-        );
+    );
 
     sol::usertype<AnimationArgs> animationArgsUT = lua.new_usertype<AnimationArgs>("Anim_Args",
         sol::constructors <AnimationArgs>(),
@@ -68,11 +68,11 @@ void Script::CreateUsertypes(sol::state& lua) {
         "states", &AnimationArgs::states,
         "frames", &AnimationArgs::frameTime,
         "spritesheet_quad", &AnimationArgs::spriteSheetQuad
-        );
+    );
 
     sol::usertype<ProjFlags> projFlagsUT = lua.new_usertype<ProjFlags>("Proj_Flag",
         sol::constructors <ProjFlags>()
-        );
+    );
     lua["P_AIMED_AT_PLAYER"] = PFLAG_AIMED_AT_PLAYER;
     lua["P_FOLLOW_PLAYER"] = PFLAG_FOLLOW_PLAYER;
     lua["P_GRAZEABLE"] = PFLAG_GRAZEABLE;
@@ -95,13 +95,13 @@ void Script::CreateUsertypes(sol::state& lua) {
         "angle", &ProjArgs::angle,
         "andle_d", &ProjArgs::angleDelta,
         "gravity", &ProjArgs::gravityConstant
-        );
+    );
 
     sol::usertype<Projectile> projUT = lua.new_usertype<Projectile>("Proj",
         sol::constructors <Projectile(ProjArgs, CommonArgs)>(),
         "proj_args", &Projectile::projectile,
         "common_args", &Projectile::common
-        );
+    );
 
     sol::usertype< KeyContainer<Enemy> > eKeyUT = lua.new_usertype< KeyContainer<Enemy> >("Enemy_Key",
         sol::constructors < KeyContainer<Enemy> >(),
@@ -133,7 +133,18 @@ void Script::CreateUsertypes(sol::state& lua) {
         "drift_brake", &Enemy::Drift2,
         "circle", &Enemy::CircleAround,
         "add_spawner", &Enemy::AddChild
-        );
+    );
+
+    sol::usertype<Spawner> spawnerUT = lua.new_usertype<Spawner>("Spawner",
+        sol::constructors<Spawner()>(),
+        "recreate_manual", &Spawner::RecreateManual,
+        "recreate_constant", &Spawner::RecreateConstant,
+        "recreate_barrage", &Spawner::RecreateBarrage,
+        "recreate_random", &Spawner::RecreateRandom,
+        "recreate_empty", &Spawner::RecreateEmpty,
+        "sleep", &Spawner::Sleep,
+        "wake_up", &Spawner::WakeUp
+    );
 
     sol::usertype<EnemPool<MAX_ENEMIES>> enemyPoolUT = lua.new_usertype<EnemPool<MAX_ENEMIES>>("Enemy_Pool",
         sol::constructors<>(),
@@ -153,14 +164,14 @@ void Script::CreateUsertypes(sol::state& lua) {
         "destroy_all", &Pool<Spawner, MAX_SPAWNERS>::FreeAllHandles
     );
 
-    sol::usertype<SpawnerArgs> spawnerUT = lua.new_usertype<SpawnerArgs>("Spawner_Args",
+    sol::usertype<SpawnerArgs> spawnerArgsUT = lua.new_usertype<SpawnerArgs>("Spawner_Args",
         sol::constructors<SpawnerArgs()>(),
         "angle", &SpawnerArgs::angle,
         "angle_d", &SpawnerArgs::angleDelta,
         "angle_d2", &SpawnerArgs::angleAccel,
         "loop_start", &SpawnerArgs::loopingConeStart,
         "loop_end", &SpawnerArgs::loopingConeEnd
-        );
+    );
 
     sol::usertype<ConstantArgs> constantUT = lua.new_usertype<ConstantArgs>("Constant_Args",
         sol::constructors<ConstantArgs()>(),
@@ -177,7 +188,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "shot_time", &ConstantArgs::bulletShotTimer,
         "perarray_accel", &ConstantArgs::perArrayAccel,
         "perbullet_accel", &ConstantArgs::perBulletAccel
-        );
+    );
 
     sol::usertype<BarrageArgs> barrageUT = lua.new_usertype<BarrageArgs>("Barrage_Args",
         sol::constructors<BarrageArgs()>(),
@@ -215,7 +226,7 @@ void Script::CreateUsertypes(sol::state& lua) {
         "speed_range", &RandomArgs::speedRange,
         "accel_range", &RandomArgs::accelRange,
         "angle_range", &RandomArgs::coneRange
-        );
+    );
 
     sol::usertype<Camera> cameraUT = lua.new_usertype<Camera>("Camera",
         sol::constructors<Camera()>(),
@@ -246,6 +257,6 @@ void Script::CreateUsertypes(sol::state& lua) {
         "a_stop", &Camera::CameraFloat,         //ALIASES
         "a_fix_on", &Camera::CameraFixViewOn,   //ALIASES
         "a_follow", &Camera::CameraFollow       //ALIASES
-        );
+    );
 
 }

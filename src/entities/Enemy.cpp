@@ -8,41 +8,25 @@ Enemy::Enemy() {
 
 void Enemy::RecreateTransform(const TransformArgs& entity, const AnimationArgs& animArgs, const unsigned int health) {
 
-	this->health = health;
 	transform = entity;
-	drawQuad = animArgs.drawQuad;
-	dimensions = animArgs.states;
-	frameTime = animArgs.frameTime;
 	hitbox = animArgs.hitbox;
+	this->health = health;
 	dead = false;
 	state = STOP;
 
-	//REMOVE
-	InitTransformBuffers();
-
-	//SetStateSprites(3);
-
-	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
+	Recreate(animArgs, 3);
 
 }
 
 void Enemy::RecreatePosition(const Complex position, const AnimationArgs& animArgs, const unsigned int health) {
 
 	transform.position = position;
-	drawQuad = animArgs.drawQuad;
-	dimensions = animArgs.states;
-	frameTime = animArgs.frameTime;
 	hitbox = animArgs.hitbox;
 	this->health = health;
 	dead = false;
 	state = STOP;
 
-	//REMOVE
-	InitTransformBuffers();
-
-	//SetStateSprites(3);
-
-	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
+	Recreate(animArgs, 3);
 
 }
 

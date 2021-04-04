@@ -13,7 +13,8 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 	//MANUAL SPAWNER CONSTRUCTOR
 	unsigned int bullets = 100;
 	for (int i = 0; i < playerSpawnerArgs.size(); i++) {
-		spawners[0].emplace_back(Spawner(spawnerOffsets[i], bullets, spawnerArgs[i], playerSpawnerArgs[i]));
+		//CHANGE TO NEW ID SYSTEM
+		//spawners[0].emplace_back(Spawner(spawnerOffsets[i], bullets, spawnerArgs[i], playerSpawnerArgs[i]));
 	}
 	
 	SetStateSprites(1);
@@ -31,7 +32,7 @@ Player::Player(const PlayerArgs& player, const TransformArgs& entity, const Anim
 }
 
 Player::~Player() {
-}
+}	
 
 void Player::HandlePlayerMovement() {
 

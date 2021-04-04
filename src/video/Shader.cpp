@@ -59,6 +59,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 {
     unsigned int id = glCreateShader(type);
     const char* src = source.c_str();
+    //printf("source\n: %s\n", src);
     glShaderSource(id, 1, &src, NULL);
     glCompileShader(id);
 

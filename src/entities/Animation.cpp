@@ -11,11 +11,39 @@ Animation::Animation(const Quad& drawQuad, const ipair animStates, const unsigne
 	currentState = { (unsigned int)(dimensions.x / 2), (unsigned int)(dimensions.y / 2) };
 	targetState = currentState;
 
-	//animationSpritesID = new std::vector<unsigned int>[dimensions.x * dimensions.y];
-
+	SHMY_LOGD("InitTransformBuffer @ animation constructor\n");
 	InitTransformBuffers();
 
 }
+
+void Animation::Recreate(const AnimationArgs& animArgs, const int stateSprites) {
+
+	for(std::vector<unsigned int> vec : animationSpritesID) {
+		vec.clear();
+		vec.shrink_to_fit();
+	}
+
+	SetStateSprites(stateSprites);
+
+	if(vao == 0) {
+		InitTransformBuffers();
+	}
+
+	drawQuad = animArgs.drawQuad;
+	dimensions = animArgs.states;
+	frameTime = animArgs.frameTime;
+
+	currentSpriteFrame = 0,
+	currentFrame = Timer::countedFrames;
+	animationFrameOffset = 0;
+
+	currentState = { (unsigned int)(dimensions.x / 2), (unsigned int)(dimensions.y / 2) };
+	targetState = currentState;
+
+	CreateMapAndMesh(1024.f, animArgs.spriteSheetQuad);
+
+}
+
 
 Animation::~Animation() {
 	//delete[] animationSpritesID;
@@ -53,7 +81,6 @@ void Animation::SetStateSprites(const unsigned int frames, const unsigned int st
 
 		unsigned int indexX = va_arg(args, unsigned int);
 		unsigned int indexY = va_arg(args, unsigned int);
-		//animationSpritesID[va_arg(args, unsigned int)][va_arg(args, unsigned int)].resize(frames);
 		animationSpritesID[indexX + dimensions.x * indexY].resize(frames);
 
 	}
@@ -63,6 +90,7 @@ void Animation::SetStateSprites(const unsigned int frames, const unsigned int st
 
 void Animation::SetStateSprites(const unsigned int frames) {
 
+	//what was I thinking?
 	for (unsigned int j = 0; j < 1; j++) {
 
 		for (unsigned int i = 0; i < 7; i++) {
@@ -139,12 +167,17 @@ void Animation::CreateMapAndMesh(const float textureSize, const Quad spriteRegio
 
 	animationFrameOffset = animationSpritesID[currentState.x + dimensions.x * currentState.y][currentSpriteFrame];
 
+	SHMY_LOGD("Filling buffers, vao: %u, vbo: %u\n", vao, vbo);
+
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 4 * spriteMap.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+	glBufferData(GL_ARRAY_BUFFER, 4 * vertices.size() * sizeof(Vertex), &vertices[0], GL_STREAM_DRAW);
 
 	glBindVertexArray(0);
+
 
 }
 

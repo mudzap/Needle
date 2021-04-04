@@ -1,9 +1,11 @@
 
 function doNext()
+	print("LUA: resuming coroutine")
 	coroutine.resume(movement)
 end
 
 movement = coroutine.create(function()
+	print("LUA: yielding coroutine")
 	coroutine.yield()
 end)
 
@@ -56,16 +58,19 @@ function main()
 
 	print("LUA:", s_key_1, s_key_2, s_key_3, s_key_4)
 
-	s_key_1.spawner_ptr = Spawner.new(test_pattern)
-	s_key_2.spawner_ptr = Spawner.new(test_pattern)
-	s_key_3.spawner_ptr = Spawner.new(test_pattern2)
-	s_key_4.spawner_ptr = Spawner.new(test_pattern2)
+	s_key_1.spawner_ptr:recreate_constant(Cmplx.new(100, 0), 100, test_spawner, test_pattern)
+	s_key_2.spawner_ptr:recreate_constant(Cmplx.new(-100, 0), 100, test_spawner, test_pattern)
+	--s_key_3.spawner_ptr:recreate_constant(test_pattern2)
+	--s_key_4.spawner_ptr:recreate_constant(test_pattern2)
 
 	-- ENEMY CREATION
-	e_key_1 = enemy_pool:create_enemy()
-	e_key_1.enemy_ptr:add_spawner(s_key_1.spawner_id)
-	e_key_1.enemy_ptr:add_spawner(s_key_3.spawner_id)
-	e_key_1.enemy_ptr:recreate_pos(cmplx.new(-200, 0), ran, 10)
+	print("LUA: Creating enemy")
+	e_key_1 = enemies:get_enemy()
+	print("LUA: Adding spawners")
+	e_key_1.enemy_ptr:add_spawner(s_key_1)
+	e_key_1.enemy_ptr:add_spawner(s_key_2)
+	print("LUA: Setting enemy position", e_key_1, e_key_1.enemy_ptr)
+	e_key_1.enemy_ptr:recreate_pos(Cmplx.new(-200, 0), ran, 10)
 	--testEnemy = enemies:create_enemy(cmplx.new(-200, 0), ran, 10)
 	--testEnemy:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern2)
 	--testEnemy:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern2)
@@ -76,24 +81,30 @@ function main()
 	--testEnemy2:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern)
 
 	-- CAMERA
+	print("LUA: init camera")
 	cam:set_pos(-64, 20, 0)
 	cam:follow_yaw(5)
 	cam:lerp(240, 80, 40, 0)
-	doAfterFrames(240, function() cam:quad_bezier(160,	24, 12, 0,		0, 12, 24) end)
-	doAfterFrames(400, function() cam:lerp(240, 0, 40, 80) end)
+
+	print("LUA: programming camera")
+	do_after_frames(240, function() cam:quad_bezier(160,	24, 12, 0,		0, 12, 24) end)
+	do_after_frames(400, function() cam:lerp(240, 0, 40, 80) end)
 
 	-- TIMING
 	--doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
 	--doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
 	--doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
 
-	doAfterFrames(0, function() testEnemy:slowToXY(cmplx.new(-150, -50), 0.06) end)
-	doAfterFrames(60, function() testEnemy:slowToXY(cmplx.new(50, 300), 0.06) end)
-	doAfterFrames(120, function() testEnemy:moveToXY(cmplx.new(100, -250), 6, 0) end)
-	doAfterFrames(130, function() testEnemy:circle(cmplx.new(200, 50)) end)
-	doAfterFrames(220, function() testEnemy:driftBrake(0.95) end)
-	doAfterFrames(280, function() testEnemy:slowToXY(cmplx.new(-350, -300), 0.04) end)
-	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy) end)
+	print("LUA: programming enemy script")
+	e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(-150, -50), 0.06)
+	do_after_frames(60, function() e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(50, 300), 0.06) end)
+	do_after_frames(120, function() e_key_1.enemy_ptr:move_to_XY(Cmplx.new(100, -250), 6, 0) end)
+	do_after_frames(130, function() e_key_1.enemy_ptr:circle(Cmplx.new(200, 50)) end)
+	do_after_frames(220, function() e_key_1.enemy_ptr:drift_brake(0.95) end)
+	do_after_frames(280, function() e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(-350, -300), 0.04) end)
+
+	print("LUA: programming enemy destruction")
+	do_after_frames(600, function() enemies:destroy_enemy(e_key_1.enemy_id) end)
 
 end
 
