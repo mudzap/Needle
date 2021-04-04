@@ -35,7 +35,7 @@ int Game::OnExecute() {
     // AUDIO
 
     Audio::LoadMusic("assets/audio/Warp Tapes 89-93 Part 1.wav");
-    Audio::PlayMusic();
+    //Audio::PlayMusic();
     Audio::LoadSample("assets/audio/bell.wav");
 
 

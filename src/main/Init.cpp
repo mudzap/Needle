@@ -230,14 +230,13 @@ int Game::initLua() {
 
     bool success = true;
 
-    
     lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine);
 
     Script::CreateUsertypes(lua);
     LuaData::LoadProjData(lua);
     LuaData::LoadAnimData(lua);
 
-    lua.script_file("assets/scripts/stage1.lua");
+    lua.script_file("scripts/stage1.lua");
 
     lua["cam"] = camera;
     lua["enemies"] = &enemyPool;

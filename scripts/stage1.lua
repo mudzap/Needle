@@ -10,18 +10,23 @@ end)
 
 function main()
 
+	print("LUA: Setting spawner args")
+
 	-- SPAWNER ARGS
 	test_spawner = Spawner_Args.new()
 	test_spawner['angle'] = 0
 	test_spawner['angle_d'] = 2.0
 
+	print("LUA: Setting projectile args")
+
 	-- PROJ ARGS, AND PROJECTILE
 	temp_pargs = Proj_Args.new()
 	temp_pargs['vel'] = Cmplx.new(3, 0)
-	--testBullet2 = proj.new(temp_pargs, hugebullet_red)
-	test_bullet = proj.new(temp_pargs, knife_magenta)
-	test_bullet2 = proj.new(temp_pargs, knife_green)
+	--testBullet2 = Proj.new(temp_pargs, hugebullet_red)
+	test_bullet = Proj.new(temp_pargs, knife_magenta)
+	test_bullet2 = Proj.new(temp_pargs, knife_green)
 
+	print("LUA: creating spawner pattern")
 
 	-- PATTERN, CONST, BARR, RANDOM...
 	test_pattern = Constant_Args.new()
@@ -42,11 +47,14 @@ function main()
 	test_pattern2['array_angle'] = 45
 	test_pattern2['shot_time'] = 600
 
+	print("LUA: getting spawner keys:")
 
-	s_key_1 = spawners.get_spawner()
-	s_key_2 = spawners.get_spawner()
-	s_key_3 = spawners.get_spawner()
-	s_key_4 = spawners.get_spawner()
+	s_key_1 = spawners:get_spawner()
+	s_key_2 = spawners:get_spawner()
+	s_key_3 = spawners:get_spawner()
+	s_key_4 = spawners:get_spawner()
+
+	print("LUA:", s_key_1, s_key_2, s_key_3, s_key_4)
 
 	s_key_1.spawner_ptr = Spawner.new(test_pattern)
 	s_key_2.spawner_ptr = Spawner.new(test_pattern)
@@ -90,6 +98,7 @@ function main()
 end
 
 --start script
+print("LUA: script start\n")
 main()
 
 --Add:	Bullet instantiation

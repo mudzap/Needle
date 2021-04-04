@@ -220,7 +220,11 @@ void Game::RenderImGuiDebug() {
         ImGui::Begin("Lua");            
         if (ImGui::Button("Start Main Script"))
         {
-            lua.script_file("scripts/stage1.lua");
+            
+            SHMY_LOGD("Starting lua script\n");
+            sol::error e = lua.script_file("scripts/stage1.lua");
+            printf("%s\n", e.what());
+
         }
         ImGui::Separator();
         ImGui::TextWrapped("Lua console\n");

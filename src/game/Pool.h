@@ -8,8 +8,6 @@
 #include <set>
 #include <memory>
 
-#define MAX_ENEMIES_D 64
-
 //Changes!
 //You feed pool a list of handles, it returns a list of pointers
 //Enemies and spawners are independent now, they use handles exclusively
@@ -42,12 +40,11 @@ class Pool {
 
 			int returnHandle = 0;
 
-			if(activeElements.size() >= N) {   //If the set of active elements contains the handle to all the elements
-				SHMY_LOGD("Pool filled! Replacing on index %d\n", currentIndex);
+			if(activeElements.size() >= N || inactiveElements.empty()) {   //If the set of active elements contains the handle to all the elements
+				SHMY_LOGD("Pool filled or no defined inactive elements! Replacing on index %d\n", currentIndex);
 				returnHandle = currentIndex;   //Replace
 				currentIndex = (currentIndex + 1) % N;
 			} else {    //Otherwise, give from the inactive elements set
-				//int newHandle = inactiveElemets.cbegin();
 				auto it = inactiveElements.begin();
 				returnHandle = *it;
 				inactiveElements.erase(inactiveElements.cbegin());

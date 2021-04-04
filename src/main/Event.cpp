@@ -27,8 +27,11 @@ void Game::OnEvent() {
     if (keystate[SDL_SCANCODE_RIGHT])
         player.transform.velocity.x += player.currentSpeed;
 
-    if (keystate[SDL_SCANCODE_KP_1])
-        lua.script_file("scripts/stage1.lua");
+    if (keystate[SDL_SCANCODE_KP_1]) {
+        SHMY_LOGD("Starting lua script\n");
+        sol::error e = lua.script_file("scripts/stage1.lua");
+        printf("%s\n", e.what());
+    }
 
     if (keystate[SDL_SCANCODE_W])
         camera.velocity.z += 0.4f;
