@@ -15,6 +15,7 @@
 #include "util/Timer.h"
 #include "math/RNG.h"
 
+#include "Entity.h"
 #include "Projectile.h"
 #include "Bullets.h"
 #include "Transform.h"
@@ -110,7 +111,7 @@ const PlayerSpawnerArgs defaultPlayerSpawner;
 class Player;
 struct PlayerArgs;
 
-class Spawner : public Transform, public Bullets {
+class Spawner : public Transform, public Bullets, public Entity {
 public:
 
 	Spawner();

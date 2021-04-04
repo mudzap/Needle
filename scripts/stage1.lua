@@ -11,46 +11,61 @@ end)
 function main()
 
 	-- SPAWNER ARGS
-	testSpawner = spawnerArgs.new()
-	testSpawner['angle'] = 0
-	testSpawner['angle_d'] = 2.0
+	test_spawner = Spawner_Args.new()
+	test_spawner['angle'] = 0
+	test_spawner['angle_d'] = 2.0
 
 	-- PROJ ARGS, AND PROJECTILE
-	temp_pargs = pargs.new()
-	temp_pargs['vel'] = cmplx.new(3, 0)
+	temp_pargs = Proj_Args.new()
+	temp_pargs['vel'] = Cmplx.new(3, 0)
 	--testBullet2 = proj.new(temp_pargs, hugebullet_red)
-	testBullet = proj.new(temp_pargs, knife_magenta)
-	testBullet2 = proj.new(temp_pargs, knife_green)
+	test_bullet = proj.new(temp_pargs, knife_magenta)
+	test_bullet2 = proj.new(temp_pargs, knife_green)
 
 
 	-- PATTERN, CONST, BARR, RANDOM...
-	testPattern = constantArgs.new()
-	testPattern['base_proj'] = testBullet
-	--testPattern['arrays'] = 72
-	--testPattern['array_angle'] = 5
-	--testPattern['shot_time'] = 1
-	testPattern['arrays'] = 8
-	testPattern['array_angle'] = 45
-	testPattern['shot_time'] = 600
+	test_pattern = Constant_Args.new()
+	test_pattern['base_proj'] = test_bullet
+	--test_pattern['arrays'] = 72
+	--test_pattern['array_angle'] = 5
+	--test_pattern['shot_time'] = 1
+	test_pattern['arrays'] = 8
+	test_pattern['array_angle'] = 45
+	test_pattern['shot_time'] = 600
 
-	testPattern2 = constantArgs.new()
-	testPattern2['base_proj'] = testBullet2
-	--testPattern2['arrays'] = 72
-	--testPattern2['array_angle'] = 5
-	--testPattern2['shot_time'] = 1
-	testPattern2['arrays'] = 8
-	testPattern2['array_angle'] = 45
-	testPattern2['shot_time'] = 600
+	test_pattern2 = Constant_Args.new()
+	test_pattern2['base_proj'] = test_bullet2
+	--test_pattern2['arrays'] = 72
+	--test_pattern2['array_angle'] = 5
+	--test_pattern2['shot_time'] = 1
+	test_pattern2['arrays'] = 8
+	test_pattern2['array_angle'] = 45
+	test_pattern2['shot_time'] = 600
 
+
+	s_key_1 = spawners.get_spawner()
+	s_key_2 = spawners.get_spawner()
+	s_key_3 = spawners.get_spawner()
+	s_key_4 = spawners.get_spawner()
+
+	s_key_1.spawner_ptr = Spawner.new(test_pattern)
+	s_key_2.spawner_ptr = Spawner.new(test_pattern)
+	s_key_3.spawner_ptr = Spawner.new(test_pattern2)
+	s_key_4.spawner_ptr = Spawner.new(test_pattern2)
 
 	-- ENEMY CREATION
-	testEnemy = enemies:createEnemy(cmplx.new(-200, 0), ran, 10)
-	testEnemy:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern2)
-	testEnemy:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern2)
+	e_key_1 = enemy_pool:create_enemy()
+	e_key_1.enemy_ptr:add_spawner(s_key_1.spawner_id)
+	e_key_1.enemy_ptr:add_spawner(s_key_3.spawner_id)
+	e_key_1.enemy_ptr:recreate_pos(cmplx.new(-200, 0), ran, 10)
+	--testEnemy = enemies:create_enemy(cmplx.new(-200, 0), ran, 10)
+	--testEnemy:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern2)
+	--testEnemy:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern2)
 
-	testEnemy2 = enemies:createEnemy(cmplx.new(200, 0), chen, 10)
-	testEnemy2:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern)
-	testEnemy2:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern)
+	--e_key_2.enemy_ptr
+	--testEnemy2 = enemies:createEnemy(cmplx.new(200, 0), chen, 10)
+	--testEnemy2:addConstant(cmplx.new(100, 0), 100, testSpawner, testPattern)
+	--testEnemy2:addConstant(cmplx.new(-100, 0), 100, testSpawner, testPattern)
 
 	-- CAMERA
 	cam:set_pos(-64, 20, 0)
@@ -60,9 +75,9 @@ function main()
 	doAfterFrames(400, function() cam:lerp(240, 0, 40, 80) end)
 
 	-- TIMING
-	doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
-	doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
-	doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
+	--doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
+	--doAfterFrames(180, function() testEnemy2:slowToXY(cmplx.new(0, -150), 0.02) end)
+	--doAfterFrames(600, function() enemies:destroyEnemy(testEnemy2) end)
 
 	doAfterFrames(0, function() testEnemy:slowToXY(cmplx.new(-150, -50), 0.06) end)
 	doAfterFrames(60, function() testEnemy:slowToXY(cmplx.new(50, 300), 0.06) end)

@@ -143,7 +143,10 @@ class Game {
 
         Camera camera;
         Timer timer;
-        EnemyPool enemyPool;
+
+        //Entity pools
+        EnemPool<MAX_ENEMIES> enemyPool;
+        Pool<Spawner, MAX_SPAWNERS> spawnerPool;
 
         //Font
         Font myFont;

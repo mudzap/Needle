@@ -5,6 +5,7 @@
 #include "video/Mesh.h"
 #include "math/Complex.h"
 //#include "util/Timer.h"
+#include "game/Pool.h"
 #include "util/Log.h"
 
 #include "Hitbox.h"
@@ -32,8 +33,13 @@ enum EnemyState {
 template<typename T, int N>
 class Pool;
 
+template<typename T>
+struct KeyContainer;
+
 //class Player;
 class Projectile;
+
+//class SpawnerChildrenWrapper: public Children<Spawner,MAX_SPAWNERS> {};
 
 class Enemy:
 	public Transform,
@@ -41,6 +47,7 @@ class Enemy:
 	public Hitbox,
 	public Entity,
 	public Children<Spawner, MAX_SPAWNERS> {
+	//public SpawnerChildrenWrapper {
 
 	public:
 

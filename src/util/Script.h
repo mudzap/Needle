@@ -18,6 +18,7 @@ extern "C"
 #include "game/Pool.h"
 #include "entities/Animation.h"
 #include "game/Camera.h"
+#include "entities/Entity.h"
 
 enum ScriptIdentifiers {
     PLAYER = 1,

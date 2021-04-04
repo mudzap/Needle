@@ -240,7 +240,8 @@ int Game::initLua() {
     lua.script_file("assets/scripts/stage1.lua");
 
     lua["cam"] = camera;
-    lua["enemies"] = &enemyPool; //MOVE THIS TO SCRIPT CLASS
+    lua["enemies"] = &enemyPool;
+    lua["spawners"] = &spawnerPool;
     lua["doAfterFrames"] = &Timer::AddLuaTimer;
        
     stage1Main = lua["main"];

@@ -22,10 +22,16 @@ template<typename T>
 struct KeyContainer {
 	T* type_ptr = NULL;
 	int ID = -1;
+
+	bool operator<(const KeyContainer& rhs) const {
+		return(ID < rhs.ID);
+	}
+
 };
 
 class Enemy;
 class Player;
+class Spawner;
 
 template<typename T, int N>
 class Pool {

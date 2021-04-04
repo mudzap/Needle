@@ -4,6 +4,7 @@
 #define MAX_CHILDREN_PER_ENTITY 16
 
 #include <set>
+#include <unordered_set>
 #include <memory>
 #include <array>
 
@@ -46,6 +47,10 @@ class Children {
 
         void SleepChild(KeyContainer<T> handle) {
             childrenID.erase(handle);
+        }
+
+        void SetPool(Pool<T, N>* pool) {
+            childrenPool = pool;
         }
 
     protected:
