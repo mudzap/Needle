@@ -1,13 +1,13 @@
 
-function doNext()
-	print("LUA: resuming coroutine")
-	coroutine.resume(movement)
-end
+--function doNext()
+--	print("LUA: resuming coroutine")
+--	coroutine.resume(movement)
+--end
 
-movement = coroutine.create(function()
-	print("LUA: yielding coroutine")
-	coroutine.yield()
-end)
+--movement = coroutine.create(function()
+--	print("LUA: yielding coroutine")
+--	coroutine.yield()
+--end)
 
 
 function main()
@@ -87,8 +87,8 @@ function main()
 	cam:lerp(240, 80, 40, 0)
 
 	print("LUA: programming camera")
-	do_after_frames(240, function() cam:quad_bezier(160,	24, 12, 0,		0, 12, 24) end)
-	do_after_frames(400, function() cam:lerp(240, 0, 40, 80) end)
+	do_after_frames(240, function(self) cam:quad_bezier(160,	24, 12, 0,		0, 12, 24) end)
+	do_after_frames(400, function(self) cam:lerp(240, 0, 40, 80) end)
 
 	-- TIMING
 	--doAfterFrames(0, function() testEnemy2:slowToXY(cmplx.new(0, 150), 0.02) end)
@@ -97,20 +97,20 @@ function main()
 
 	print("LUA: programming enemy script")
 	e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(-150, -50), 0.06)
-	do_after_frames(60, function() e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(50, 300), 0.06) end)
-	do_after_frames(120, function() e_key_1.enemy_ptr:move_to_XY(Cmplx.new(100, -250), 6, 0) end)
-	do_after_frames(130, function() e_key_1.enemy_ptr:circle(Cmplx.new(200, 50)) end)
-	do_after_frames(220, function() e_key_1.enemy_ptr:drift_brake(0.95) end)
-	do_after_frames(280, function() e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(-350, -300), 0.04) end)
+	do_after_frames(60, function(self) e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(50, 300), 0.06) end)	
+	do_after_frames(120, function(self) e_key_1.enemy_ptr:move_to_XY(Cmplx.new(100, -250), 6, 0) end)
+	do_after_frames(130, function(self) e_key_1.enemy_ptr:circle(Cmplx.new(200, 50)) end)
+	do_after_frames(220, function(self) e_key_1.enemy_ptr:drift_brake(0.95) end)
+	do_after_frames(280, function(self) e_key_1.enemy_ptr:slow_to_XY(Cmplx.new(-350, -300), 0.04) end)
 
 	print("LUA: programming enemy destruction")
-	do_after_frames(600, function() enemies:destroy_enemy(e_key_1.enemy_id) end)
+	do_after_frames(600, function(self) enemies:destroy_enemy(e_key_1.enemy_id) end)
 
 end
 
 --start script
-print("LUA: script start\n")
-main()
+--print("LUA: script start\n")
+--main()
 
 --Add:	Bullet instantiation
 --		Bullet modifying

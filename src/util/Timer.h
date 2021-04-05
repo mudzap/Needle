@@ -21,6 +21,7 @@ extern "C"
 #include <algorithm>
 #include <functional>
 
+#include "util/Log.h"
 
 //class Enemy;
 class Laser;
@@ -74,8 +75,9 @@ class Timer {
 			Timer::poolTimers.push_back({ Timer::countedFrames, time, callback });
 		};*/
 		static inline void AddLuaTimer(unsigned int time, sol::function luaFunc) { //sol::state luaState
-			SHMY_LOGD("Adding lua function %x to execute in time %u @ time %u\n", luaFunc, time, Timer::countedFrames);
+			SHMY_LOGD("Adding lua function %x to execute in time %u @ time %u\n", luaFunc.pointer(), time, Timer::countedFrames);
 			Timer::luaTimers.push_back({ Timer::countedFrames, time, luaFunc }); //luaState
+			
 		};
 
 		
@@ -117,8 +119,8 @@ class Timer {
 
 			for (int i = 0; i < luaTimers.size(); i++) {
 				if (Timer::countedFrames - luaTimers[i].startTime >= luaTimers[i].duration) {
-					SHMY_LOGD("Calling lua function %x to execute @ time %u\n", luaTimers[i].function, Timer::countedFrames);
-					luaTimers[i].function();
+					SHMY_LOGD("Calling lua function %x to execute @ time %u\n", luaTimers[i].function.pointer(), Timer::countedFrames);
+					luaTimers[i].function.call();
 					luaTimers.erase(luaTimers.begin() + i);
 					i--;
 				}

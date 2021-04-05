@@ -220,11 +220,21 @@ void Game::RenderImGuiDebug() {
         ImGui::Begin("Lua");            
         if (ImGui::Button("Start Main Script"))
         {
-            
             SHMY_LOGD("Starting lua script\n");
-            sol::error e = lua.safe_script_file("scripts/stage1.lua");
-            printf("%s\n", e.what());
+            stage1Main.call();
+        }
+        if (ImGui::Button("Reload Main Script"))
+        {
+            SHMY_LOGD("Reloading lua script\n");
+            //sol::error e = lua.script_file("scripts/stage1.lua");
+            lua.script_file("scripts/stage1.lua");
+            //SHMY_LOGE("%s\n", e.what());
+            lua["cam"] = camera;
+            lua["enemies"] = &enemyPool;
+            lua["spawners"] = &spawnerPool;
+            lua["do_after_frames"] = &Timer::AddLuaTimer;
 
+            stage1Main = lua["main"];
         }
         ImGui::Separator();
         ImGui::TextWrapped("Lua console\n");

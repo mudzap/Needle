@@ -250,6 +250,7 @@ int Game::OnExecute() {
         ImGui::NewFrame();
                 
         RenderImGuiDebug();
+        
         if(isPaused)
             RenderImGuiPause();
 
