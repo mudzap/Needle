@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.11) #for GLVND/LEGACY OpenGL
 project(needle_game)
 
 include(FindPkgConfig)
-include(CTest)
 
 #MODULES
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
@@ -35,9 +34,4 @@ add_subdirectory(app)
 add_subdirectory(assets)
 
 #DOXYGEN
-add_subdirectory(docs)
-
-#TESTING
-if(BUILD_TESTING)
-  add_subdirectory(tests)
-endif()
+#add_subdirectory(docs)
