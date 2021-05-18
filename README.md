@@ -1,3 +1,5 @@
+Too many dependencies! README comes later.
+
 ```bash
 # Download the latest version (tested with 1.16), unzip and then:
 cd src
